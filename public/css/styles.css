@@ -1,0 +1,32 @@
+.modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* START FADE-IN MODAL */
+.modal-content {
+    animation: fadeInModal 0.5s 1;
+}
+@keyframes fadeInModal {
+    0% { 
+        opacity: 0; 
+        transform: translateY(-100px);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateX(0);
+    }
+}
+.fade-out-modal {
+    opacity: 0; 
+    animation: fadeOutModal 0.5s 1;
+}
+@keyframes fadeOutModal {
+    0% { 
+      opacity: 1; 
+      transform: translateX(0);
+    }
+    100% { 
+      opacity: 0; 
+      transform: translateY(-100px);
+    }
+}
