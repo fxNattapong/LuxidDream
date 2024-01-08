@@ -19,18 +19,96 @@ class GameController extends Controller
         return view('Home', compact('data'));
     }
 
-    public function RoomCreate(Request $request) {
-        $number_player = ($request->has('number_player')) ? trim($request->input('number_player')) : null;
-        $name = ($request->has('name')) ? trim($request->input('name')) : null;
+    public function RegisterProcess(Request $request) {
+        $username = ($request->has('username')) ? trim($request->input('username')) : null;
+        $password = ($request->has('password')) ? trim($request->input('password')) : null;
+        $email = ($request->has('email')) ? trim($request->input('email')) : null;
+        $phone = ($request->has('phone')) ? trim($request->input('phone')) : null;
+
+        if(!$username) {
+            $status = 'กรุณากรอกชื่อผู้ใช้';
+            return response()->json(['status' => $status], 401);
+        }
+        if(strlen($password) < 4) {
+            $status = 'รหัสผ่านขั้นต่ำ 4 ตัวอักษร';
+            return response()->json(['status' => $status], 401);
+        }
+
+        $isUser = Players::where('username', $username)->first();
+        if($isUser) {
+            $status = 'ชื่อผู้ใช้นี้ถูกใช้ไปแล้ว';
+            return response()->json(['status' => $status], 401); 
+        } else {
+            $InsertRow = new Players;
+            $InsertRow->username = $username;
+            $InsertRow->password = $password;
+            $InsertRow->email = $email;
+            $InsertRow->phone = $phone;
+            $InsertRow->save();
+        }
+
+        return response()->json(200);
+    }
+
+    public function LoginProcess(Request $request) {
+        $username = ($request->has('username')) ? trim($request->input('username')) : null;
+        $password = ($request->has('password')) ? trim($request->input('password')) : null;
         
-        if ($name && $number_player) {
+        $isUser = Players::where('username', '=', $username)->where('password', '=', $password)->first();
+        if($isUser) {
+            $result = [
+                'isOk' => true, 
+                'username' => $username
+            ];
+            $statusCode = 200;
+
+            session::put('authen', true);
+            session::put('player_id', $isUser->id);
+            session::put('username', $username);
+
+            if($isUser->image) {
+                session::put('image', $isUser->image);
+            }
+        } else {
+            $result = [
+                'isOk' => false,
+                'status' => 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง'
+            ];
+            $statusCode = 400;
+        }
+
+        return response()->json($result, $statusCode);
+    }
+
+    public function Logout() {
+        session::flush();
+        session::save();
+        return redirect()->back();
+    }
+
+    public function RoomCreate(Request $request) {
+        $username = ($request->has('username')) ? trim($request->input('username')) : null;
+        $name_ingame = ($request->has('name_ingame')) ? trim($request->input('name_ingame')) : null;
+        $level = ($request->has('level')) ? trim($request->input('level')) : null;
+        
+        if ($username && $name_ingame) {
             $InsertRow = new Rooms;
             $InsertRow->invite_code = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
-            $InsertRow->number_player = $number_player;
-            $InsertRow->creator_name = $name;
+            $InsertRow->creator_name = $username;
+            $InsertRow->level = $level;
             $InsertRow->save();
 
+            Players::where('username', $username)
+                    ->update([
+                        'room_id' => $InsertRow->id,
+                        'name_ingame' => $name_ingame,
+                        'status' => 1,
+                        'updated_at' => now()
+                    ]);
+
             session::put('creator', true);
+            session::put('username', $username);
+            session::put('name_ingame', $name_ingame);
         
             return response()->json([
                 'status' => 'success',
@@ -39,7 +117,7 @@ class GameController extends Controller
                 'number_player' => $InsertRow->number_player,
             ], 200);
         } else {
-            $status = 'กรุณากรอกชื่อและจำนวนผู้เล่น';
+            $status = 'Please enter your in-game name.';
             return response()->json(['status' => $status], 401);
         }
     }
@@ -51,31 +129,25 @@ class GameController extends Controller
 
     public function RoomJoining(Request $request) {
         $invite_code = ($request->has('invite_code')) ? trim($request->input('invite_code')) : null;
-        $name = ($request->has('name')) ? trim($request->input('name')) : null;
+        $username = ($request->has('username')) ? trim($request->input('username')) : null;
+        $name_ingame = ($request->has('name_ingame')) ? trim($request->input('name_ingame')) : null;
 
-        $isInvite = Rooms::where('invite_code', $invite_code)->first();
-        if($isInvite) {
-            $InsertRow = new Players;
-            $InsertRow->room_id = $isInvite->id;
-            $InsertRow->name = $name;
-            $InsertRow->save();
+        $isRoom = Rooms::where('invite_code', $invite_code)->first();
+        if($isRoom) {
+            Players::where('username', $username)
+                    ->update([
+                        'room_id' => $isRoom->id,
+                        'name_ingame' => $name_ingame,
+                        'updated_at' => now()
+                    ]);
 
             session::put('player', true);
-
-            $data = [
-                'room_id' => $InsertRow->room_id,
-                'player_id' => $InsertRow->id,
-                'player_name' => $InsertRow->name,
-            ];
-            
-            // broadcast(new RoomUpdated($data));
-            // event(new RoomUpdated($data));
+            session::put('username', $username);
+            session::put('name_ingame', $name_ingame);
         
             return response()->json([
                 'status' => 'success',
                 'invite_code' => $invite_code,
-                'id' => $InsertRow->id,
-                'name' => $InsertRow->name,
             ], 200);
         } else {
             $status = 'กรุณากรอกรหัสและชื่อ';

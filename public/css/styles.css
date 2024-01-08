@@ -30,3 +30,21 @@
       transform: translateY(-100px);
     }
 }
+
+
+/* START IMAGE MOVING */
+.image-moving {
+  opacity: 1;
+  animation: ImageMoving 30s linear infinite;
+}
+
+@keyframes ImageMoving {
+  0% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-100%);
+  }
+}

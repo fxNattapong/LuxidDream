@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 01, 2024 at 07:00 PM
+-- Generation Time: Jan 08, 2024 at 06:46 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 7.2.5
 
@@ -54,11 +54,25 @@ INSERT INTO `cards` (`id`, `card_code`, `card_name`, `details`, `image`, `create
 CREATE TABLE `players` (
   `id` int(5) NOT NULL,
   `room_id` int(5) DEFAULT NULL,
-  `name` varchar(50) DEFAULT NULL,
+  `name_ingame` varchar(50) DEFAULT NULL,
+  `username` varchar(50) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `phone` varchar(10) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
   `status` tinyint(2) DEFAULT 0 COMMENT '0=not ready, 1=ready',
+  `played_all` int(5) DEFAULT 0,
+  `played_last` datetime DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `players`
+--
+
+INSERT INTO `players` (`id`, `room_id`, `name_ingame`, `username`, `password`, `email`, `phone`, `image`, `status`, `played_all`, `played_last`, `created_at`, `updated_at`) VALUES
+(75, 36, '1234', 'test', '1234', '', '', NULL, 0, 0, NULL, '2024-01-09 00:10:30', '2024-01-09 00:10:39');
 
 -- --------------------------------------------------------
 
@@ -69,7 +83,7 @@ CREATE TABLE `players` (
 CREATE TABLE `rooms` (
   `id` int(5) NOT NULL,
   `invite_code` varchar(30) DEFAULT NULL,
-  `number_player` int(2) DEFAULT NULL,
+  `level` tinyint(2) DEFAULT NULL,
   `creator_name` varchar(50) DEFAULT NULL,
   `status` tinyint(2) DEFAULT 0,
   `round_time` datetime DEFAULT NULL,
@@ -81,8 +95,8 @@ CREATE TABLE `rooms` (
 -- Dumping data for table `rooms`
 --
 
-INSERT INTO `rooms` (`id`, `invite_code`, `number_player`, `creator_name`, `status`, `round_time`, `created_at`, `updated_at`) VALUES
-(11, '544062', 4, 'Creator', 1, '2024-01-02 00:40:58', '2024-01-01 06:46:31', '2024-01-02 00:35:58');
+INSERT INTO `rooms` (`id`, `invite_code`, `level`, `creator_name`, `status`, `round_time`, `created_at`, `updated_at`) VALUES
+(36, '220975', 1, 'test', 0, NULL, '2024-01-09 00:10:39', '2024-01-09 00:10:39');
 
 -- --------------------------------------------------------
 
@@ -98,12 +112,20 @@ CREATE TABLE `rooms_cards` (
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `rooms_cards`
+-- Table structure for table `rooms_players`
 --
 
-INSERT INTO `rooms_cards` (`id`, `room_id`, `card_code`, `created_at`, `updated_at`) VALUES
-(12, 11, '1', '2024-01-02 00:36:02', '2024-01-02 00:36:02');
+CREATE TABLE `rooms_players` (
+  `id` int(5) NOT NULL,
+  `player_id` int(5) DEFAULT NULL,
+  `status` tinyint(2) DEFAULT 0 COMMENT '0=not ready, 1=ready',
+  `role` tinyint(2) DEFAULT 0 COMMENT '0=player, 1=creator',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -134,6 +156,12 @@ ALTER TABLE `rooms_cards`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `rooms_players`
+--
+ALTER TABLE `rooms_players`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -147,19 +175,25 @@ ALTER TABLE `cards`
 -- AUTO_INCREMENT for table `players`
 --
 ALTER TABLE `players`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `rooms_cards`
 --
 ALTER TABLE `rooms_cards`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `rooms_players`
+--
+ALTER TABLE `rooms_players`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', "GameController@Home")->Name('Home');
+Route::post('/register/process', "GameController@RegisterProcess")->Name('RegisterProcess');
+Route::post('/login/process', "GameController@LoginProcess")->Name('LoginProcess');
+Route::get('/logout', "GameController@Logout")->Name('Logout');
 
 Route::prefix('room')->group(function () {
     Route::post('/create', "GameController@RoomCreate")->Name('RoomCreate');
