@@ -85,6 +85,7 @@
             });
         });
 
+        var sessionPlayerID = "<?php echo Session::get('player_id');  ?>";
         var sessionUsername = "<?php echo Session::get('username');  ?>";
 
         var isLoading = false;
@@ -100,6 +101,7 @@
                     },
                     body:JSON.stringify(
                         {
+                            player_id: sessionPlayerID,
                             username: sessionUsername,
                             name_ingame: document.getElementById("name_ingame_create").value,
                             level: document.getElementById("level_create").value,

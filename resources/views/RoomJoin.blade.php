@@ -32,6 +32,7 @@
 
 
     <script>
+        const sessionPlayerID = '<?php echo Session::get('player_id') ?>';
         const sessionUsername = '<?php echo Session::get('username') ?>';
 
         var isLoading = false;
@@ -49,6 +50,7 @@
                     body:JSON.stringify(
                         {
                             invite_code: document.getElementById("invite_code_join").value,
+                            player_id: sessionPlayerID,
                             username: sessionUsername,
                             name_ingame: document.getElementById("name_ingame_join").value,
                         }

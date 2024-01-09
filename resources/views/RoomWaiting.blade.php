@@ -10,6 +10,7 @@
             <img src="{{ URL('assets/logo.png') }}" alt="">
         </div>
         <!-- END LOGO -->
+
         <!-- START CONTENT -->
         <div class="flex-col flex items-center justify-center">
             <div class="z-[100] grid grid-cols-3 gap-8">
@@ -56,7 +57,7 @@
                                 <div class="relative inline-flex items-center w-full whitespace-nowrap">
                                     <div class="flex items-center gap-2">
                                         <i class='bx bxs-user text-2xl text-white' ></i>
-                                        <input type="text" class="hidden player_id" value="{{ $player->id }}">
+                                        <input type="text" class="hidden player_id" value="{{ $player->player_id }}">
                                         <span class="player_name text-xl font-bold text-white">{{ $player->name_ingame }}</span>
                                     </div>
                                     <span class="span-status bg-white w-[20px] h-[20px] rounded-full ml-auto mr-0"></span>
@@ -74,14 +75,14 @@
 
     <!-- START PROTOTYPES -->
     <div class="z-10 w-full h-full absolute top-0 left-0 bg-[#4A4098] opacity-50 rounded-3xl hidden bg-set-opacity"></div>
-    <div class="absolute right-0 mt-[-40px] hidden NumberPlayerBoxPt">
-        <span class="flex items-center px-2 py-1 font-bold text-gray-50 bg-gray-400 rounded-3xl">
-            <i class='bx bx-user text-xl'></i>&nbsp;
-            <span class="number_player">5</span>&nbsp;Players
-        </span>
-    </div>
+        <div class="absolute right-0 mt-[-40px] hidden NumberPlayerBoxPt">
+            <span class="flex items-center px-2 py-1 font-bold text-gray-50 bg-gray-400 rounded-3xl">
+                <i class='bx bx-user text-xl'></i>&nbsp;
+                <span class="number_player">5</span>&nbsp;Players
+            </span>
+        </div>
 
-    <div class="z-20 border-[3px] border-dashed rounded-full m-1 h-fit px-4 py-2 hidden PlayerBoxPt">
+        <div class="z-20 border-[3px] border-dashed rounded-full m-1 h-fit px-4 py-2 hidden PlayerBoxPt">
         <div class="relative inline-flex items-center w-full whitespace-nowrap">
             <div class="flex items-center gap-2">
                 <i class='bx bxs-user text-2xl text-white' ></i>
@@ -168,13 +169,8 @@
                         for(let i=0; i<data.players.length; i++) {
                             var PlayerBox = $('.PlayerBoxPt').clone();
                             PlayerBox.removeClass("hidden PlayerBoxPt");
-                            PlayerBox.find('.player_id').val(data.players[i].id);
+                            PlayerBox.find('.player_id').val(data.players[i].player_id);
                             PlayerBox.find('.player_name').text(data.players[i].name_ingame);
-
-                            if(data.players[i].name_ingame === creatorName) {
-                                PlayerBox.find('.span-status-color').addClass('hidden');
-                                PlayerBox.find('.span-creator').removeClass('hidden');
-                            }
 
                             if(data.players[i].status === 0) {
                                 PlayerBox.find('.span-status-color').addClass('bg-[#FD0000]');
@@ -186,29 +182,41 @@
                                 PlayerBox.find('.span-status-color').removeClass('span-status-color w-[20px] h-[20px]')
                                                                     .addClass('text-indigo-900 bg-indigo-300 px-2')
                                                                     .text('Creator');
+                            } else if(data.players[i].name_ingame === sessionName) {
+                                if(data.players[i].status === 0) {
+                                    PlayerBox.find('.span-status-color').removeClass('w-[20px] h-[20px]')
+                                                                        .addClass('bg-[#FD0000] text-white px-2')
+                                                                        .text('YOU');
+                                    $('#player_id').val(data.players[i].player_id);
+                                    $('#player_status').val(0);
+                                    $('#btn-status').text('READY').removeClass('bg-[#ff5757] hover:bg-[#fd0000]')
+                                                                    .addClass('bg-[#E69FBC] hover:bg-[#d1638a]');
+                                } else {
+                                    PlayerBox.find('.span-status-color').removeClass('w-[20px] h-[20px]')
+                                                                        .addClass('bg-[#50D255] text-white px-2')
+                                                                        .text('YOU');
+                                    $('#player_id').val(data.players[i].player_id);
+                                    $('#player_status').val(1);
+                                    $('#btn-status').text('NOT READY').removeClass('bg-[#E69FBC] hover:bg-[#d1638a]')
+                                                                        .addClass('bg-[#ff5757] hover:bg-[#fd0000]');
+
+                                }
+                            } else {
+                                if(data.players[i].status === 0) {
+                                    PlayerBox.find('.span-status-color').addClass('bg-[#FD0000] text-white px-2');
+                                    $('#player_id').val(data.players[i].player_id);
+                                    $('#player_status').val(0);
+                                    $('#btn-status').text('READY').removeClass('bg-[#ff5757] hover:bg-[#fd0000]')
+                                                                    .addClass('bg-[#E69FBC] hover:bg-[#d1638a]');
+                                } else {
+                                    PlayerBox.find('.span-status-color').addClass('bg-[#50D255] text-indigo-900 px-2'); 
+                                    $('#player_id').val(data.players[i].player_id);      
+                                    $('#player_status').val(1);
+                                    $('#btn-status').text('NOT READY').removeClass('bg-[#E69FBC] hover:bg-[#d1638a]')
+                                                                        .addClass('bg-[#ff5757] hover:bg-[#fd0000]');
+                                }
                             }
                             
-
-                            if(data.players[i].status === 0) {
-                                PlayerBox.find('.span-status-color').addClass('bg-[#FD0000] text-white px-2');
-                                $('#player_id').val(data.players[i].id);
-                                $('#player_status').val(0);
-                                $('#btn-status').text('READY').removeClass('bg-[#ff5757] hover:bg-[#fd0000]')
-                                                                .addClass('bg-[#E69FBC] hover:bg-[#d1638a]');
-                            } else {
-                                PlayerBox.find('.span-status-color').removeClass('w-[20px] h-[20px]')
-                                                                    .addClass('bg-[#50D255] text-indigo-900 px-2'); 
-                                $('#player_id').val(data.players[i].id);      
-                                $('#player_status').val(1);
-                                $('#btn-status').text('NOT READY').removeClass('bg-[#E69FBC] hover:bg-[#d1638a]')
-                                                                    .addClass('bg-[#ff5757] hover:bg-[#fd0000]');
-                            }
-
-                            if(data.players[i].name_ingame === sessionName) {
-                                PlayerBox.find('.span-status-color').removeClass('w-[20px] h-[20px]')
-                                                                    .addClass('bg-[#FD0000] text-white px-2')
-                                                                    .text('YOU');
-                            }
 
                             $("#grid-players").append(PlayerBox);
                         }
@@ -225,7 +233,6 @@
         var isLoading = false;
 
         function ChangeStatus(){
-            console.log('status: ' + document.getElementById("player_status").value);
             if(!isLoading) {
                 isLoading = true;
                 fetch("{{ Route('ChangeStatus') }}", {
@@ -250,7 +257,7 @@
                         Swal.fire({
                             position: 'center',
                             icon: 'error',
-                            title: 'เปลี่ยนสถานะไม่สำเร็จ!',
+                            title: 'Can not change status!',
                             html: `${data.status}`,
                             confirmButtonText: 'ตกลง'
                         });
@@ -268,9 +275,9 @@
             }
         }
 
-        window.addEventListener('beforeunload', function (event) {
-            RoomDisconnect();
-        });
+        // window.addEventListener('beforeunload', function (event) {
+        //     RoomDisconnect();
+        // });
 
         function RoomDisconnect(){
             fetch("{{ Route('RoomDisconnect') }}", {
