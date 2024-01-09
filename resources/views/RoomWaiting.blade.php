@@ -152,7 +152,7 @@
                     console.log('data:', data);
 
                     if(data.room.status === 1) {
-                        window.location.href = "{{ Route('RoomRound', ['invite_code' => '']) }}" + data.room.invite_code;
+                        window.location.href = "{{ Route('RoomPlay', ['invite_code' => '']) }}" + data.room.invite_code;
                     }
                     
                     $('#grid-players').empty();
@@ -177,7 +177,7 @@
                             } else {
                                 PlayerBox.find('.span-status-color').addClass('bg-[#50D255]');
                             }
-
+                            
                             if(data.players[i].username === creatorName) {
                                 PlayerBox.find('.span-status-color').removeClass('span-status-color w-[20px] h-[20px]')
                                                                     .addClass('text-indigo-900 bg-indigo-300 px-2')
@@ -341,8 +341,7 @@
                     return Promise.reject(error);
                 }
 
-                // window.location.href = "{{ Route('RoomRound') }}";
-                window.location.href = "{{ Route('RoomRound', ['invite_code' => '']) }}" + data.invite_code;
+                window.location.href = "{{ Route('RoomPlay', ['invite_code' => '']) }}" + data.invite_code;
                 
             }).catch((er) => {
                 console.log('Error: ' + er);

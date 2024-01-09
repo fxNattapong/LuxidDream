@@ -232,7 +232,6 @@ class GameController extends Controller
         Rooms::where('id', $room_id)
                 ->update([
                     'status' => 1,
-                    'round_time' => now()->addMinutes(5)->toDateTimeString(),
                     'updated_at' => now()
                 ]);
         
@@ -243,8 +242,8 @@ class GameController extends Controller
             'invite_code' => $room->invite_code
         ], 200);
     }
-
-    public function RoomRound(Request  $request) {
+    
+    public function RoomPlay(Request  $request) {
         $invite_code = ($request->has('invite_code')) ? trim($request->input('invite_code')) : null;
 
         $room = Rooms::where('invite_code', $invite_code)->first();
@@ -258,7 +257,7 @@ class GameController extends Controller
                                     ->latest()
                                     ->first();
                                     
-        return view('RoomRound', compact('room', 'players', 'room_card'));
+        return view('RoomPlay', compact('room', 'players', 'room_card'));
     }
 
     public function StartTimer(Request $request) {
@@ -275,7 +274,7 @@ class GameController extends Controller
     
         return response()->json([
             'status' => 'success', 
-            'invite_code' => $room->invite_code
+            'round_time' => $room->round_time
         ], 200);
     }
 

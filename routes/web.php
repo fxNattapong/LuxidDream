@@ -32,7 +32,9 @@ Route::prefix('room')->group(function () {
 
     Route::post('/start', "GameController@StartGame")->Name('StartGame');
 
-    Route::get('/round', "GameController@RoomRound")->Name('RoomRound');
+    Route::get('/start', "GameController@RoomPlay")->Name('RoomPlay');
+
+    Route::post('/start/timer', "GameController@StartTimer")->Name('StartTimer');
 
     Route::post('/poll/cards', "GameController@pollCards")->Name('pollCards');
 

@@ -64,9 +64,8 @@
                         Swal.fire({
                             position: 'center',
                             icon: 'error',
-                            title: 'เข้าห้องไม่สำเร็จ!',
+                            title: 'Failed to join room!',
                             html: `${data.status}`,
-                            confirmButtonText: 'ตกลง'
                         });
             
                         const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";

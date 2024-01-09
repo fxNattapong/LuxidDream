@@ -70,7 +70,7 @@
                         @endif
                     </li>
                 </ul>
-                <!-- END RIGHT BAR -->
+                <!-- END LIST MENU -->
             </div>
             <!-- END HEADER -->
 
@@ -317,9 +317,8 @@
                         Swal.fire({
                             position: 'center',
                             icon: 'error',
-                            title: 'สมัครสมาชิกไม่สำเร็จ!',
+                            title: 'Registration failed!',
                             html: `${data.status}`,
-                            confirmButtonText: 'ตกลง'
                         });
             
                         const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
@@ -329,8 +328,7 @@
                     Swal.fire({
                             position: 'center',
                             icon: 'success',
-                            title: 'สมัครสมาชิกสำเร็จ',
-                            confirmButtonText: 'ตกลง',
+                            title: 'Registration successfully',
                             timer: 1000,
                             timerProgressBar: true
                     }).then((result) => {
@@ -372,9 +370,8 @@
                         Swal.fire({
                             position: 'center',
                             icon: 'error',
-                            title: 'เข้าสู่ระบบไม่สำเร็จ!',
+                            title: 'Login failed!',
                             html: `${data.status}`,
-                            confirmButtonText: 'ตกลง'
                         });
             
                         const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
@@ -384,8 +381,7 @@
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'เข้าสู่ระบบสำเร็จ',
-                        confirmButtonText: 'ตกลง',
+                        title: 'Login successfully',
                         timer: 1500,
                         timerProgressBar: true
                     }).then((result) => {
