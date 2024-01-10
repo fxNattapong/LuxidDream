@@ -97,6 +97,11 @@ class GameController extends Controller
         $username = ($request->has('username')) ? trim($request->input('username')) : null;
         $name_ingame = ($request->has('name_ingame')) ? trim($request->input('name_ingame')) : null;
         $level = ($request->has('level')) ? trim($request->input('level')) : null;
+
+        if(!$username) {
+            $status = 'Please login.';
+            return response()->json(['status' => $status], 401);
+        }
         
         if ($username && $name_ingame) {
             $InsertRoom = new Rooms;
@@ -280,6 +285,8 @@ class GameController extends Controller
 
     public function PollCards(Request $request) {
         $room_id = $request->input('room_id');
+
+        $room = Rooms::where('id', $room_id)->first();
         
         $rooms_card = Rooms_Cards::leftJoin('cards', 'rooms_cards.card_code', '=', 'cards.card_code')
                                     ->select('rooms_cards.*', 'cards.card_name as card_name', 'cards.details as details',
@@ -290,6 +297,7 @@ class GameController extends Controller
     
         return response()->json([
             'status' => 'success', 
+            'room' => $room,
             'rooms_card' => $rooms_card
         ], 200);
     }

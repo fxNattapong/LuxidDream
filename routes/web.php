@@ -21,10 +21,10 @@ Route::get('/logout', "GameController@Logout")->Name('Logout');
 Route::prefix('room')->group(function () {
     Route::post('/create', "GameController@RoomCreate")->Name('RoomCreate');
 
-    Route::get('/join', "GameController@RoomJoin")->Name('RoomJoin');
+    Route::get('/join', "GameController@RoomJoin")->Name('RoomJoin')->middleware('redirectIfAuth');
     Route::post('/joining', "GameController@RoomJoining")->Name('RoomJoining');
 
-    Route::get('/waiting', "GameController@RoomWaiting")->Name('RoomWaiting');
+    Route::get('/waiting', "GameController@RoomWaiting")->Name('RoomWaiting')->middleware('redirectIfAuth');
     Route::post('/poll/players', "GameController@pollPlayers")->Name('pollPlayers');
 
     Route::post('/change/status', "GameController@ChangeStatus")->Name('ChangeStatus');
@@ -32,7 +32,7 @@ Route::prefix('room')->group(function () {
 
     Route::post('/start', "GameController@StartGame")->Name('StartGame');
 
-    Route::get('/start', "GameController@RoomPlay")->Name('RoomPlay');
+    Route::get('/start', "GameController@RoomPlay")->Name('RoomPlay')->middleware('redirectIfAuth');
 
     Route::post('/start/timer', "GameController@StartTimer")->Name('StartTimer');
 

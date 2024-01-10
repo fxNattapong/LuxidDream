@@ -220,6 +220,10 @@
 
                 console.log('data:', data);
 
+                if(data.room.round_time)  {
+                    Timeout = new Date(data.room.round_time).getTime();
+                }
+                
                 if(data.rooms_card) {
                     $('#grid-cards').empty();
 
