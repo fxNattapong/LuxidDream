@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/home', "WebpagesController@HomePage")->Name('HomePage');
+Route::get('/about', "WebpagesController@AboutPage")->Name('AboutPage');
+
 Route::get('/', "GameController@Home")->Name('Home');
 Route::post('/register/process', "GameController@RegisterProcess")->Name('RegisterProcess');
 Route::post('/login/process', "GameController@LoginProcess")->Name('LoginProcess');
