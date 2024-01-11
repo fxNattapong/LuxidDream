@@ -16,9 +16,7 @@ use App\Events\RoomUpdated;
 class GameController extends Controller
 {
     public function Home() {
-        $data = 'Home Page';
-
-        return view('Home', compact('data'));
+        return view('game/contents/Home', compact('data'));
     }
 
     public function RegisterProcess(Request $request) {
@@ -134,8 +132,7 @@ class GameController extends Controller
     }
 
     public function RoomJoin() {
-
-        return view('RoomJoin', compact('data'));
+        return view('game/contents/RoomJoin', compact('data'));
     }
 
     public function RoomJoining(Request $request) {
@@ -176,7 +173,7 @@ class GameController extends Controller
                                 ->where('room_id', $room->id)
                                 ->get();
         
-        return view('RoomWaiting', compact('room', 'players'));
+        return view('game/contents/RoomWaiting', compact('room', 'players'));
     }
 
     public function PollPlayers(Request $request) {
@@ -262,7 +259,7 @@ class GameController extends Controller
                                     ->latest()
                                     ->first();
                                     
-        return view('RoomPlay', compact('room', 'players', 'room_card'));
+        return view('game/contents/RoomPlay', compact('room', 'players', 'room_card'));
     }
 
     public function StartTimer(Request $request) {

@@ -1,4 +1,4 @@
-<link href="{{ asset('css/navbar.css') }}" rel="stylesheet">
+<link href="{{ asset('css/webpages/navbar.css') }}" rel="stylesheet">
 
 <div class="container-fruid1" style="background-color: #6d5092">
     <div class="navbar font-medium">
@@ -8,10 +8,13 @@
                 <a href="{{ Route('HomePage') }}">Home</a>
             </li>
             <li>
-                <a href="rulepage">Rule</a>
+                <a href="{{ Route('RulePage') }}">Rule</a>
             </li>
             <li>
                 <a href="{{ Route('AboutPage') }}">About</a>
+            </li>
+            <li>
+                <a href="{{ Route('Home') }}">Game</a>
             </li>
         </ul>
         <div class="d-flex ms-auto">

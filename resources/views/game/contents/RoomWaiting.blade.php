@@ -1,12 +1,12 @@
 <title>Room Waiting</title>
 
-@extends('components/Header')
+@extends('game.layouts.Layout')
 
 @section('Content')
 
     <div class="flex-col flex items-center justify-center mt-[5em]">
         <!-- START LOGO -->
-        <div class="z-50 w-[300px] max-sm:w-[250px] absolute">
+        <div class="z-50 w-[275px] max-sm:w-[250px] absolute">
             <img src="{{ URL('assets/logo.png') }}" alt="">
         </div>
         <!-- END LOGO -->

@@ -13,5 +13,20 @@ class WebpagesController extends Controller
     public function AboutPage() {
         return view('webpages/contents/AboutPage');
     }
-    
+
+    public function AccountPage() {
+        return view('webpages/contents/AccountPage');
+    }
+
+    public function LoginPage() {
+        return view('webpages/contents/LoginPage');
+    }
+
+    public function RegisterPage() {
+        return view('webpages/contents/RegisterPage');
+    }
+
+    public function RulePage() {
+        return view('webpages/contents/RulePage');
+    }
 }

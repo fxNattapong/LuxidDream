@@ -1,17 +1,18 @@
 <title>Join Room</title>
 
-@extends('components/Header')
+@extends('game.layouts.Layout')
 
 @section('Content')
 
     <!-- START BUTTON -->
     <li class="flex-col flex items-center justify-center">
         <!-- START LOGO -->
-        <div class="z-50 w-[300px] max-sm:w-[250px]">
+        <div class="z-50 w-[275px] max-sm:w-[250px]">
             <img src="{{ URL('assets/logo.png') }}" alt="" class="w-full">
         </div>
         <!-- END LOGO -->
 
+        <!-- START FORM -->
         <div class="z-50 relative flex-col flex items-center justify-center w-[350px] border border-gray-300 p-4 rounded-3xl space-y-[1em] overflow-hidden">
             <div class="z-10 w-full h-full absolute top-0 left-0 bg-[#4A4098] opacity-50"></div>
 
@@ -27,10 +28,13 @@
                 <button onclick="RoomJoining()" class="bg-[#EE609A] rounded-full py-1 w-full border border-white text-white hover:bg-[#d62c65] duration-300">JOIN</button>
             </div>
         </div>
+        <!-- END FORM -->
     </li>
     <!-- END BUTTON -->
 
+@endsection
 
+@section('script')
     <script>
         const sessionPlayerID = '<?php echo Session::get('player_id') ?>';
         const sessionUsername = '<?php echo Session::get('username') ?>';
@@ -83,5 +87,4 @@
             }
         }
     </script>
-
 @endsection

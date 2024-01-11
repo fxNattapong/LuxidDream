@@ -1,13 +1,13 @@
 <title>Home</title>
 
-@extends('components/Header')
+@extends('game.layouts.Layout')
 
 @section('Content')
 
     <!-- START BUTTON -->
     <li class="flex-col flex items-center justify-center">
         <!-- START LOGO -->
-        <div class="z-50 w-[300px] max-sm:w-[250px]">
+        <div class="z-50 w-[275px] max-sm:w-[250px]">
             <img src="{{ URL('assets/logo.png') }}" alt="">
         </div>
         <!-- END LOGO -->

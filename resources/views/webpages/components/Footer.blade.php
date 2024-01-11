@@ -1,7 +1,7 @@
-<link href="{{ asset('css/footer.css') }}" rel="stylesheet">
+<link href="{{ asset('css/webpages/footer.css') }}" rel="stylesheet">
 
 <footer class="footer">
-  <div class="container py-4 mx-auto">
+  <div class="py-4 mx-auto">
     <div class="row grid grid-cols-3">
       <div class="col-md-4">
         <h4 class="topic_footer text-center text-white">About</h4>
@@ -18,11 +18,11 @@
       <div class="col-md-4">
         <h4 class="topic_footer text-center text-white">Other</h4>
         <ul class="mt-[1em] w-fit mx-auto text-gray-400">
-          <li><a href="#">Home</a></li>
-          <li><a href="#">Rules</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Login</a></li>
-          <li><a href="#">Register</a></li>
+          <li><a href="{{ Route('HomePage') }}">Home</a></li>
+          <li><a href="{{ Route('RulePage') }}">Rules</a></li>
+          <li><a href="{{ Route('AboutPage') }}">About</a></li>
+          <li><a href="{{ Route('LoginPage') }}">Login</a></li>
+          <li><a href="{{ Route('RegisterPage') }}">Register</a></li>
         </ul>
       </div>
     </div>

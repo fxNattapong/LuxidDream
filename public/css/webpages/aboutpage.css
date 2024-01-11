@@ -47,6 +47,7 @@
   font-size: 24px;
   margin: 0;
   line-height: 1.5; /* ระยะห่างระหว่างบรรทัด */
+  font-weight: lighter;
 }
 
 .look {

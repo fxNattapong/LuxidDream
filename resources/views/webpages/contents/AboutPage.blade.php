@@ -1,19 +1,20 @@
 @extends('webpages.layouts.Layout')
 
 @section('Content')
-  <link href="{{ asset('css/aboutpage.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/webpages/aboutpage.css') }}" rel="stylesheet">
 
   <div class="*banner">
     <div class="story">
+      
       <div class="">
-        <div class="d-flex">
-          <div class="col-4 text-center my-5">
+        <div class="grid grid-cols-3 py-5 flex">
+          <div class="m-auto">
             <img src="../../../assets/images/29.jpg" alt="" />
           </div>
-          <div class="col-4 text-center my-5">
+          <div class="m-auto">
             <img src="../../../assets/images/39.jpg" alt="" />
           </div>
-          <div class="col-4 text-center my-5">
+          <div class="m-auto">
             <img src="../../../assets/images/43.jpg" alt="" />
           </div>
         </div>
@@ -31,10 +32,11 @@
           และสามารถปรับตัวและดำเนินชีวิตต่อไปได้
         </p>
       </div>
+
       <!-- look listen link -->
       <!-- look -->
-      <div class="d-flex">
-        <div class="col-6 mt-3">
+      <div class="grid grid-cols-2">
+        <div class="mt-3">
           <p class="paragraph">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Look หมายถึง การประเมินสถานการณ์
             ความปลอดภัยเป็นสิ่งสำคัญ
@@ -45,16 +47,17 @@
             • ประเมินความต้องการและความต้องการความช่วยเหลือของผู้ประสบปัญหา
           </p>
         </div>
-        <div class="col-6 text-center my-auto">
+        <div class="m-auto">
           <img src="../../../assets/images/skill-02.png" alt="" />
         </div>
       </div>
+
       <!-- listen -->
-      <div class="d-flex">
-        <div class="col-6 text-center my-auto">
+      <div class="grid grid-cols-2">
+        <div class="m-auto">
           <img src="../../../assets/images/skill-16.png" alt="" />
         </div>
-        <div class="col-6 mt-3">
+        <div class="mt-3">
           <p class="paragraph">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Listen หมายถึง การฟังอย่างตั้งใจ
             โดยไม่ตัดสินหรือวิพากษ์วิจารณ์
@@ -65,9 +68,10 @@
           </p>
         </div>
       </div>
+
       <!-- link -->
-      <div class="d-flex">
-        <div class="col-6 mt-3">
+      <div class="grid grid-cols-2">
+        <div class="mt-3">
           <p class="paragraph">
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Link หมายถึง
             การเชื่อมโยงผู้ประสบปัญหากับแหล่งความช่วยเหลือเพิ่มเติม เช่น
@@ -76,48 +80,50 @@
             • แนะนำให้พบแพทย์หรือผู้เชี่ยวชาญ
           </p>
         </div>
-        <div class="col-6 text-center my-auto">
+        <div class="m-auto">
           <img src="../../../assets/images/skill-24.png" alt="" />
         </div>
       </div>
+
       <div class="">
         <!-- สาเหตุสุขภาพจิตใจ -->
         <div class="header text-center">
-          <p class="paragraph">สาเหตุที่ทำให้เกิดปัญหาทางสุขภาพจิตใจ</p>
+          <p class="paragraph !font-medium">สาเหตุที่ทำให้เกิดปัญหาทางสุขภาพจิตใจ</p>
         </div>
-        <div class="d-flex mb-4">
-          <p class="paragraph col-6">
-            1.ปัจจัยด้านร่างกาย เช่น โรคทางกาย เช่น โรคสมอง โรคทางระบบประสาท
+        <div class="grid grid-cols-2 mb-4">
+          <p class="paragraph flex items-center">
+            1. ปัจจัยด้านร่างกาย เช่น โรคทางกาย เช่น โรคสมอง โรคทางระบบประสาท
             โรคทางฮอร์โมน พันธุกรรม เป็นต้น
           </p>
-          <div class="col-6 text-center my-auto">
+          <div class="m-auto">
             <img src="../../../assets/images/stuff-20.png" alt="" />
           </div>
         </div>
-        <div class="d-flex mb-4">
-          <p class="paragraph col-6">
-            2.ปัจจัยด้านจิตใจ เช่น ลักษณะบุคลิกภาพ การพัฒนาการทางอารมณ์และจิตใจ
+        <div class="grid grid-cols-2 mb-4">
+          <p class="paragraph flex items-center">
+            2. ปัจจัยด้านจิตใจ เช่น ลักษณะบุคลิกภาพ การพัฒนาการทางอารมณ์และจิตใจ
             เหตุการณ์กระทบกระเทือนจิตใจ เป็นต้น
           </p>
-          <div class="col-6 text-center my-auto">
+          <div class="m-auto">
             <img src="../../../assets/images/stuff-22.png" alt="" />
           </div>
         </div>
-        <div class="d-flex pb-4">
-          <p class="paragraph col-6">
-            3.ปัจจัยด้านสิ่งแวดล้อม เช่น สภาพสังคม วัฒนธรรม ครอบครัว เศรษฐกิจ
+        <div class="grid grid-cols-2 pb-4">
+          <p class="paragraph flex items-center">
+            3. ปัจจัยด้านสิ่งแวดล้อม เช่น สภาพสังคม วัฒนธรรม ครอบครัว เศรษฐกิจ
             เป็นต้น
           </p>
-          <div class="col-6 text-center my-auto">
+          <div class="m-auto">
             <img src="../../../assets/images/stuff-21.png" alt="" />
           </div>
         </div>
+
         <!-- ประโยชน์สุขภาพทางจิตใจ -->
         <div class="header text-center">
-          <p class="paragraph">ประโยชน์ของการปฐมพยาบาลทางใจ</p>
+          <p class="paragraph !font-medium">ประโยชน์ของการปฐมพยาบาลทางใจ</p>
         </div>
-        <div class="d-flex mb-4">
-          <p class="paragraph col-12">
+        <div class="flex justify-center mb-4">
+          <p class="paragraph w-fit">
             • ช่วยลดความเครียดและบรรเทาอาการทางอารมณ์ เช่น ความรู้สึกเศร้า
             วิตกกังวล กลัว หรือหวาดระแวง<br />
             • ช่วยให้ผู้ประสบปัญหารู้สึกปลอดภัยและได้รับการปลอบโยน<br />
@@ -125,10 +131,10 @@
           </p>
         </div>
         <div class="header text-center">
-          <p class="paragraph">การปฐมพยาบาลทางใจสามารถช่วยได้ในกรณีต่อไปนี้</p>
+          <p class="paragraph !font-medium">การปฐมพยาบาลทางใจสามารถช่วยได้ในกรณีต่อไปนี้</p>
         </div>
-        <div class="d-flex pb-4">
-          <p class="paragraph col-12">
+        <div class="flex justify-center pb-4">
+          <p class="paragraph w-fit">
             • ภาวะวิกฤต เช่น ประสบอุบัติเหตุ ภัยธรรมชาติ หรือเหตุการณ์รุนแรง<br />
             • ปัญหาชีวิต เช่น ปัญหาด้านการเงิน ความสัมพันธ์ การทำงาน<br />
             • โรคทางจิตเวช เช่น โรคซึมเศร้า โรควิตกกังวล
@@ -142,11 +148,12 @@
             เพียงแค่เรียนรู้หลักการง่ายๆ และฝึกฝนเป็นประจำ
             ก็จะสามารถช่วยเหลือผู้ที่ประสบปัญหาทางจิตใจได้อย่างเหมาะสมและมีประสิทธิภาพ
           </p>
-          <div class="text-center">
+          <div class="w-fit mx-auto">
             <img src="../../../assets/images/skill-09.png" alt="" />
           </div>
         </div>
       </div>
+
     </div>
   </div>
 

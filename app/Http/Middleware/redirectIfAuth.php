@@ -11,7 +11,7 @@ class redirectIfAuth
 {
     public function handle(Request $request, Closure $next): Response {
         if(!$request->session()->get('username')) {
-            return redirect('/');
+            return redirect('/game');
         }
         return $next($request);
     }
