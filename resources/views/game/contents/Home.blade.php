@@ -69,6 +69,10 @@
 
 @section('script')
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $('#loading').addClass('hidden');
+        });
+
         $(document).ready(function() {
             // MODAL ROOM CREATE
             $('#btn-room-create').on('click', function() {

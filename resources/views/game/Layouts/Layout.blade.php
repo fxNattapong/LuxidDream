@@ -14,6 +14,8 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
+        
+        @include('game.components.Loading')
 
         <div class="z-10 relative min-h-screen">
             @include('game.components.Navbar')

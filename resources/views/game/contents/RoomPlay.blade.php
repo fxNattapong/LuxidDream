@@ -192,6 +192,8 @@
         }, 1000);
 
         document.addEventListener('DOMContentLoaded', function () {
+            $('#loading').addClass('hidden');
+            
             pollCards();
         });
         function pollCards(element){

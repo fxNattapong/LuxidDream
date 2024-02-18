@@ -47,7 +47,7 @@ class GameController extends Controller
             $InsertPlayer->save();
 
             $InsertStats = new Players_Stats;
-            $InsertStats->player_Id = $InsertPlayer->id;
+            $InsertStats->player_id = $InsertPlayer->id;
             $InsertStats->save();
         }
 
@@ -58,7 +58,7 @@ class GameController extends Controller
         $username = ($request->has('username')) ? trim($request->input('username')) : null;
         $password = ($request->has('password')) ? trim($request->input('password')) : null;
         
-        $isPlayer = Players::where('username', '=', $username)->where('password', '=', $password)->first();
+        $isPlayer = Players::where('username', $username)->where('password', $password)->first();
         if($isPlayer) {
             $result = [
                 'isOk' => true, 
@@ -67,7 +67,7 @@ class GameController extends Controller
             $statusCode = 200;
 
             session::put('authen', true);
-            session::put('player_id', $isPlayer->id);
+            session::put('player_id', $isPlayer->player_id);
             session::put('username', $username);
 
             if($isPlayer->image) {
@@ -89,6 +89,8 @@ class GameController extends Controller
         session::save();
         return redirect()->back();
     }
+
+
 
     public function RoomCreate(Request $request) {
         $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
@@ -131,6 +133,8 @@ class GameController extends Controller
         }
     }
 
+
+
     public function RoomJoin() {
         return view('game/contents/RoomJoin', compact('data'));
     }
@@ -145,7 +149,7 @@ class GameController extends Controller
         if($isRoom) {
             $InsertPlayer = new Rooms_Players;
             $InsertPlayer->player_id = $player_id;
-            $InsertPlayer->room_id = $isRoom->id;
+            $InsertPlayer->room_id = $isRoom->room_id;
             $InsertPlayer->name_ingame = $name_ingame;
             $InsertPlayer->save();
 
@@ -163,39 +167,45 @@ class GameController extends Controller
         }
     }
 
+
+
     public function RoomWaiting(Request $request) {
         $invite_code = ($request->has('invite_code')) ? trim($request->input('invite_code')) : null;
         
         $room = Rooms::where('invite_code', $invite_code)->first();
 
-        $players = Rooms_Players::leftJoin('players', 'rooms_players.player_id', '=', 'players.id')
-                                ->select('rooms_players.*', 'players.id as player_id', 'players.username as username')
-                                ->where('room_id', $room->id)
+        $players = Rooms_Players::leftJoin('players', 'rooms_players.player_id', '=', 'players.player_id')
+                                ->select('rooms_players.*', 'players.player_id as player_id', 'players.username as username')
+                                ->where('room_id', $room->room_id)
                                 ->get();
         
         return view('game/contents/RoomWaiting', compact('room', 'players'));
     }
 
     public function PollPlayers(Request $request) {
-        $room_id = $request->input('room_id');
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
+        $room = Rooms::where('room_id', $room_id)->first();
         
-        $room = Rooms::where('id', $room_id)->first();
-    
         if (!$room) {
             return response()->json(['status' => 'Room not found', 400]);
         }
-    
-        $players = Rooms_Players::leftJoin('players', 'rooms_players.player_id', '=', 'players.id')
-                                ->select('rooms_players.*', 'players.id as player_id', 'players.username as username')
-                                ->where('room_id', $room->id)
+
+        $players = Rooms_Players::leftJoin('players', 'rooms_players.player_id', '=', 'players.player_id')
+                                ->select('rooms_players.*', 'players.player_id as player_id', 'players.username as username')
+                                ->where('room_id', $room->room_id)
                                 ->get();
-    
-        return response()->json(['status' => 'success', 'room' => $room, 'players' => $players]);
+        
+        return response()->json([
+            'status' => 'success', 
+            'room' => $room, 
+            'players' => $players
+        ], 200);
     }
 
     public function ChangeStatus(Request $request) {
-        $player_id = $request->input('player_id');
-        $status = $request->input('status');
+        $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
+        $status = ($request->has('status')) ? trim($request->input('status')) : null;
+
         if($status == 0) {
             $status = 1;
         } else {
@@ -212,9 +222,9 @@ class GameController extends Controller
     }
 
     public function RoomDisconnect(Request $request) {
-        $player_id = $request->input('player_id');
+        $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
         
-        Players::where('id', $player_id)
+        Players::where('player_id', $player_id)
                 ->update([
                     'status' => 3,
                     'updated_at' => now()
@@ -230,14 +240,14 @@ class GameController extends Controller
         if($isReady) {
             return response()->json(['status' => 'Some players are not ready yet.'], 401);
         }
-
-        Rooms::where('id', $room_id)
+        
+        Rooms::where('room_id', $room_id)
                 ->update([
                     'status' => 1,
                     'updated_at' => now()
                 ]);
         
-        $room = Rooms::where('id', $room_id)->first();
+        $room = Rooms::where('room_id', $room_id)->first();
     
         return response()->json([
             'status' => 'success', 
@@ -252,27 +262,27 @@ class GameController extends Controller
         
         $players = Rooms_Players::where('room_id', $room->id)->get();
 
-        $room_card = Rooms_Cards::leftJoin('cards', 'rooms_cards.card_code', '=', 'cards.card_code')
+        $room_cards = Rooms_Cards::leftJoin('cards', 'rooms_cards.card_code', '=', 'cards.card_code')
                                     ->select('rooms_cards.*', 'cards.card_name as card_name', 'cards.details as details',
                                             'cards.image as image')
                                     ->where('room_id', $room->id)
                                     ->latest()
                                     ->first();
                                     
-        return view('game/contents/RoomPlay', compact('room', 'players', 'room_card'));
+        return view('game/contents/RoomPlay', compact('room', 'players', 'room_cards'));
     }
 
     public function StartTimer(Request $request) {
         $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
 
-        Rooms::where('id', $room_id)
+        Rooms::where('room_id', $room_id)
                 ->update([
                     'status' => 1,
                     'round_time' => now()->addMinutes(5)->toDateTimeString(),
                     'updated_at' => now()
                 ]);
         
-        $room = Rooms::where('id', $room_id)->first();
+        $room = Rooms::where('room_id', $room_id)->first();
     
         return response()->json([
             'status' => 'success', 
@@ -281,11 +291,11 @@ class GameController extends Controller
     }
 
     public function PollCards(Request $request) {
-        $room_id = $request->input('room_id');
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
 
-        $room = Rooms::where('id', $room_id)->first();
+        $room = Rooms::where('room_id', $room_id)->first();
         
-        $rooms_card = Rooms_Cards::leftJoin('cards', 'rooms_cards.card_code', '=', 'cards.card_code')
+        $room_cards = Rooms_Cards::leftJoin('cards', 'rooms_cards.card_code', '=', 'cards.card_code')
                                     ->select('rooms_cards.*', 'cards.card_name as card_name', 'cards.details as details',
                                             'cards.image as image')
                                     ->where('room_id', $room_id)
@@ -295,7 +305,7 @@ class GameController extends Controller
         return response()->json([
             'status' => 'success', 
             'room' => $room,
-            'rooms_card' => $rooms_card
+            'room_cards' => $rooms_cards
         ], 200);
     }
 

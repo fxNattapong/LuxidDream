@@ -39,6 +39,10 @@
         const sessionPlayerID = '<?php echo Session::get('player_id') ?>';
         const sessionUsername = '<?php echo Session::get('username') ?>';
 
+        document.addEventListener('DOMContentLoaded', function () {
+            $('#loading').addClass('hidden');
+        });
+
         var isLoading = false;
 
         function RoomJoining(){

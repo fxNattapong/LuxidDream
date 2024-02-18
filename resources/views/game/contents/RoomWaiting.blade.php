@@ -3,7 +3,6 @@
 @extends('game.layouts.Layout')
 
 @section('Content')
-
     <div class="flex-col flex items-center justify-center mt-[5em]">
         <!-- START LOGO -->
         <div class="z-50 w-[275px] max-sm:w-[250px] absolute">
@@ -104,7 +103,7 @@
         const creatorName = '<?php echo $room->creator_name ?>';
 
         $(document).ready(function() {
-            const room_id = '<?php echo $room->id ; ?>';
+            const room_id = '<?php echo $room->room_id ; ?>';
             $('#room_id').val(room_id);
 
         });
@@ -119,13 +118,15 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            $('#loading').addClass('hidden');
+
             @if($players && !empty($players)) 
-                var room_id = <?php echo $room->id ?>;
+                var room_id = <?php echo $room->room_id ?>;
                 pollPlayers(room_id);
             @endif
         });
 
-        function pollPlayers(element){
+        function pollPlayers(room_id){
             setInterval(() => {
                 fetch("{{ Route('pollPlayers') }}", {
                     method: "POST",
@@ -136,7 +137,7 @@
                     },
                     body:JSON.stringify(
                         {
-                            room_id: element
+                            room_id: room_id
                         }
                     )
                 })
@@ -235,6 +236,7 @@
         function ChangeStatus(){
             if(!isLoading) {
                 isLoading = true;
+                $('#loading').removeClass('hidden');
                 fetch("{{ Route('ChangeStatus') }}", {
                     method: "POST",
                     headers: {
@@ -271,6 +273,7 @@
                 })
                 .finally(() => {
                     isLoading = false;
+                    $('#loading').addClass('hidden');
                 });
             }
         }
@@ -280,75 +283,81 @@
         // });
 
         function RoomDisconnect(){
-            fetch("{{ Route('RoomDisconnect') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "X-CSRF-Token": '{{ csrf_token() }}'
-                },
-                body:JSON.stringify(
-                    {
-                        player_id: document.getElementById("player_id").value,
+            if(!isLoading) {
+                isLoading = true;
+                fetch("{{ Route('RoomDisconnect') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-Token": '{{ csrf_token() }}'
+                    },
+                    body:JSON.stringify(
+                        {
+                            player_id: document.getElementById("player_id").value,
+                        }
+                    )
+                })
+                .then(async response => {
+                    const isJson = response.headers.get('content-type')?.includes('application/json');
+                    const data = isJson ? await response.json() : null; 
+            
+                    if(!response.ok){
+                        const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                        return Promise.reject(error);
                     }
-                )
-            })
-            .then(async response => {
-                const isJson = response.headers.get('content-type')?.includes('application/json');
-                const data = isJson ? await response.json() : null; 
-        
-                if(!response.ok){
-                    const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
-                    return Promise.reject(error);
-                }
 
-            }).catch((er) => {
-                console.log('Error: ' + er);
-            })
-            .finally(() => {
-                isLoading = false;
-            });
+                }).catch((er) => {
+                    console.log('Error: ' + er);
+                })
+                .finally(() => {
+                    isLoading = false;
+                });
+            }
         }
 
         function StartGame(){
-            fetch("{{ Route('StartGame') }}", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "X-CSRF-Token": '{{ csrf_token() }}'
-                },
-                body:JSON.stringify(
-                    {
-                        room_id: document.getElementById("room_id").value,
+            if(!isLoading) {
+                isLoading = true;
+                fetch("{{ Route('StartGame') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-Token": '{{ csrf_token() }}'
+                    },
+                    body:JSON.stringify(
+                        {
+                            room_id: document.getElementById("room_id").value,
+                        }
+                    )
+                })
+                .then(async response => {
+                    const isJson = response.headers.get('content-type')?.includes('application/json');
+                    const data = isJson ? await response.json() : null; 
+            
+                    if(!response.ok){
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'Can not start game!',
+                            html: `${data.status}`,
+                            confirmButtonText: 'ตกลง'
+                        });
+            
+                        const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                        return Promise.reject(error);
                     }
-                )
-            })
-            .then(async response => {
-                const isJson = response.headers.get('content-type')?.includes('application/json');
-                const data = isJson ? await response.json() : null; 
-        
-                if(!response.ok){
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: 'Can not start game!',
-                        html: `${data.status}`,
-                        confirmButtonText: 'ตกลง'
-                    });
-        
-                    const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
-                    return Promise.reject(error);
-                }
 
-                window.location.href = "{{ Route('RoomPlay', ['invite_code' => '']) }}" + data.invite_code;
-                
-            }).catch((er) => {
-                console.log('Error: ' + er);
-            })
-            .finally(() => {
-                isLoading = false;
-            });
+                    window.location.href = "{{ Route('RoomPlay', ['invite_code' => '']) }}" + data.invite_code;
+                    
+                }).catch((er) => {
+                    console.log('Error: ' + er);
+                })
+                .finally(() => {
+                    isLoading = false;
+                });
+            }
         }
     </script>
 @endsection
