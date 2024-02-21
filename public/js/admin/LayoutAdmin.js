@@ -1,16 +1,18 @@
 if(currentRoute === currentRoute) {
     if(currentRoute === 'Members' || currentRoute === 'Admins') {
-        $('#' + currentRoute).removeClass('text-gray-500');
+        $('#' + currentRoute).removeClass('text-indigo-600');
         openMenuMembers();
     }
 
-    $('#' + currentRoute).addClass('text-blue-700 bg-[#E4E9F7]');
+    $('#' + currentRoute).addClass('text-indigo-600 bg-[#E4E9F7]');
 }
 
 $(document).ready(function() {
     $('#btn-menu-switch').on('click', function() {
         $('#sidebar').toggleClass('max-md:min-w-0 max-md:max-w-[60px]');
         $('#btn-menu-switch').toggleClass('rotate-180');
+        $('#img-logo').toggleClass('max-md:h-full');
+        $('#text-logo').toggleClass('max-md:hidden');
     });
 
     // MODAL EDIT
@@ -44,6 +46,23 @@ $(document).ready(function() {
             phoneLengthWarning.text('หมายเลขไม่ถูกต้อง')
             phoneLengthWarning.removeClass('hidden');
         }
+    });
+
+    // SWEETALERT LOGOUT
+    $('#btn-logout').on('click', function () {
+        Swal.fire({
+            title: `คุณต้องการออกจากระบบใช่หรือไม่`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ใช่, ตกลง',
+            cancelButtonText: 'ยกเลิก',
+            }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = $('#btn-logout').data('route');
+            }
+        })
     });
 });
 
@@ -108,8 +127,8 @@ function fileToDataUrl_Single(event, callback) {
 function fileHanddle_Single(src){
     $("#account_image").attr("src", src);
 
-    $("#member_image_add").attr("src", src);
-    $("#member_image_edit").attr("src", src);
+    $("#player_image_add").attr("src", src);
+    $("#player_image_edit").attr("src", src);
 
     $("#admin_image_add").attr("src", src);
     $("#admin_image_edit").attr("src", src);
@@ -145,12 +164,14 @@ function openMenuLogged() {
     var icon = $('#icon-settings');
 
     if (btnLogged.hasClass('text-gray-700')) {
-        btnLogged.removeClass('text-gray-700').addClass('text-blue-700');
+        btnLogged.removeClass('text-gray-700').addClass('text-indigo-600');
         popup.removeClass('hidden');
+        popup.addClass('h-full');
         icon.addClass('rotate-180');
     } else {
-        btnLogged.removeClass('text-blue-700').addClass('text-gray-700');
+        btnLogged.removeClass('text-indigo-600').addClass('text-gray-700');
         popup.addClass('hidden');
+        popup.removeClass('h-full');
         icon.removeClass('rotate-180');
     }
 }

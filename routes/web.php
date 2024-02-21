@@ -22,6 +22,11 @@ Route::get('/rule', "WebpagesController@RulePage")->Name('RulePage');
 
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', "AdminController@Dashboard")->Name('Dashboard');
+
+    Route::get('/players', "AdminController@Players")->Name('Players');
+    Route::post('/player/add', "AdminController@SubmitPlayerAdd")->Name('SubmitPlayerAdd');
+    Route::post('/player/edit', "AdminController@SubmitPlayerEdit")->Name('SubmitPlayerEdit');
+    Route::post('/player/delete', "AdminController@SubmitPlayerDelete")->Name('SubmitPlayerDelete');
 });
 
 Route::prefix('game')->group(function () {

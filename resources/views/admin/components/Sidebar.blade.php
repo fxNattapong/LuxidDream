@@ -1,8 +1,8 @@
 <!-- START SIDEBAR -->
 <nav id="sidebar" class="z-[100] relative sticky fixed top-0 left-0 min-w-[250px] max-w-[250px] max-md:min-w-0 max-md:max-w-[60px] bg-white min-h-[100vh] drop-shadow duration-300">
     <!-- START SWITCH -->
-    <div id="btn-menu-switch" class="z-50 hidden max-md:block absolute right-0 mr-[-9px] mt-[25px] flex items-center bg-white rounded-full duration-300">
-        <i class="fi fi-sr-angle-circle-right text-lg text-blue-500"></i>
+    <div id="btn-menu-switch" class="z-[100] hidden max-md:block absolute right-0 mr-[-9px] mt-[25px] flex items-center bg-[#8388d1] rounded-full duration-300">
+        <i class='bx bx-chevron-right text-xl text-white'></i>
     </div>
     <!-- END SWITCH -->
 
@@ -12,12 +12,12 @@
         </div>
 
         <!-- START HEADER -->
-        <div class="flex items-center justify-center gap-2 mt-5 overflow-hidden">
-            <div class="z-50 relative bg-white rounded-full w-auto max-md:min-w-[45px] h-[80px] max-md:h-full p-1 overflow-hidden">
-                <img src="{{ URL('/assets/mini-logo.png') }}" alt="logo" class="w-full h-full object-cover my-auto" alt="logo">
+        <div class="flex items-center justify-center gap-2 mt-5">
+            <div id="img-logo" class="z-50 relative bg-white rounded-full w-auto max-md:min-w-[45px] h-[80px] max-md:h-full p-1 overflow-hidden">
+                <img src="{{ URL('/assets/mini-logo.png') }}" alt="logo" class="w-full h-full object-cover my-auto">
             </div>
-            <div class="z-50 relative w-auto w-[100px] max-md:min-w-[45px] h-[80px] max-md:h-full p-1 overflow-hidden">
-                <img src="{{ URL('/assets/logo.png') }}" alt="logo" class="w-full h-full object-cover my-auto" alt="logo">
+            <div id="text-logo" class="z-50 relative w-auto w-[100px] h-[80px] p-1 overflow-hidden max-md:hidden">
+                <img src="{{ URL('/assets/logo.png') }}" alt="logo" class="w-full h-full object-cover my-auto">
             </div>
         </div>
         <!-- END HEADER -->
@@ -28,11 +28,17 @@
             <ul class="flex-col flex justify-between h-full ">
                 <!-- START MENU -->
                 <li class="grow overflow-hidden">
-                    <ul class="text-gray-700 space-y-2 whitespace-nowrap">
+                    <ul class="text-gray-200 space-y-2 whitespace-nowrap">
                         <li>
                             <a href="{{ Route('Dashboard') }}" id="Dashboard" class="flex items-center font-medium gap-2 w-full p-2 hover:text-blue-700 hover:bg-[#E4E9F7] duration-300 rounded">
                                 <i class='bx bxs-dashboard text-2xl'></i>
                                 <span>ภาพรวม</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ Route('Players') }}" id="Players" class="flex items-center font-medium gap-2 w-full p-2 hover:text-indigo-600 hover:bg-[#E4E9F7] duration-300 rounded">
+                                <i class='bx bxs-user-rectangle text-2xl'></i>
+                                <span>ผู้เล่น</span>
                             </a>
                         </li>
                     </ul>
@@ -40,31 +46,42 @@
                 <!-- END MENU -->
 
                 <!-- START SETTINGS -->
-                <li class="relative flex w-auto mt-auto mb-3 bottom-0">
-                    <a onClick="openMenuLogged()" id="btnLoggedMenu" class="flex w-[100%] px-2 hover:bg-[#E4E9F7] rounded duration-300 cursor-pointer overflow-hidden">
-                        <div class="flex items-center w-full text-gray-700 gap-2 py-1">
+                <li class="relative flex-col flex w-auto mt-auto mb-3 bottom-0">
+                    <a onClick="openMenuLogged()" id="btnLoggedMenu" class="relative flex w-[100%] px-2 hover:bg-[#E4E9F7] rounded duration-300 cursor-pointer overflow-hidden">
+                        <div class="z-20 flex items-center w-full text-gray-700 gap-2 py-1">
                             <div class="relative bg-white w-[40px] max-md:min-w-[30px] h-[40px] max-md:h-[30px] max-md:ml-[-3px] rounded-full p-1 overflow-hidden border">
                                 @if(Session::get('image'))
                                     <img src="{{ URL('/uploads/'.Session::get('image')) }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
                                 @else
-                                    <img src="{{ URL('/assets/'.'admin.png') }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
+                                    <img src="{{ URL('/assets/member.png') }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
                                 @endif
                             </div>
-                            <span id="btn-logged" class="text-lg overflow-x-hidden">{{ Session::get('firstname') }}</span>
-                            <i id="icon-settings" class="fi fi-rr-settings text-xl ml-auto mr-0 duration-300"></i>
+                            <span id="btn-logged" class="text-lg overflow-x-hidden">{{ Session::get('username') }}</span>
+                            <i id="icon-settings" class='bx bx-chevron-down text-2xl ml-auto mr-0 duration-300'></i>
                         </div>
+                        <div class="z-10 w-full h-full absolute top-0 left-0 bg-indigo-200 opacity-50 rounded"></div>
                     </a>
 
-                    <div id="menu-logged" class="z-[100] hidden absolute bg-black-300 rounded-md -right-[155px] max-md:-right-[141px] bottom-0 duration-800">
-                        <button href="#!" id="btn-account-edit" class="w-full h-12 flex items-center text-gray-700 bg-gray-100 rounded-r-3xl p-2 gap-1 hover:bg-gray-200 duration-300"
+                </li>
+
+                <li class="-mt-2 mb-3 ml-[20px] max-md:ml-0">
+                    <div id="menu-logged" class="z-[100] hidden space-y-1 text-white rounded-md duration-800 h-0 duration-300 overflow-hidden">
+                        <button id="btn-account-edit" class="relative w-full"
                         onClick="FetchAccountData(this)" data-route="" data-username="{{ Session::get('username') }}">
-                            <i class="fi fi-rr-user-pen text-2xl"></i>
-                            <span class="my-auto overflow-x-hidden">ข้อมูลของฉัน</span>
+                            <div class="flex items-center font-medium gap-2 w-full p-2 hover:text-indigo-600 hover:bg-indigo-100 duration-300 rounded">
+                                <i class='z-20 bx bxs-edit text-2xl' ></i>
+                                <span class="z-20 whitespace-nowrap">ข้อมูลของฉัน</span>
+                            </div>
+                            <div class="z-10 w-full h-full absolute top-0 left-0 bg-indigo-300 opacity-50 rounded"></div>
                         </button>
-                        <a href="{{ Route('Logout') }}" id="btn-logout" class="w-full h-12 flex items-center text-gray-700 bg-rose-200 rounded-r-3xl p-2 gap-1 hover:bg-rose-300 duration-300">
-                            <i class="fi fi-rr-sign-out-alt text-2xl"></i>
-                            <span class="my-auto overflow-x-hidden">ออกจากระบบ</span>
-                        </a>
+                        <button id="btn-logout" class="relative w-full"
+                        data-route="{{ Route('Logout') }}">
+                            <div class="flex items-center font-medium gap-2 w-full p-2 hover:text-indigo-600 hover:bg-red-100 duration-300 rounded">
+                                <i class='z-20 bx bx-log-out text-2xl' ></i>
+                                <span class="z-20 whitespace-nowrap">ออกจากระบบ</span>
+                            </div>
+                            <div class="z-10 w-full h-full absolute top-0 left-0 bg-red-300 opacity-50 rounded"></div>
+                        </button>
                     </div>
                 </li>
                 <!-- END SETTINGS -->

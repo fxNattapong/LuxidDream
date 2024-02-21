@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 19, 2024 at 05:55 PM
+-- Generation Time: Feb 21, 2024 at 07:26 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 7.2.5
 
@@ -116,9 +116,10 @@ CREATE TABLE `players` (
   `player_id` int(5) NOT NULL,
   `username` varchar(50) DEFAULT NULL,
   `password` varchar(50) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
   `phone` varchar(10) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
+  `role` tinyint(2) NOT NULL DEFAULT 0 COMMENT '0=player, 1=admin',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -127,9 +128,9 @@ CREATE TABLE `players` (
 -- Dumping data for table `players`
 --
 
-INSERT INTO `players` (`player_id`, `username`, `password`, `email`, `phone`, `image`, `created_at`, `updated_at`) VALUES
-(1, 'creator', '1234', '', '', NULL, '2024-01-10 01:17:00', '2024-01-10 01:17:00'),
-(2, 'player', '1234', '', '', NULL, '2024-01-10 01:17:06', '2024-01-10 01:17:06');
+INSERT INTO `players` (`player_id`, `username`, `password`, `phone`, `email`, `image`, `role`, `created_at`, `updated_at`) VALUES
+(1, 'admin', '1234', '0123456789', 'admin@gmail.com', '9FKxEjQukz.png', 1, '2024-01-10 01:17:00', '2024-02-21 23:09:34'),
+(2, 'player', '1234', '', '', NULL, 0, '2024-01-10 01:17:06', '2024-02-21 23:12:15');
 
 -- --------------------------------------------------------
 
@@ -319,7 +320,7 @@ ALTER TABLE `nightmares`
 -- AUTO_INCREMENT for table `players`
 --
 ALTER TABLE `players`
-  MODIFY `player_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `player_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `players_stats`

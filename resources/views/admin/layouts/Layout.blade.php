@@ -15,9 +15,7 @@
         @include('admin/components/Sidebar')
         
         <section class="bg-[#E4E9F7] w-full min-h-[100vh] overflow-y-auto">
-            <div class="px-6 py-10 max-md:px-3">
-                @yield('Content')
-            </div>
+            @yield('Content')
         </section>
 
         @stack('script')
