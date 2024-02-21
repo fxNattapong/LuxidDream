@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 18, 2024 at 08:38 AM
+-- Generation Time: Feb 19, 2024 at 05:55 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 7.2.5
 
@@ -30,9 +30,11 @@ SET time_zone = "+00:00";
 CREATE TABLE `cards` (
   `card_id` int(5) NOT NULL,
   `card_code` varchar(10) DEFAULT NULL,
+  `card_skills` tinyint(2) DEFAULT NULL,
+  `card_color` tinyint(2) DEFAULT NULL,
   `card_name` varchar(50) DEFAULT NULL,
-  `details` varchar(100) DEFAULT NULL,
-  `image` varchar(255) DEFAULT NULL,
+  `card_description` varchar(100) DEFAULT NULL,
+  `card_image` varchar(255) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -41,12 +43,12 @@ CREATE TABLE `cards` (
 -- Dumping data for table `cards`
 --
 
-INSERT INTO `cards` (`card_id`, `card_code`, `card_name`, `details`, `image`, `created_at`, `updated_at`) VALUES
-(1, '1', 'Help people using their natural coping', 'Discuss with someone Spend time with family Find safe way to help other.', '1.png', '2024-01-01 16:03:51', '2024-01-01 16:03:51'),
-(2, '2', 'Listen with eye, ear, heart', 'Give undivided attention, hearingcarefully,caring and showing respect', '2.png', '2024-01-01 16:21:25', '2024-01-01 16:21:25'),
-(3, '3', 'Provide factual information', 'Be honest about what you know\r\nand what you don’t know', '3.png', '2024-01-10 00:00:00', '2024-01-10 00:57:13'),
-(4, '4', 'Always ask', 'Ask about need and concern', '4.png', '2024-01-10 00:57:13', '2024-01-10 00:57:13'),
-(5, '5', 'What to do first', 'Help prioritize urgent needs', '5.png', '2024-01-10 01:00:22', '2024-01-10 01:00:22');
+INSERT INTO `cards` (`card_id`, `card_code`, `card_skills`, `card_color`, `card_name`, `card_description`, `card_image`, `created_at`, `updated_at`) VALUES
+(1, '1', NULL, NULL, 'Help people using their natural coping', 'Discuss with someone Spend time with family Find safe way to help other.', '1.png', '2024-01-01 16:03:51', '2024-01-01 16:03:51'),
+(2, '2', NULL, NULL, 'Listen with eye, ear, heart', 'Give undivided attention, hearingcarefully,caring and showing respect', '2.png', '2024-01-01 16:21:25', '2024-01-01 16:21:25'),
+(3, '3', NULL, NULL, 'Provide factual information', 'Be honest about what you know\r\nand what you don’t know', '3.png', '2024-01-10 00:00:00', '2024-01-10 00:57:13'),
+(4, '4', NULL, NULL, 'Always ask', 'Ask about need and concern', '4.png', '2024-01-10 00:57:13', '2024-01-10 00:57:13'),
+(5, '5', NULL, NULL, 'What to do first', 'Help prioritize urgent needs', '5.png', '2024-01-10 01:00:22', '2024-01-10 01:00:22');
 
 -- --------------------------------------------------------
 
@@ -71,9 +73,38 @@ CREATE TABLE `cards_relation` (
 CREATE TABLE `levels` (
   `level_id` int(5) NOT NULL,
   `level` tinyint(2) DEFAULT NULL,
+  `round` tinyint(2) DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `levels_time`
+--
+
+CREATE TABLE `levels_time` (
+  `level_time_id` int(5) NOT NULL,
+  `level_id` int(5) DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nightmares`
+--
+
+CREATE TABLE `nightmares` (
+  `nightmare_id` int(5) NOT NULL,
+  `nightmare_color` tinyint(2) DEFAULT NULL,
+  `description` varchar(100) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -209,6 +240,18 @@ ALTER TABLE `levels`
   ADD PRIMARY KEY (`level_id`);
 
 --
+-- Indexes for table `levels_time`
+--
+ALTER TABLE `levels_time`
+  ADD PRIMARY KEY (`level_time_id`);
+
+--
+-- Indexes for table `nightmares`
+--
+ALTER TABLE `nightmares`
+  ADD PRIMARY KEY (`nightmare_id`);
+
+--
 -- Indexes for table `players`
 --
 ALTER TABLE `players`
@@ -259,6 +302,18 @@ ALTER TABLE `cards_relation`
 --
 ALTER TABLE `levels`
   MODIFY `level_id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `levels_time`
+--
+ALTER TABLE `levels_time`
+  MODIFY `level_time_id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `nightmares`
+--
+ALTER TABLE `nightmares`
+  MODIFY `nightmare_id` int(5) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `players`

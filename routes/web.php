@@ -20,6 +20,10 @@ Route::get('/login', "WebpagesController@LoginPage")->Name('LoginPage');
 Route::get('/register', "WebpagesController@RegisterPage")->Name('RegisterPage');
 Route::get('/rule', "WebpagesController@RulePage")->Name('RulePage');
 
+Route::prefix('admin')->group(function () {
+    Route::get('/dashboard', "AdminController@Dashboard")->Name('Dashboard');
+});
+
 Route::prefix('game')->group(function () {
     Route::get('/', "GameController@Home")->Name('Home');
     Route::post('/register/process', "GameController@RegisterProcess")->Name('RegisterProcess');
