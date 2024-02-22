@@ -5,9 +5,9 @@
 @section('Content')
 
     <!-- START HEADER -->
-    <div class="relative w-[100%]">
+    <div class="relative w-[100%] bg-[#dbcae8] p-6 max-md:px-3 mb-6 shadow-md">
         <div class="flex relative max-sm:flex-col">
-            <div class="flex items-center whitespace-nowrap text-2xl text-gray-900 font-medium gap-2 overflow-hidden">
+            <div class="flex items-center whitespace-nowrap text-2xl text-gray-700 font-medium gap-2 overflow-hidden">
                 <i class="fi fi-rr-dashboard text-2xl"></i>
                 <span class="">ภาพรวม</span>
             </div>

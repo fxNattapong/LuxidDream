@@ -47,6 +47,18 @@
                                 <span>ระดับความยาก</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ Route('Nightmares') }}" id="Nightmares" class="flex items-center font-medium gap-2 w-full p-2 hover:text-indigo-600 hover:bg-[#E4E9F7] duration-300 rounded">
+                                <i class='bx bx-ghost text-2xl' ></i>
+                                <span>ฝันร้าย</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ Route('Cards') }}" id="Cards" class="flex items-center font-medium gap-2 w-full p-2 hover:text-indigo-600 hover:bg-[#E4E9F7] duration-300 rounded">
+                                <i class='bx bx-credit-card-front text-2xl'></i>
+                                <span>การ์ดทักษะ</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <!-- END MENU -->

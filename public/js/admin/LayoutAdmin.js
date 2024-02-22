@@ -127,20 +127,8 @@ function fileToDataUrl_Single(event, callback) {
 function fileHanddle_Single(src){
     $("#account_image").attr("src", src);
 
-    $("#player_image_add").attr("src", src);
-    $("#player_image_edit").attr("src", src);
-
-    $("#admin_image_add").attr("src", src);
-    $("#admin_image_edit").attr("src", src);
-
-    $("#category_image_add").attr("src", src);
-    $("#category_image_edit").attr("src", src);
-
-    $("#banner_image_preview_add").attr("src", src);
-    $("#banner_image_preview_edit").attr("src", src);
-
-    $("#shipment_image_add").attr("src", src);
-    $("#shipment_image_edit").attr("src", src);
+    $("#image_add").attr("src", src);
+    $("#image_edit").attr("src", src);
     
     _image64_single = src;
 }

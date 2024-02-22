@@ -14,7 +14,7 @@
 
         @include('admin/components/Sidebar')
         
-        <section class="bg-[#E4E9F7] w-full min-h-[100vh] overflow-y-auto">
+        <section class="bg-[#eae4f7] w-full min-h-[100vh] overflow-y-auto">
             @yield('Content')
         </section>
 

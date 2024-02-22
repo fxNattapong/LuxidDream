@@ -5,9 +5,9 @@
 @section('Content')
 
     <!-- START HEADER -->
-    <div class="relative w-[100%] bg-white p-6 max-md:px-3 mb-6 shadow">
+    <div class="relative w-[100%] bg-[#dbcae8] p-6 max-md:px-3 mb-6 shadow-md">
         <div class="flex relative">
-            <div class="flex items-center whitespace-nowrap text-2xl text-gray-900 font-medium gap-2 overflow-hidden">
+            <div class="flex items-center whitespace-nowrap text-2xl text-gray-700 font-medium gap-2 overflow-hidden">
                 <i class='bx bx-expand-horizontal text-3xl'></i>
                 <span class="">จัดการระดับความยาก</span>
             </div>
@@ -36,7 +36,7 @@
                             จำนวนรอบ
                         </th>
                         <th scope="col" class="px-3 py-2 font-medium text-center">
-                            เวลา
+                            เวลา <span class="font-light">(นาที)</span>
                         </th>
                         <th scope="col" class="px-3 py-2 font-medium text-center">
                             การกระทำ
@@ -45,39 +45,46 @@
                 </thead>
                 <tbody class="text-gray-500">
                     @if(sizeof($levels))
-                        @foreach($levels as $key => $player)
+                        @foreach($levels as $key => $level)
                             <tr class="bg-white border-b font-light whitespace-nowrap text-center">
                                 <td scope="row" class="px-2 py-2">
-                                    {{ $loop->iteration + $levels->firstItem() - 1 }}
+                                    {{ $key + 1 }}
                                 </td>
                                 <td scope="row" class="px-2 py-2">
-                                    @if($levels['level'] === 0)
+                                    @if($level['level'] === 0)
                                         ง่าย
+                                    @elseif($level['level'] === 1)
+                                        ปานกลาง
                                     @else
                                         ยาก
                                     @endif
                                 </td>
                                 <td class="px-3 py-2">
-                                    {{ $player['username'] }}
+                                    {{ $level['round'] }}
                                 </td>
                                 <td class="px-3 py-2">
-                                    @if($player['phone'])
-                                        {{ $player['phone'] }}
-                                    @else
-                                        -
-                                    @endif
+                                    <div class="flex items-center justify-center">
+                                        {{ $level['time_1'] }} <i class='bx bx-right-arrow-alt'></i> 
+                                        {{ $level['time_2'] }} <i class='bx bx-right-arrow-alt'></i> 
+                                        {{ $level['time_3'] }} <i class='bx bx-right-arrow-alt'></i> 
+                                        {{ $level['time_4'] }}
+
+                                        @if($level['time_5'])
+                                            <i class='bx bx-right-arrow-alt'></i> {{ $level['time_5'] }}
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-3 py-2 text-2xl whitespace-nowrap">
                                     <div class="flex items-center justify-center space-x-3">
-                                        <button class="btn-player-edit hover:text-blue-700 duration-300"
-                                        data-id="{{ $player['player_id'] }}" data-username="{{ $player['username'] }}" data-password="{{ $player['password'] }}" 
-                                        data-phone="{{ $player['phone'] }}" data-email="{{ $player['email'] }}"  data-image="{{ isset($player['image']) ? URL('/uploads/' . $player['image']) : '' }}"
-                                        data-role="{{ $player['role'] }}">
+                                        <button class="btn-level-edit hover:text-blue-700 duration-300"
+                                        data-level_id="{{ $level['level_id'] }}" data-level="{{ $level['level'] }}" data-round="{{ $level['round'] }}"
+                                        data-time_1="{{ $level['time_1'] }}" data-time_2="{{ $level['time_2'] }}" data-time_3="{{ $level['time_3'] }}"
+                                        data-time_4="{{ $level['time_4'] }}" data-time_5="{{ $level['time_5'] }}">
                                             <i class='bx bx-edit' ></i>
                                         </button>
 
-                                        <button class="btn-player-delete hover:text-rose-700 duration-300" 
-                                        data-route="{{ Route('SubmitPlayerDelete') }}" data-player_id="{{ $player['player_id'] }}" data-username="{{ $player['username'] }}">
+                                        <button class="btn-level-delete hover:text-rose-700 duration-300" 
+                                        data-route="{{ Route('SubmitLevelDelete') }}" data-level_id="{{ $level['level_id'] }}" data-level="{{ $level['level'] }}">
                                             <i class='bx bx-trash' ></i>
                                         </button>
                                     </div>
@@ -97,48 +104,48 @@
             <!-- START MOBILE -->
             @if(sizeof($levels))
                 <div class="hidden max-md:block min-w-[250px] bg-white p-4 rounded-t-2xl overflow-hidden">
-                    @foreach($levels as $key => $player)
+                    @foreach($levels as $key => $level)
                         <div class="flex items-center relative">
-                            <div class="min-w-[60px] max-w-[80px] pr-2">
-                                @if($player['image'])
-                                    <img src="{{ URL('/uploads/'.$player['image']) }}" alt="" class="w-full h-auto object-scale-down mx-auto rounded border p-1">
-                                @else
-                                    <img src="{{ URL('/assets/member.png') }}" alt="" class="w-full h-auto object-scale-down mx-auto rounded border p-1">
-                                @endif
-                            </div>
-                            <div class="absolute top-0 right-0 bg-gray-200 rounded-full px-2 text-gray-500 text-sm"># {{ $loop->iteration + $players->firstItem() - 1 }}</div>
+                            <div class="absolute top-0 right-0 bg-gray-200 rounded-full px-2 text-gray-500 text-sm"># {{ $key + 1 }}</div>
                             <div class="flex-col">
-                                <p class="text-sm font-medium text-gray-500 truncate">ชื่อผู้ใช้: <span class="font-light">{{ $player['username'] }}</span></p>
-                                <p class="text-sm font-medium text-gray-500 truncate">โทรศัพท์: 
-                                    <span class="font-light">
-                                        @if($player['phone'])
-                                            {{ $player['phone'] }}
+                                <p class="text-sm font-medium text-gray-500 truncate">
+                                    ระดับความยาก: <span class="font-light">
+                                        @if($level['level'] === 0)
+                                            ง่าย
+                                        @elseif($level['level'] === 1)
+                                            ปานกลาง
                                         @else
-                                            -
+                                            ยาก
                                         @endif
                                     </span>
                                 </p>
-                                <p class="text-sm font-medium text-gray-500 truncate">สิทธิ์การใช้: 
-                                    <span class="font-light">
-                                        @if($player['role'] === 0)
-                                            ผู้เล่น
-                                        @else
-                                            ผู้ดูแลระบบ
+                                <p class="text-sm font-medium text-gray-500 truncate">
+                                    จำนวนรอบ: <span class="font-light">{{ $level['round'] }}</span>
+                                </p>
+                                <p class="text-sm font-medium text-gray-500 inline-flex">
+                                    เวลา:&nbsp;<span class="font-light flex items-center">
+                                        {{ $level['time_1'] }}<i class='bx bx-right-arrow-alt'></i>
+                                        {{ $level['time_2'] }}<i class='bx bx-right-arrow-alt'></i>
+                                        {{ $level['time_3'] }}<i class='bx bx-right-arrow-alt'></i>
+                                        {{ $level['time_4'] }}
+
+                                        @if($level['time_5'])
+                                            <i class='bx bx-right-arrow-alt'></i>{{ $level['time_5'] }}
                                         @endif
                                     </span>
                                 </p>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-1 mt-2">
-                            <button class="btn-player-edit flex items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
-                            data-id="{{ $player['player_id'] }}" data-username="{{ $player['username'] }}" data-password="{{ $player['password'] }}" 
-                            data-phone="{{ $player['phone'] }}" data-email="{{ $player['email'] }}" data-image="{{ isset($player['image']) ? URL('/uploads/' . $player['image']) : '' }}"
-                            data-role="{{ $player['role'] }}">
-                            <i class="fi fi-rr-edit"></i>แก้ไข</button>
-    
-                            <button class="btn-player-delete flex items-center justify-center gap-1 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
-                            data-route="{{ Route('SubmitPlayerDelete') }}" data-player_id="{{ $player['player_id'] }}" data-username="{{ $player['username'] }}">
-                            <i class="fi fi-rr-trash"></i>ลบ</button>
+                            <button class="btn-level-edit flex items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
+                            data-level_id="{{ $level['level_id'] }}" data-level="{{ $level['level'] }}" data-round="{{ $level['round'] }}"
+                            data-time_1="{{ $level['time_1'] }}" data-time_2="{{ $level['time_2'] }}" data-time_3="{{ $level['time_3'] }}"
+                            data-time_4="{{ $level['time_4'] }}" data-time_5="{{ $level['time_5'] }}">
+                            <i class='bx bx-edit' ></i>แก้ไข</button>
+
+                            <button class="btn-level-delete flex items-center justify-center gap-1 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
+                            data-route="{{ Route('SubmitLevelDelete') }}" data-level_id="{{ $level['level_id'] }}" data-level="{{ $level['level'] }}">
+                            <i class='bx bx-trash' ></i>ลบ</button>
                         </div>
                         <hr class="bg-blue-300 border-dashed border-gray-300 w-full my-2 rounded-2xl ">
                     @endforeach
@@ -157,20 +164,20 @@
 
 
     <!-- START MODAL PLAYER ADD -->
-    <div id="modal-level-add" class="modal hidden1 z-[100] fixed flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:p-[10px]">
+    <div id="modal-level-add" class="modal hidden z-[100] fixed flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:p-[10px]">
         <!-- START MODAL CONTENT -->
-        <div class="modal-content relative bg-white m-auto p-[20px] rounded-md">
+        <div class="modal-content relative bg-white m-auto p-[20px] rounded-md max-sm:w-[100%] overflow-hidden">
             <div class="flex items-center">
-                <p class="text-xl font-bold w-full ml-4 text-center">เพิ่มระดับความยาก</p>
+                <p class="text-xl font-bold w-full ml-4 text-center whitespace-nowrap">เพิ่มระดับความยาก</p>
                 <span id="icon-level-add-close" class="text-gray-500 text-[30px] font-medium absolute top-0 right-0 mr-4 hover:text-indigo-600 cursor-pointer">&times;</span>
             </div>
             <hr class="mt-4">
             <div class="mt-2">
                 <form action="#!" method="post" onsubmit="return false;" class="m-0"
-                id="form-level-add" data-route="{{ Route('SubmitPlayerAdd') }}">
+                id="form-level-add" data-route="{{ Route('SubmitLevelAdd') }}">
                     <div class="grid gap-6 mb-6 grid-cols-2">
-                        <div class="max-md:col-span-2">
-                            <label for="level_add" class="block mb-2 text-md font-medium text-gray-700">ระดับความยาก</label>
+                        <div class="max-sm:col-span-2">
+                            <label for="level_add" class="block mb-2 text-md font-medium text-gray-700 whitespace-nowrap">ระดับความยาก</label>
                             <select id="level_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
                                 <option selected value="0" class="font-light">ง่าย</option>
                                 <option value="1" class="font-light">ปานกลาง</option>
@@ -183,78 +190,74 @@
                             <input type="text" id="level_round_add" class="bg-gray-200 border border-gray-300 text-gray-700 text-md font-light rounded-lg block w-full p-2 outline-none" value="5" readonly>
                         </div>
 
-                        <div class="col-span-2 grid grid-cols-5 gap-2">
-                            <div class="max-md:col-span-2">
-                                <label for="level_add" class="block mb-2 text-md font-medium text-gray-700">เวลา</label>
-                                <select id="level_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                                    <option selected value="3.00" class="font-light">3.00</option>
-                                    <option value="3.30" class="font-light">3.30</option>
-                                    <option value="4.00" class="font-light">4.00</option>
-                                    <option value="5.00" class="font-light">5.00</option>
-                                    <option value="6.00" class="font-light">6.00</option>
-                                    <option value="6.30" class="font-light">6.30</option>
-                                    <option value="7.00" class="font-light">7.00</option>
-                                </select>
-                            </div>
-                            <div class="max-md:col-span-2">
-                                <select id="level_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                                    <option selected value="3.00" class="font-light">3.00</option>
-                                    <option value="3.30" class="font-light">3.30</option>
-                                    <option value="4.00" class="font-light">4.00</option>
-                                    <option value="5.00" class="font-light">5.00</option>
-                                    <option value="6.00" class="font-light">6.00</option>
-                                    <option value="6.30" class="font-light">6.30</option>
-                                    <option value="7.00" class="font-light">7.00</option>
-                                </select>
-                            </div>
-                            <div class="max-md:col-span-2">
-                                <select id="level_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                                    <option selected value="3.00" class="font-light">3.00</option>
-                                    <option value="3.30" class="font-light">3.30</option>
-                                    <option value="4.00" class="font-light">4.00</option>
-                                    <option value="5.00" class="font-light">5.00</option>
-                                    <option value="6.00" class="font-light">6.00</option>
-                                    <option value="6.30" class="font-light">6.30</option>
-                                    <option value="7.00" class="font-light">7.00</option>
-                                </select>
-                            </div>
-                            <div class="max-md:col-span-2">
-                                <select id="level_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                                    <option selected value="3.00" class="font-light">3.00</option>
-                                    <option value="3.30" class="font-light">3.30</option>
-                                    <option value="4.00" class="font-light">4.00</option>
-                                    <option value="5.00" class="font-light">5.00</option>
-                                    <option value="6.00" class="font-light">6.00</option>
-                                    <option value="6.30" class="font-light">6.30</option>
-                                    <option value="7.00" class="font-light">7.00</option>
-                                </select>
-                            </div>
-                            <div class="max-md:col-span-2">
-                                <select id="level_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                                    <option selected value="3.00" class="font-light">3.00</option>
-                                    <option value="3.30" class="font-light">3.30</option>
-                                    <option value="4.00" class="font-light">4.00</option>
-                                    <option value="5.00" class="font-light">5.00</option>
-                                    <option value="6.00" class="font-light">6.00</option>
-                                    <option value="6.30" class="font-light">6.30</option>
-                                    <option value="7.00" class="font-light">7.00</option>
-                                </select>
-                            </div>
-                            <div class="max-md:col-span-2">
-                                <select id="level_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                                    <option selected value="3.00" class="font-light">3.00</option>
-                                    <option value="3.30" class="font-light">3.30</option>
-                                    <option value="4.00" class="font-light">4.00</option>
-                                    <option value="5.00" class="font-light">5.00</option>
-                                    <option value="6.00" class="font-light">6.00</option>
-                                    <option value="6.30" class="font-light">6.30</option>
-                                    <option value="7.00" class="font-light">7.00</option>
-                                </select>
+                        <div class="col-span-2">
+                            <label for="time" class="block mb-2 text-md font-medium text-gray-700">เวลา (นาที)</label>
+                            <div class="grid grid-cols-2 gap-x-6 gap-y-4">
+                                <div class="relative">
+                                    <label for="time_1_add" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 1</label>
+                                    <select id="time_1_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option value="3.30" class="font-light">3.30</option>
+                                        <option value="4.00" class="font-light">4.00</option>
+                                        <option value="5.00" class="font-light">5.00</option>
+                                        <option value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option selected value="7.00" class="font-light">7.00</option>
+                                    </select>
+                                </div>
+                                <div class="relative">
+                                    <label for="time_2_add" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 2</label>
+                                    <select id="time_2_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option value="3.30" class="font-light">3.30</option>
+                                        <option value="4.00" class="font-light">4.00</option>
+                                        <option value="5.00" class="font-light">5.00</option>
+                                        <option selected value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option value="7.00" class="font-light">7.00</option>
+                                    </select>
+                                </div>
+                                <div class="relative">
+                                    <label for="time_3_add" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 3</label>
+                                    <select id="time_3_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option value="3.30" class="font-light">3.30</option>
+                                        <option value="4.00" class="font-light">4.00</option>
+                                        <option selected value="5.00" class="font-light">5.00</option>
+                                        <option value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option value="7.00" class="font-light">7.00</option>
+                                    </select>
+                                </div>
+                                <div class="relative">
+                                    <label for="time_4_add" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 4</label>
+                                    <select id="time_4_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option value="3.30" class="font-light">3.30</option>
+                                        <option selected value="4.00" class="font-light">4.00</option>
+                                        <option value="5.00" class="font-light">5.00</option>
+                                        <option value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option value="7.00" class="font-light">7.00</option>
+                                    </select>
+                                </div>
+                                <div class="relative">
+                                    <label for="time_5_add" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 5</label>
+                                    <select id="time_5_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option selected value="3.30" class="font-light">3.30</option>
+                                        <option value="4.00" class="font-light">4.00</option>
+                                        <option value="5.00" class="font-light">5.00</option>
+                                        <option value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option value="7.00" class="font-light">7.00</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <hr class="mb-1 mt-3">
-                    <button type="submit" onClick={SubmitPlayerAdd()} class="w-full text-md font-medium text-white text-center bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 duration-300 focus:ring-4 focus:outline-none focus:ring-blue-300">บันทึกข้อมูล</button>
+                    <button type="submit" onClick={SubmitLevelAdd()} class="w-full text-md font-medium text-white text-center bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 duration-300 focus:ring-4 focus:outline-none focus:ring-blue-300">บันทึกข้อมูล</button>
                 </form>
             </div>
         </div>
@@ -263,73 +266,101 @@
     <!-- END MODAL PLAYER ADD -->
     
     <!-- START MODAL PLAYER EDIT -->
-    <div id="modal-player-edit" class="modal hidden z-[100] fixed flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:p-[10px]">
+    <div id="modal-level-edit" class="modal hidden z-[100] fixed flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:p-[10px]">
         <!-- START MODAL CONTENT -->
-        <div class="modal-content relative bg-white m-auto p-[20px] rounded-md">
+        <div class="modal-content relative bg-white m-auto p-[20px] rounded-md max-sm:w-[100%] overflow-hidden">
             <div class="flex items-center">
-                <p class="text-[20px] font-bold w-full ml-4 text-center">แก้ไขบัญชีผู้เล่น</p>
-                <span id="icon-player-edit-close" class="text-gray-500 text-[30px] font-medium absolute top-0 right-0 mr-4 hover:text-indigo-600 cursor-pointer">&times;</span>
+                <p class="text-xl font-bold w-full ml-4 text-center whitespace-nowrap">แก้ไขระดับความยาก</p>
+                <span id="icon-level-edit-close" class="text-gray-500 text-[30px] font-medium absolute top-0 right-0 mr-4 hover:text-indigo-600 cursor-pointer">&times;</span>
             </div>
             <hr class="mt-4">
             <div class="mt-2">
                 <form action="#!" method="post" onsubmit="return false;" class="m-0"
-                id="form-player-edit" data-route="{{ Route('SubmitPlayerEdit') }}">
-                    <input type="text" id="player_id_edit" class="hidden" readonly>
-                    <input type="text" id="player_username_current" class="hidden" readonly>
+                id="form-level-edit" data-route="{{ Route('SubmitLevelEdit') }}">
+                    <input id="level_id_edit" type="hidden">
                     <div class="grid gap-6 mb-6 grid-cols-2">
                         <div class="max-sm:col-span-2">
-                            <label for="player_username_edit" class="block mb-2 text-md font-medium text-gray-700">ชื่อผู้ใช้ <span class="text-red-800 text-xl">*</span></label>
-                            <input type="text" id="player_username_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 outline-none" placeholder="กรุณาชื่อผู้ใช้" required>
-                        </div>
-                        <div class="relative w-full max-sm:col-span-2">
-                            <label for="player_password_edit" class="block mb-2 text-md font-medium text-gray-700">รหัสผ่าน <span class="text-red-800 text-xl">*</span></label>
-                            <div class="absolute inset-y-0 right-0 flex items-center px-2 z-10 mt-9">
-                                <input class="hidden js-password-toggle" type="checkbox" />
-                                <label class="js-password-label bg-gray-300 hover:bg-gray-400 duration-300 rounded px-2 py-1 text-sm text-gray-600 cursor-pointer" for="toggle">แสดง</label>
-                            </div>
-                            <div class="relative float-label-input">
-                                <input type="password" id="player_password_edit" class="js-password bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 outline-none" placeholder="รหัสผ่านขั้นต่ำ 4 ตัวอักษร">
-                            </div>
-                        </div>
-                        <div class="max-md:col-span-2">
-                            <div class="inline-flex gap-2">
-                                <label for="player_phone_edit" class="whitespace-nowrap mb-2 text-md font-medium text-gray-700">หมายเลขโทรศัพท์</label>
-                                <span class="hidden phoneLengthWarning text-sm text-rose-700 font-light mt-[2px] max-sm:mt-[3px]"></span>
-                            </div>
-                            <input type="text" id="player_phone_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 outline-none" placeholder="กรุณากรอกหมายเลขโทรศัพท์">
-                        </div>
-                        <div class="max-md:col-span-2">
-                            <label for="player_email_edit" class="block mb-2 text-md font-medium text-gray-700">อีเมล</label>
-                            <input type="text" id="player_email_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 outline-none" placeholder="กรุณากรอกอีเมล">
-                        </div>
-                        <div class="max-md:col-span-2">
-                            <label for="player_role_edit" class="block mb-2 text-md font-medium text-gray-700">สิทธิ์การใช้</label>
-                            <select id="player_role_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                                <option selected value="0" class="font-light">ผู้เล่น</option>
-                                <option value="1" class="font-light">ผู้ดูแลระบบ</option>
+                            <label for="level_edit" class="block mb-2 text-md font-medium text-gray-700 whitespace-nowrap">ระดับความยาก</label>
+                            <select id="level_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                <option selected value="0" class="font-light">ง่าย</option>
+                                <option value="1" class="font-light">ปานกลาง</option>
+                                <option value="2" class="font-light">ยาก</option>
                             </select>
                         </div>
-                        <div class="max-md:col-span-2">
-                            <p class="mb-2 text-md font-medium text-gray-700">รูปภาพผู้ใช้</p>
-                            <div class="flex items-center space-x-2 bg-gray-200 rounded-lg w-full">
-                                <div class="shrink-0 ml-1 mt-1 mb-1 bg-white rounded-full">
-                                    <img id='player_image_edit' class="h-11 w-11 object-cover rounded-full" src="{{ URL('/assets/'.'member.png') }}" alt="Current profile photo" />
+
+                        <div class="max-sm:col-span-2">
+                            <label for="level_round_edit" class="block mb-2 text-md font-medium text-gray-700">จำนวนรอบ</label>
+                            <input type="text" id="level_round_edit" class="bg-gray-200 border border-gray-300 text-gray-700 text-md font-light rounded-lg block w-full p-2 outline-none" value="5" readonly>
+                        </div>
+
+                        <div class="col-span-2">
+                            <label for="time" class="block mb-2 text-md font-medium text-gray-700">เวลา (นาที)</label>
+                            <div class="grid grid-cols-2 gap-x-6 gap-y-4">
+                                <div class="relative">
+                                    <label for="time_1_edit" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 1</label>
+                                    <select id="time_1_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option value="3.30" class="font-light">3.30</option>
+                                        <option value="4.00" class="font-light">4.00</option>
+                                        <option value="5.00" class="font-light">5.00</option>
+                                        <option value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option value="7.00" class="font-light">7.00</option>
+                                    </select>
                                 </div>
-                                <label class="block w-fit">
-                                    <span class="sr-only">Choose profile photo</span>
-                                    <input type="file" onChange={fileChosen_Single(event)} id="player_image_edit" name="image" accept="image/png, image/jpeg" class="block w-full text-sm text-slate-500
-                                        file:mr-4 file:py-2 file:px-4
-                                        file:rounded-full file:border-0
-                                        file:text-sm file:font-semibold
-                                        file:bg-blue-50 file:text-blue-700
-                                        hover:file:bg-blue-100 duration-300
-                                    "/>
-                                </label>
+                                <div class="relative">
+                                    <label for="time_2_edit" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 2</label>
+                                    <select id="time_2_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option value="3.30" class="font-light">3.30</option>
+                                        <option value="4.00" class="font-light">4.00</option>
+                                        <option value="5.00" class="font-light">5.00</option>
+                                        <option value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option value="7.00" class="font-light">7.00</option>
+                                    </select>
+                                </div>
+                                <div class="relative">
+                                    <label for="time_3_edit" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 3</label>
+                                    <select id="time_3_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option value="3.30" class="font-light">3.30</option>
+                                        <option value="4.00" class="font-light">4.00</option>
+                                        <option value="5.00" class="font-light">5.00</option>
+                                        <option value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option value="7.00" class="font-light">7.00</option>
+                                    </select>
+                                </div>
+                                <div class="relative">
+                                    <label for="time_4_edit" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 4</label>
+                                    <select id="time_4_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option value="3.30" class="font-light">3.30</option>
+                                        <option value="4.00" class="font-light">4.00</option>
+                                        <option value="5.00" class="font-light">5.00</option>
+                                        <option value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option value="7.00" class="font-light">7.00</option>
+                                    </select>
+                                </div>
+                                <div class="relative">
+                                    <label for="time_5_edit" class="absolute block -mt-3 text-sm font-light text-gray-700 bg-white px-2 rounded-full">รอบที่ 5</label>
+                                    <select id="time_5_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
+                                        <option value="3.00" class="font-light">3.00</option>
+                                        <option value="3.30" class="font-light">3.30</option>
+                                        <option value="4.00" class="font-light">4.00</option>
+                                        <option value="5.00" class="font-light">5.00</option>
+                                        <option value="6.00" class="font-light">6.00</option>
+                                        <option value="6.30" class="font-light">6.30</option>
+                                        <option value="7.00" class="font-light">7.00</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <hr class="mb-1 mt-3">
-                    <button type="submit" onClick={SubmitPlayerEdit()} class="w-full text-md font-medium text-white text-center bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 duration-300 focus:ring-4 focus:outline-none focus:ring-blue-300">บันทึกข้อมูล</button>
+                    <button type="submit" onClick={SubmitLevelEdit()} class="w-full text-md font-medium text-white text-center bg-blue-700 hover:bg-blue-800 rounded-lg px-5 py-2 duration-300 focus:ring-4 focus:outline-none focus:ring-blue-300">บันทึกข้อมูล</button>
                 </form>
             </div>
         </div>

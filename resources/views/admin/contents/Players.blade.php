@@ -5,9 +5,9 @@
 @section('Content')
 
     <!-- START HEADER -->
-    <div class="relative w-[100%] bg-white p-6 max-md:px-3 mb-6 shadow">
+    <div class="relative w-[100%] bg-[#dbcae8] p-6 max-md:px-3 mb-6 shadow-md">
         <div class="flex relative">
-            <div class="flex items-center whitespace-nowrap text-2xl text-gray-900 font-medium gap-2 overflow-hidden">
+            <div class="flex items-center whitespace-nowrap text-2xl text-gray-700 font-medium gap-2 overflow-hidden">
                 <i class="bx bxs-user-rectangle text-3xl"></i>
                 <span class="">จัดการผู้เล่น</span>
             </div>
@@ -146,11 +146,11 @@
                             data-id="{{ $player['player_id'] }}" data-username="{{ $player['username'] }}" data-password="{{ $player['password'] }}" 
                             data-phone="{{ $player['phone'] }}" data-email="{{ $player['email'] }}" data-image="{{ isset($player['image']) ? URL('/uploads/' . $player['image']) : '' }}"
                             data-role="{{ $player['role'] }}">
-                            <i class="fi fi-rr-edit"></i>แก้ไข</button>
+                            <i class='bx bx-edit' ></i>แก้ไข</button>
     
                             <button class="btn-player-delete flex items-center justify-center gap-1 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
                             data-route="{{ Route('SubmitPlayerDelete') }}" data-player_id="{{ $player['player_id'] }}" data-username="{{ $player['username'] }}">
-                            <i class="fi fi-rr-trash"></i>ลบ</button>
+                            <i class='bx bx-trash' ></i>ลบ</button>
                         </div>
                         <hr class="bg-blue-300 border-dashed border-gray-300 w-full my-2 rounded-2xl ">
                     @endforeach
@@ -213,11 +213,11 @@
                             <p class="mb-2 text-md font-medium text-gray-700">รูปภาพผู้ใช้</p>
                             <div class="flex items-center space-x-2 bg-gray-200 rounded-lg w-full">
                                 <div class="shrink-0 ml-1 mt-1 mb-1 bg-white rounded-full">
-                                    <img id='player_image_add' class="h-11 w-11 object-cover rounded-full" src="{{ URL('/assets/'.'admin.png') }}" alt="Current profile photo" />
+                                    <img id='image_add' class="h-11 w-11 object-cover rounded-full" src="{{ URL('/assets/'.'admin.png') }}" alt="Current profile photo" />
                                 </div>
                                 <label class="block w-fit">
                                     <span class="sr-only">Choose profile photo</span>
-                                    <input type="file" onChange={fileChosen_Single(event)} id="player_image_add" name="image" accept="image/png, image/jpeg" class="block w-full text-sm text-slate-500
+                                    <input type="file" onChange={fileChosen_Single(event)} id="image_add" name="image" accept="image/png, image/jpeg" class="block w-full text-sm text-slate-500
                                         file:mr-4 file:py-2 file:px-4
                                         file:rounded-full file:border-0
                                         file:text-sm file:font-semibold
@@ -288,11 +288,11 @@
                             <p class="mb-2 text-md font-medium text-gray-700">รูปภาพผู้ใช้</p>
                             <div class="flex items-center space-x-2 bg-gray-200 rounded-lg w-full">
                                 <div class="shrink-0 ml-1 mt-1 mb-1 bg-white rounded-full">
-                                    <img id='player_image_edit' class="h-11 w-11 object-cover rounded-full" src="{{ URL('/assets/'.'member.png') }}" alt="Current profile photo" />
+                                    <img id='image_edit' class="h-11 w-11 object-cover rounded-full" src="{{ URL('/assets/'.'member.png') }}" alt="Current profile photo" />
                                 </div>
                                 <label class="block w-fit">
                                     <span class="sr-only">Choose profile photo</span>
-                                    <input type="file" onChange={fileChosen_Single(event)} id="player_image_edit" name="image" accept="image/png, image/jpeg" class="block w-full text-sm text-slate-500
+                                    <input type="file" onChange={fileChosen_Single(event)} id="image_edit" name="image" accept="image/png, image/jpeg" class="block w-full text-sm text-slate-500
                                         file:mr-4 file:py-2 file:px-4
                                         file:rounded-full file:border-0
                                         file:text-sm file:font-semibold

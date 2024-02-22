@@ -8,6 +8,7 @@ use Session;
 use App\Models\Players;
 use App\Models\Players_Stats;
 use App\Models\Levels;
+use App\Models\Nightmares;
 use App\Models\Cards;
 use App\Models\Rooms;
 use App\Models\Rooms_Players;
@@ -189,4 +190,268 @@ class AdminController extends Controller
         return view('admin/contents/Levels', compact('levels'));
     }
 
+    public function SubmitLevelAdd(Request $request) {
+        $level = ($request->has('level')) ? trim($request->input('level')) : null;
+        $round = ($request->has('round')) ? trim($request->input('round')) : null;
+        $time_1 = ($request->has('time_1')) ? trim($request->input('time_1')) : null;
+        $time_2 = ($request->has('time_2')) ? trim($request->input('time_2')) : null;
+        $time_3 = ($request->has('time_3')) ? trim($request->input('time_3')) : null;
+        $time_4 = ($request->has('time_4')) ? trim($request->input('time_4')) : null;
+        $time_5 = ($request->has('time_5')) ? trim($request->input('time_5')) : null;
+
+        $isLevel = Levels::where('level', $level)->first();
+        if($isLevel) {
+            $status = 'ระดับความยากนี้ถูกสร้างแล้ว';
+            return response()->json(['status' => $status], 400);
+        }
+
+        $InsertRow = new Levels;
+        $InsertRow->level = $level;
+        $InsertRow->round = $round;
+        $InsertRow->time_1 = $time_1;
+        $InsertRow->time_2 = $time_2;
+        $InsertRow->time_3 = $time_3;
+        $InsertRow->time_4 = $time_4;
+        $InsertRow->time_5 = $time_5;
+        $InsertRow->save();
+
+        return response()->json(200);
+    }
+
+    public function SubmitLevelEdit(Request $request) {
+        $level_id = ($request->has('level_id')) ? trim($request->input('level_id')) : null;
+        $level = ($request->has('level')) ? trim($request->input('level')) : null;
+        $round = ($request->has('round')) ? trim($request->input('round')) : null;
+        $time_1 = ($request->has('time_1')) ? trim($request->input('time_1')) : null;
+        $time_2 = ($request->has('time_2')) ? trim($request->input('time_2')) : null;
+        $time_3 = ($request->has('time_3')) ? trim($request->input('time_3')) : null;
+        $time_4 = ($request->has('time_4')) ? trim($request->input('time_4')) : null;
+        $time_5 = ($request->has('time_5')) ? trim($request->input('time_5')) : null;
+
+        $isLevel = Levels::where('level', $level)->first();
+        if($isLevel && ($isLevel->level_id != $level_id)) {
+            $status = 'ระดับความยากนี้ถูกสร้างแล้ว';
+            return response()->json(['status' => $status], 400);
+        }
+
+        Levels::where('level_id', $level_id)
+                ->update([
+                    'level' => $level,
+                    'round' => $round,
+                    'time_1' => $time_1,
+                    'time_2' => $time_2,
+                    'time_3' => $time_3,
+                    'time_4' => $time_4,
+                    'time_5' => $time_5,
+                    'updated_at' => now()
+                ]);
+
+        return response()->json(200);
+    }
+
+    public function SubmitLevelDelete(Request $request) {
+        $level_id = ($request->has('level_id')) ? ($request->input('level_id')) : null;
+
+        Levels::where('level_id', $level_id)->delete();
+
+        return response()->json(200);
+    }
+
+
+
+    public function Nightmares(Request $request) {
+        $nightmares = Nightmares::paginate(8, ['*'], 'page');
+
+        return view('admin/contents/Nightmares', compact('nightmares'));
+    }
+
+    public function SubmitNightmareAdd(Request $request) {
+        $type = ($request->has('type')) ? trim($request->input('type')) : null;
+        $description = ($request->has('description')) ? trim($request->input('description')) : null;
+        $image64 = ($request->has('image64')) ? trim($request->input('image64')) : null;
+
+        $isNightmare = Nightmares::where('description', $description)->first();
+        if($isNightmare) {
+            $status = 'ฝันร้ายนี้ถูกสร้างแล้ว';
+            return response()->json(['status' => $status], 400);
+        }
+
+        $InsertRow = new Nightmares;
+        $InsertRow->type = $type;
+        $InsertRow->description = $description;
+
+        if($image64) {
+            @list($type, $file_data) = explode(';', $image64);
+            @list(, $file_data) = explode(',', $file_data); 
+            $imageName = Str::random(10).'.'.'png';   
+            file_put_contents(config('pathImage.uploads_path') . '/' . $imageName, base64_decode($file_data));
+            
+            $InsertRow->image = $imageName;
+        }
+
+        $InsertRow->save();
+
+        return response()->json(200);
+    }
+
+    public function SubmitNightmareEdit(Request $request) {
+        $nightmare_id = ($request->has('nightmare_id')) ? trim($request->input('nightmare_id')) : null;
+        $nightmare_type = ($request->has('type')) ? trim($request->input('type')) : null;
+        $description = ($request->has('description')) ? trim($request->input('description')) : null;
+        $image64 = ($request->has('image64')) ? trim($request->input('image64')) : null;
+
+        if(!$description) {
+            $status = 'กรุณากรอกรายละเอียด';
+            return response()->json(['status' => $status], 400);
+        }
+
+        $isNightmare = Nightmares::where('description', $description)->first();
+        if($isNightmare && $isNightmare->nightmare_id != $nightmare_id) {
+            $status = 'ฝันร้ายนี้ถูกสร้างแล้ว';
+            return response()->json(['status' => $status], 400);
+        }
+
+        if($image64) {
+            @list($type, $file_data) = explode(';', $image64);
+            @list(, $file_data) = explode(',', $file_data); 
+            $imageName = Str::random(10).'.'.'png';
+            file_put_contents(config('pathImage.uploads_path') . '/' . $imageName, base64_decode($file_data));
+
+            Nightmares::where('nightmare_id', $nightmare_id)
+                        ->update([
+                            'type' => $nightmare_type,
+                            'description' => $description,
+                            'image' => $imageName,
+                            'updated_at' => now()
+                        ]);
+        } else {
+            Nightmares::where('nightmare_id', $nightmare_id)
+                        ->update([
+                            'type' => $nightmare_type,
+                            'description' => $description,
+                            'updated_at' => now()
+                        ]);
+        }
+
+        return response()->json(200);
+    }
+
+    public function SubmitNightmareDelete(Request $request) {
+        $nightmare_id = ($request->has('nightmare_id')) ? trim($request->input('nightmare_id')) : null;
+
+        Nightmares::where('nightmare_id', $nightmare_id)->delete();
+
+        return response()->json(200);
+    }
+
+
+
+    public function Cards(Request $request) {
+        $cards = Cards::paginate(8, ['*'], 'page');
+
+        return view('admin/contents/Cards', compact('cards'));
+    }
+
+    public function SubmitCardAdd(Request $request) {
+        $code = ($request->has('code')) ? trim($request->input('code')) : null;
+        $color = ($request->has('color')) ? trim($request->input('color')) : null;
+        $skill = ($request->has('skill')) ? trim($request->input('skill')) : null;
+        $name = ($request->has('name')) ? trim($request->input('name')) : null;
+        $description = ($request->has('description')) ? trim($request->input('description')) : null;
+        $image64 = ($request->has('image64')) ? trim($request->input('image64')) : null;
+
+        if(!$name) {
+            $status = 'กรุณากรอกชื่อการ์ด';
+            return response()->json(['status' => $status], 400);
+        }
+        if(!$image64) {
+            $status = 'กรุณาเพิ่มรูปภาพ';
+            return response()->json(['status' => $status], 400);
+        }
+
+        $isCard = Cards::where('code', $code)->first();
+        if($isCard) {
+            $status = 'รหัสการ์ดทักษะนี้ถูกสร้างแล้ว';
+            return response()->json(['status' => $status], 400);
+        }
+
+        $InsertRow = new Cards;
+        $InsertRow->code = $code;
+        $InsertRow->color = $color;
+        $InsertRow->skill = $skill;
+        $InsertRow->name = $name;
+        $InsertRow->description = $description;
+
+        if($image64) {
+            @list($type, $file_data) = explode(';', $image64);
+            @list(, $file_data) = explode(',', $file_data); 
+            $imageName = Str::random(10).'.'.'png';   
+            file_put_contents(config('pathImage.uploads_path') . '/' . $imageName, base64_decode($file_data));
+            
+            $InsertRow->image = $imageName;
+        }
+
+        $InsertRow->save();
+
+        return response()->json(200);
+    }
+
+    public function SubmitCardEdit(Request $request) {
+        $card_id = ($request->has('card_id')) ? trim($request->input('card_id')) : null;
+        $code = ($request->has('code')) ? trim($request->input('code')) : null;
+        $color = ($request->has('color')) ? trim($request->input('color')) : null;
+        $skill = ($request->has('skill')) ? trim($request->input('skill')) : null;
+        $name = ($request->has('name')) ? trim($request->input('name')) : null;
+        $description = ($request->has('description')) ? trim($request->input('description')) : null;
+        $image64 = ($request->has('image64')) ? trim($request->input('image64')) : null;
+
+        if(!$name) {
+            $status = 'กรุณากรอกชื่อการ์ด';
+            return response()->json(['status' => $status], 400);
+        }
+
+        $isCard = Cards::where('code', $code)->first();
+        if($isCard && $isCard->card_id != $card_id) {
+            $status = 'รหัสการ์ดทักษะนี้ถูกสร้างแล้ว';
+            return response()->json(['status' => $status], 400);
+        }
+
+        if($image64) {
+            @list($type, $file_data) = explode(';', $image64);
+            @list(, $file_data) = explode(',', $file_data); 
+            $imageName = Str::random(10).'.'.'png';
+            file_put_contents(config('pathImage.uploads_path') . '/' . $imageName, base64_decode($file_data));
+
+            Cards::where('card_id', $card_id)
+                ->update([
+                    'code' => $code,
+                    'skill' => $skill,
+                    'color' => $color,
+                    'name' => $name,
+                    'description' => $description,
+                    'image' => $imageName,
+                    'updated_at' => now()
+                ]);
+        } else {
+            Cards::where('card_id', $card_id)
+                ->update([
+                    'code' => $code,
+                    'skill' => $skill,
+                    'color' => $color,
+                    'name' => $name,
+                    'description' => $description,
+                    'updated_at' => now()
+                ]);
+        }
+
+        return response()->json(200);
+    }
+
+    public function SubmitCardDelete(Request $request) {
+        $card_id = ($request->has('card_id')) ? trim($request->input('card_id')) : null;
+
+        Cards::where('card_id', $card_id)->delete();
+
+        return response()->json(200);
+    }
 }

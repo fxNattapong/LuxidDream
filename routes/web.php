@@ -29,6 +29,19 @@ Route::prefix('admin')->group(function () {
     Route::post('/player/delete', "AdminController@SubmitPlayerDelete")->Name('SubmitPlayerDelete');
 
     Route::get('/levels', "AdminController@Levels")->Name('Levels');
+    Route::post('/level/add', "AdminController@SubmitLevelAdd")->Name('SubmitLevelAdd');
+    Route::post('/level/edit', "AdminController@SubmitLevelEdit")->Name('SubmitLevelEdit');
+    Route::post('/level/delete', "AdminController@SubmitLevelDelete")->Name('SubmitLevelDelete');
+
+    Route::get('/nightmares', "AdminController@Nightmares")->Name('Nightmares');
+    Route::post('/nightmare/add', "AdminController@SubmitNightmareAdd")->Name('SubmitNightmareAdd');
+    Route::post('/nightmare/edit', "AdminController@SubmitNightmareEdit")->Name('SubmitNightmareEdit');
+    Route::post('/nightmare/delete', "AdminController@SubmitNightmareDelete")->Name('SubmitNightmareDelete');
+
+    Route::get('/cards', "AdminController@Cards")->Name('Cards');
+    Route::post('/card/add', "AdminController@SubmitCardAdd")->Name('SubmitCardAdd');
+    Route::post('/card/edit', "AdminController@SubmitCardEdit")->Name('SubmitCardEdit');
+    Route::post('/card/delete', "AdminController@SubmitCardDelete")->Name('SubmitCardDelete');
 });
 
 Route::prefix('game')->group(function () {
