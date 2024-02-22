@@ -41,6 +41,12 @@
                                 <span>ผู้เล่น</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ Route('Levels') }}" id="Levels" class="flex items-center font-medium gap-2 w-full p-2 hover:text-indigo-600 hover:bg-[#E4E9F7] duration-300 rounded">
+                                <i class='bx bx-expand-horizontal text-2xl'></i>
+                                <span>ระดับความยาก</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <!-- END MENU -->

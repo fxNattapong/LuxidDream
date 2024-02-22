@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Session;
 use App\Models\Players;
 use App\Models\Players_Stats;
+use App\Models\Levels;
 use App\Models\Cards;
 use App\Models\Rooms;
 use App\Models\Rooms_Players;
@@ -178,6 +179,14 @@ class AdminController extends Controller
         Players::where('player_id', $player_id)->delete();
 
         return response()->json(200);
+    }
+
+
+
+    public function Levels(Request $request) {
+        $levels = Levels::All();
+
+        return view('admin/contents/Levels', compact('levels'));
     }
 
 }
