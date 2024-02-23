@@ -50,10 +50,17 @@
                     <div class="mt-[0.75em] flex-col w-full text-white font-bold pb-[1em]">
                         <i class='bx bxs-layer text-xl' ></i>
                         <label for="">Level:</label>
-                        <select id="level_create" class="bg-gray-50 border border-gray-300 rounded-full text-gray-700 text-md font-light focus:ring-indigo-500 focus:border-indigo-500 block w-full px-2 py-1 overflow-hidden">
-                            <option value="0" class="font-light">Easy</option>
-                            <option value="1" class="font-light">Medium</option>
-                            <option value="2" class="font-light">Hard</option>
+                        <select id="level_id_create" class="bg-gray-50 border border-gray-300 rounded-full text-gray-700 text-md font-light focus:ring-indigo-500 focus:border-indigo-500 block w-full px-2 py-1 overflow-hidden">
+                            @foreach($levels as $level)
+                                <option value="{{ $level->level_id }}" class="font-light">
+                                    @if($level->level === 0)
+                                        ง่าย
+                                    @elseif($level->level === 1)
+                                        ปานกลาง
+                                    @elseif($level->level === 2)
+                                        ยาก
+                                    @endif</option>
+                            @endforeach
                         </select>
                     </div>
 

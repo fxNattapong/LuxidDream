@@ -68,8 +68,8 @@
                                 <p class="text-xl">{{ $room_card->card_name }}</p>
                             </div>
                             <div class="text-center">
-                                <h2 class="text-2xl font-bold">Detailed</h2>
-                                <p class="text-xl">{{ $room_card->details }}</p>
+                                <h2 class="text-2xl font-bold">Description</h2>
+                                <p class="text-xl">{{ $room_card->description }}</p>
                             </div>
                         </div>
                     </div>

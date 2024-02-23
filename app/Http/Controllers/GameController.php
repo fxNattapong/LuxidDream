@@ -6,17 +6,20 @@ use Illuminate\Http\Request;
 use Session;
 use App\Models\Players;
 use App\Models\Players_Stats;
+use App\Models\Levels;
 use App\Models\Cards;
 use App\Models\Rooms;
 use App\Models\Rooms_Players;
 use App\Models\Rooms_Cards;
 
-use App\Events\RoomUpdated;
+// use App\Events\RoomUpdated;
 
 class GameController extends Controller
 {
     public function Home() {
-        return view('game/contents/Home', compact('data'));
+        $levels = Levels::All();
+
+        return view('game/contents/Home', compact('levels'));
     }
 
     public function RegisterProcess(Request $request) {
@@ -100,14 +103,14 @@ class GameController extends Controller
 
         if(!$username) {
             $status = 'Please login.';
-            return response()->json(['status' => $status], 401);
+            return response()->json(['status' => $status], 400);
         }
         
         if ($username && $name_ingame) {
             $InsertRoom = new Rooms;
             $InsertRoom->invite_code = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
             $InsertRoom->creator_name = $username;
-            $InsertRoom->level = $level;
+            $InsertRoom->level_id = $level_id;
             $InsertRoom->save();
 
             $InsertPlayer = new Rooms_Players;
@@ -262,14 +265,14 @@ class GameController extends Controller
         
         $players = Rooms_Players::where('room_id', $room->id)->get();
 
-        $room_cards = Rooms_Cards::leftJoin('cards', 'rooms_cards.card_code', '=', 'cards.card_code')
-                                    ->select('rooms_cards.*', 'cards.card_name as card_name', 'cards.details as details',
+        $room_card = Rooms_Cards::leftJoin('cards', 'rooms_cards.code', '=', 'cards.code')
+                                    ->select('rooms_cards.*', 'cards.name as card_name', 'cards.description as description',
                                             'cards.image as image')
                                     ->where('room_id', $room->id)
                                     ->latest()
                                     ->first();
                                     
-        return view('game/contents/RoomPlay', compact('room', 'players', 'room_cards'));
+        return view('game/contents/RoomPlay', compact('room', 'players', 'room_card'));
     }
 
     public function StartTimer(Request $request) {

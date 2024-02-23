@@ -27,6 +27,11 @@ Route::prefix('admin')->group(function () {
     Route::post('/player/add', "AdminController@SubmitPlayerAdd")->Name('SubmitPlayerAdd');
     Route::post('/player/edit', "AdminController@SubmitPlayerEdit")->Name('SubmitPlayerEdit');
     Route::post('/player/delete', "AdminController@SubmitPlayerDelete")->Name('SubmitPlayerDelete');
+    
+    Route::get('/players/rule', "AdminController@PlayersRule")->Name('PlayersRule');
+    Route::post('/player/rule/add', "AdminController@SubmitPlayerRuleAdd")->Name('SubmitPlayerRuleAdd');
+    Route::post('/player/rule/edit', "AdminController@SubmitPlayerRuleEdit")->Name('SubmitPlayerRuleEdit');
+    Route::post('/player/rule/delete', "AdminController@SubmitPlayerRuleDelete")->Name('SubmitPlayerRuleDelete');
 
     Route::get('/levels', "AdminController@Levels")->Name('Levels');
     Route::post('/level/add', "AdminController@SubmitLevelAdd")->Name('SubmitLevelAdd');

@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Session;
 use App\Models\Players;
 use App\Models\Players_Stats;
+use App\Models\Players_Rule;
 use App\Models\Levels;
 use App\Models\Nightmares;
 use App\Models\Cards;
@@ -178,6 +179,69 @@ class AdminController extends Controller
         $player_id = ($request->has('player_id')) ? ($request->input('player_id')) : null;
 
         Players::where('player_id', $player_id)->delete();
+
+        return response()->json(200);
+    }
+
+
+
+    public function PlayersRule(Request $request) {
+        $players_rule = Players_Rule::All();
+
+        return view('admin/contents/PlayersRule', compact('players_rule'));
+    }
+
+    public function SubmitPlayerRuleAdd(Request $request) {
+        $amount = ($request->has('amount')) ? trim($request->input('amount')) : null;
+        $circle = ($request->has('circle')) ? trim($request->input('circle')) : null;
+        $nightmare_5 = ($request->has('nightmare_5')) ? trim($request->input('nightmare_5')) : null;
+        $nightmare_6 = ($request->has('nightmare_6')) ? trim($request->input('nightmare_6')) : null;
+        
+        $isRule = Players_Rule::where('amount', $amount)->first();
+        if($isRule) {
+            $status = 'จำนวนผู้เล่นนี้ถูกสร้างแล้ว';
+            return response()->json(['status' => $status], 400);
+        }
+
+        $InsertRow = new Players_Rule;
+        $InsertRow->amount = $amount;
+        $InsertRow->circle = $circle;
+        $InsertRow->nightmare_5 = $nightmare_5;
+        $InsertRow->nightmare_6 = $nightmare_6;
+        $InsertRow->save();
+
+        return response()->json(200);
+    }
+
+    public function SubmitPlayerRuleEdit(Request $request) {
+        $player_rule_id = ($request->has('player_rule_id')) ? trim($request->input('player_rule_id')) : null;
+        $amount = ($request->has('amount')) ? trim($request->input('amount')) : null;
+        $circle = ($request->has('circle')) ? trim($request->input('circle')) : null;
+        $nightmare_5 = ($request->has('nightmare_5')) ? trim($request->input('nightmare_5')) : null;
+        $nightmare_6 = ($request->has('nightmare_6')) ? trim($request->input('nightmare_6')) : null;
+        $isRule = Players_Rule::where('amount', $amount)->first();
+
+        if($isRule && $isRule->player_rule_id != $player_rule_id) {
+            $status = 'จำนวนผู้เล่นนี้ถูกสร้างแล้ว';
+            return response()->json(['status' => $status], 400);
+        }
+
+        Players_Rule::where('player_rule_id', $player_rule_id)
+                    ->update([
+                        'amount' => $amount,
+                        'circle' => $circle,
+                        'nightmare_5' => $nightmare_5,
+                        'nightmare_6' => $nightmare_6,
+                        'updated_at' => now()
+                    ]);
+
+        return response()->json(200);
+    }
+
+    public function SubmitPlayerRuleDelete(Request $request) {
+        $player_rule_id = ($request->has('player_rule_id')) ? ($request->input('player_rule_id')) : null;
+
+        Players_Rule::where('player_rule_id', $player_rule_id)->delete();
 
         return response()->json(200);
     }

@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.8.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 22, 2024 at 08:45 PM
--- Server version: 10.4.28-MariaDB
+-- Generation Time: Feb 23, 2024 at 01:44 PM
+-- Server version: 10.1.32-MariaDB
 -- PHP Version: 7.2.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -35,9 +36,9 @@ CREATE TABLE `cards` (
   `name` varchar(100) DEFAULT NULL,
   `description` varchar(100) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cards`
@@ -79,9 +80,9 @@ CREATE TABLE `cards_relation` (
   `card_relation_id` int(5) NOT NULL,
   `card_id_first` int(5) DEFAULT NULL,
   `card_id_second` int(5) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -98,9 +99,9 @@ CREATE TABLE `levels` (
   `time_3` varchar(5) DEFAULT NULL,
   `time_4` varchar(5) DEFAULT NULL,
   `time_5` varchar(5) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `levels`
@@ -122,9 +123,9 @@ CREATE TABLE `nightmares` (
   `type` tinyint(2) DEFAULT NULL COMMENT '0=panic, 1=anxiety, 2=anger, 3=sad, 4=peace',
   `description` varchar(100) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `nightmares`
@@ -162,10 +163,10 @@ CREATE TABLE `players` (
   `phone` varchar(10) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
-  `role` tinyint(2) NOT NULL DEFAULT 0 COMMENT '0=player, 1=admin',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `role` tinyint(2) NOT NULL DEFAULT '0' COMMENT '0=player, 1=admin',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `players`
@@ -178,6 +179,33 @@ INSERT INTO `players` (`player_id`, `username`, `password`, `phone`, `email`, `i
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `players_rule`
+--
+
+CREATE TABLE `players_rule` (
+  `player_rule_id` int(5) NOT NULL,
+  `amount` int(2) DEFAULT NULL,
+  `circle` int(2) DEFAULT NULL,
+  `nightmare_5` int(2) DEFAULT NULL,
+  `nightmare_6` int(2) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `players_rule`
+--
+
+INSERT INTO `players_rule` (`player_rule_id`, `amount`, `circle`, `nightmare_5`, `nightmare_6`, `created_at`, `updated_at`) VALUES
+(1, 4, 2, 1, 1, '2024-02-23 16:31:22', '2024-02-23 16:31:22'),
+(2, 5, 3, 3, 0, '2024-02-23 16:32:55', '2024-02-23 16:32:55'),
+(3, 6, 3, 2, 1, '2024-02-23 16:32:58', '2024-02-23 16:32:58'),
+(4, 7, 4, 3, 1, '2024-02-23 16:33:02', '2024-02-23 16:33:02'),
+(5, 8, 4, 2, 2, '2024-02-23 16:52:24', '2024-02-23 16:52:24');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `players_stats`
 --
 
@@ -186,9 +214,9 @@ CREATE TABLE `players_stats` (
   `player_id` int(5) DEFAULT NULL,
   `played_all` int(5) DEFAULT NULL,
   `played_last` datetime DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `players_stats`
@@ -206,21 +234,13 @@ INSERT INTO `players_stats` (`player_stats_id`, `player_id`, `played_all`, `play
 
 CREATE TABLE `rooms` (
   `room_id` int(5) NOT NULL,
+  `level_id` int(5) DEFAULT NULL,
   `invite_code` varchar(30) DEFAULT NULL,
-  `level` tinyint(2) DEFAULT NULL,
   `creator_name` varchar(50) DEFAULT NULL,
-  `status` tinyint(2) DEFAULT 0,
-  `round_time` datetime DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `rooms`
---
-
-INSERT INTO `rooms` (`room_id`, `invite_code`, `level`, `creator_name`, `status`, `round_time`, `created_at`, `updated_at`) VALUES
-(1, '791567', 1, 'creator', 0, NULL, '2024-02-17 22:33:05', '2024-02-17 22:33:05');
+  `status` tinyint(2) DEFAULT '0',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -231,10 +251,25 @@ INSERT INTO `rooms` (`room_id`, `invite_code`, `level`, `creator_name`, `status`
 CREATE TABLE `rooms_cards` (
   `room_cards_id` int(5) NOT NULL,
   `room_id` int(5) DEFAULT NULL,
-  `card_code` varchar(10) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `code` varchar(10) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rooms_nightmares`
+--
+
+CREATE TABLE `rooms_nightmares` (
+  `room_nightmare_id` int(5) NOT NULL,
+  `room_id` int(5) DEFAULT NULL,
+  `nightmare_id` int(5) DEFAULT NULL,
+  `status` tinyint(2) NOT NULL DEFAULT '0',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -247,19 +282,11 @@ CREATE TABLE `rooms_players` (
   `player_id` int(5) DEFAULT NULL,
   `room_id` int(5) DEFAULT NULL,
   `name_ingame` varchar(50) DEFAULT NULL,
-  `status` tinyint(2) DEFAULT 0 COMMENT '0=not ready, 1=ready',
-  `role` tinyint(2) DEFAULT 0 COMMENT '0=player, 1=creator',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `rooms_players`
---
-
-INSERT INTO `rooms_players` (`room_players_id`, `player_id`, `room_id`, `name_ingame`, `status`, `role`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'creator', 1, 1, '2024-02-17 22:33:05', '2024-02-17 22:33:05'),
-(2, 2, 1, 'player', 0, 0, '2024-02-17 23:49:52', '2024-02-18 00:07:48');
+  `status` tinyint(2) DEFAULT '0' COMMENT '0=not ready, 1=ready',
+  `role` tinyint(2) DEFAULT '0' COMMENT '0=player, 1=creator',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
@@ -296,6 +323,12 @@ ALTER TABLE `players`
   ADD PRIMARY KEY (`player_id`);
 
 --
+-- Indexes for table `players_rule`
+--
+ALTER TABLE `players_rule`
+  ADD PRIMARY KEY (`player_rule_id`);
+
+--
 -- Indexes for table `players_stats`
 --
 ALTER TABLE `players_stats`
@@ -312,6 +345,12 @@ ALTER TABLE `rooms`
 --
 ALTER TABLE `rooms_cards`
   ADD PRIMARY KEY (`room_cards_id`);
+
+--
+-- Indexes for table `rooms_nightmares`
+--
+ALTER TABLE `rooms_nightmares`
+  ADD PRIMARY KEY (`room_nightmare_id`);
 
 --
 -- Indexes for table `rooms_players`
@@ -354,6 +393,12 @@ ALTER TABLE `players`
   MODIFY `player_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `players_rule`
+--
+ALTER TABLE `players_rule`
+  MODIFY `player_rule_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `players_stats`
 --
 ALTER TABLE `players_stats`
@@ -363,7 +408,7 @@ ALTER TABLE `players_stats`
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `room_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `room_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `rooms_cards`
@@ -372,10 +417,16 @@ ALTER TABLE `rooms_cards`
   MODIFY `room_cards_id` int(5) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `rooms_nightmares`
+--
+ALTER TABLE `rooms_nightmares`
+  MODIFY `room_nightmare_id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `rooms_players`
 --
 ALTER TABLE `rooms_players`
-  MODIFY `room_players_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `room_players_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
