@@ -15,13 +15,13 @@
         <!-- START BUTTON -->
         <div class="z-50">
             <div class="relative w-[350px]">
-                <button id="btn-room-create" class="bg-violet-900 rounded-md w-full text-white text-center font-bold py-2 hover:text-gray-400 duration-300">
-                    CRATE GAME
+                <button id="btn-room-create" class="bg-violet-900 rounded-md w-full text-white text-center font-medium py-2 hover:text-gray-400 duration-300">
+                    สร้างห้อง
                 </button>
 
                 <a href="{{ Route('RoomJoin') }}">
-                    <div class="mt-[1em] bg-violet-900 rounded-md w-full text-white text-center font-bold py-2 hover:text-gray-400 duration-300">
-                        JOIN GAME
+                    <div class="mt-[1em] bg-violet-900 rounded-md w-full text-white text-center font-medium py-2 hover:text-gray-400 duration-300">
+                        เข้าร่วมเกม
                     </div>
                 </a>
             </div>
@@ -39,29 +39,42 @@
             <span id="icon-close-room-create" class="z-20 text-white text-[30px] font-medium absolute top-0 right-0 m-0 mr-6 hover:text-gray-400 cursor-pointer duration-300">&times;</span>
 
             <div class="z-20 relative flex-col flex items-center w-full mt-[-50px]">
-                <form action="#!" method="post" onsubmit="return false;">
+                <form action="#!" method="post" onsubmit="return false;" class="m-0"
+                id="form-room-create" data-route="{{ Route('RoomCreate') }}">
                     @csrf
-                    <h1 class="uppercase text-white text-3xl font-bold text-center">Create Room</h1>
-                    <div class=" mt-[0.75em] flex-col w-full text-white font-bold">
+                    <h1 class="uppercase text-white text-3xl font-bold text-center">สร้างห้อง</h1>
+                    <div class=" mt-[0.75em] flex-col w-full text-white font-medium">
                         <i class='bx bxs-user-account text-xl' ></i>
-                        <label for="">Your in-game name:</label>
-                        <input id="name_ingame_create" type="text" class="w-full rounded-full bg-indigo-200 border border-white text-gray-700 placeholder-gray-500 px-2 py-1" value="" placeholder="Enter your name...">
+                        <label for="name_ingame_create">ชื่อในเกมของคุณ:</label>
+                        <input id="name_ingame_create" type="text" class="w-full rounded-full bg-indigo-200 border border-white text-gray-700 font-light placeholder-gray-500 px-2 py-1" value="" placeholder="กรุณากรอกชื่อ...">
                     </div>
-                    <div class="mt-[0.75em] flex-col w-full text-white font-bold pb-[1em]">
-                        <i class='bx bxs-layer text-xl' ></i>
-                        <label for="">Level:</label>
-                        <select id="level_id_create" class="bg-gray-50 border border-gray-300 rounded-full text-gray-700 text-md font-light focus:ring-indigo-500 focus:border-indigo-500 block w-full px-2 py-1 overflow-hidden">
-                            @foreach($levels as $level)
-                                <option value="{{ $level->level_id }}" class="font-light">
-                                    @if($level->level === 0)
-                                        ง่าย
-                                    @elseif($level->level === 1)
-                                        ปานกลาง
-                                    @elseif($level->level === 2)
-                                        ยาก
-                                    @endif</option>
-                            @endforeach
-                        </select>
+                    <div class="grid grid-cols-2 gap-2 pb-[1em]">
+                        <div class="mt-[0.75em] flex-col w-full text-white font-medium">
+                            <i class='bx bxs-layer text-xl' ></i>
+                            <label for="player_rule_id_create">จำนวนผู้เล่น:</label>
+                            <select id="player_rule_id_create" class="bg-gray-50 border border-gray-300 rounded-full text-gray-700 text-md font-light focus:ring-indigo-500 focus:border-indigo-500 block w-full px-2 py-1 overflow-hidden">
+                                @foreach($players_rule as $player_rule)
+                                    <option value="{{ $player_rule['player_rule_id'] }}" class="font-light">{{ $player_rule['amount'] }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mt-[0.75em] flex-col w-full text-white font-medium">
+                            <i class='bx bxs-layer text-xl' ></i>
+                            <label for="">ระดับ:</label>
+                            <select id="level_id_create" class="bg-gray-50 border border-gray-300 rounded-full text-gray-700 text-md font-light focus:ring-indigo-500 focus:border-indigo-500 block w-full px-2 py-1 overflow-hidden">
+                                @foreach($levels as $level)
+                                    <option value="{{ $level->level_id }}" class="font-light">
+                                        @if($level->level === 0)
+                                            ง่าย
+                                        @elseif($level->level === 1)
+                                            ปานกลาง
+                                        @elseif($level->level === 2)
+                                            ยาก
+                                        @endif
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
 
                     <button onclick="RoomCreate()" class="bg-[#EE609A] rounded-full py-1 w-full border border-white text-white hover:bg-[#d62c65] duration-300">CREATE</button>
@@ -74,84 +87,15 @@
 
 @endsection
 
-@section('script')
+@push('script')
+    <script src="{{ URL('js/game/Home.js') }}" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             $('#loading').addClass('hidden');
+
+            @if($room) 
+                window.location.href = '<?php echo Route('RoomWaiting', ['invite_code' => $room->invite_code]) ?>';
+            @endif
         });
-
-        $(document).ready(function() {
-            // MODAL ROOM CREATE
-            $('#btn-room-create').on('click', function() {
-                $('#modal-room-create').removeClass('hidden');
-            });
-            $('#icon-close-room-create').on('click', function() {
-                var modal = $('#modal-room-create');
-                modal.addClass('fade-out-modal');
-
-                setTimeout(function() {
-                    modal.addClass('hidden');
-                    modal.removeClass("fade-out-modal");
-                }, 500);
-            });
-        });
-
-        var sessionPlayerID = "<?php echo Session::get('player_id');  ?>";
-        var sessionUsername = "<?php echo Session::get('username');  ?>";
-
-        var isLoading = false;
-        function RoomCreate(){
-            if(!isLoading) {
-                isLoading = true;
-                fetch("{{ Route('RoomCreate') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "X-CSRF-Token": '{{ csrf_token() }}'
-                    },
-                    body:JSON.stringify(
-                        {
-                            player_id: sessionPlayerID,
-                            username: sessionUsername,
-                            name_ingame: document.getElementById("name_ingame_create").value,
-                            level: document.getElementById("level_create").value,
-                        }
-                    )
-                })
-                .then(async response => {
-                    const isJson = response.headers.get('content-type')?.includes('application/json');
-                    const data = isJson ? await response.json() : null; 
-            
-                    if(!response.ok){
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: 'Failed to create!',
-                            html: `${data.status}`,
-                        });
-            
-                        const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
-                        return Promise.reject(error);
-                    }
-
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'Successfully created',
-                        timer: 1000,
-                        timerProgressBar: true
-                    }).then((result) => {
-                        window.location.href = "{{ Route('RoomWaiting', ['invite_code' => '']) }}" + data.invite_code;
-                    })
-
-                }).catch((er) => {
-                    console.log('Error: ' + er);
-                })
-                .finally(() => {
-                    isLoading = false;
-                });
-            }
-        }
     </script>
-@endsection
+@endpush

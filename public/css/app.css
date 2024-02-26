@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=Kanit:wght@200;300;400;500;600;700&display=swap);
 /*
-! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.0 | MIT License | https://tailwindcss.com
 *//*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
@@ -571,8 +571,14 @@ video {
 .top-0 {
   top: 0px;
 }
+.top-\[-30px\] {
+  top: -30px;
+}
 .top-\[-3px\] {
   top: -3px;
+}
+.top-\[-7px\] {
+  top: -7px;
 }
 .z-10 {
   z-index: 10;
@@ -678,6 +684,9 @@ video {
 }
 .mr-0 {
   margin-right: 0px;
+}
+.mr-3 {
+  margin-right: 0.75rem;
 }
 .mr-4 {
   margin-right: 1rem;
@@ -817,6 +826,9 @@ video {
 }
 .min-h-\[100vh\] {
   min-height: 100vh;
+}
+.min-h-\[76px\] {
+  min-height: 76px;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -1115,10 +1127,6 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(74 64 152 / var(--tw-bg-opacity));
 }
-.bg-\[\#50D255\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(80 210 85 / var(--tw-bg-opacity));
-}
 .bg-\[\#8388d1\] {
   --tw-bg-opacity: 1;
   background-color: rgb(131 136 209 / var(--tw-bg-opacity));
@@ -1146,10 +1154,6 @@ video {
 .bg-\[\#eae4f7\] {
   --tw-bg-opacity: 1;
   background-color: rgb(234 228 247 / var(--tw-bg-opacity));
-}
-.bg-\[\#ff5757\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 87 87 / var(--tw-bg-opacity));
 }
 .bg-black {
   --tw-bg-opacity: 1;
@@ -1223,9 +1227,13 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
-.bg-\[\#E4E9F7\] {
+.bg-\[\#50D255\] {
   --tw-bg-opacity: 1;
-  background-color: rgb(228 233 247 / var(--tw-bg-opacity));
+  background-color: rgb(80 210 85 / var(--tw-bg-opacity));
+}
+.bg-\[\#ff5757\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 87 87 / var(--tw-bg-opacity));
 }
 .fill-blue-600 {
   fill: #2563eb;
@@ -1356,6 +1364,9 @@ video {
 .text-\[16px\] {
   font-size: 16px;
 }
+.text-\[18px\] {
+  font-size: 18px;
+}
 .text-\[20px\] {
   font-size: 20px;
 }
@@ -1485,6 +1496,9 @@ video {
 .placeholder-white::placeholder {
   --tw-placeholder-opacity: 1;
   color: rgb(255 255 255 / var(--tw-placeholder-opacity));
+}
+.opacity-20 {
+  opacity: 0.2;
 }
 .opacity-40 {
   opacity: 0.4;
@@ -1651,11 +1665,6 @@ video {
   background-color: rgb(214 44 101 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-\[\#fd0000\]:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(253 0 0 / var(--tw-bg-opacity));
-}
-
 .hover\:bg-blue-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(219 234 254 / var(--tw-bg-opacity));
@@ -1701,6 +1710,11 @@ video {
   background-color: rgb(255 228 230 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-\[\#fd0000\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(253 0 0 / var(--tw-bg-opacity));
+}
+
 .hover\:text-blue-700:hover {
   --tw-text-opacity: 1;
   color: rgb(29 78 216 / var(--tw-text-opacity));
@@ -1716,9 +1730,19 @@ video {
   color: rgb(31 41 55 / var(--tw-text-opacity));
 }
 
+.hover\:text-indigo-300:hover {
+  --tw-text-opacity: 1;
+  color: rgb(165 180 252 / var(--tw-text-opacity));
+}
+
 .hover\:text-indigo-600:hover {
   --tw-text-opacity: 1;
   color: rgb(79 70 229 / var(--tw-text-opacity));
+}
+
+.hover\:text-red-400:hover {
+  --tw-text-opacity: 1;
+  color: rgb(248 113 113 / var(--tw-text-opacity));
 }
 
 .hover\:text-rose-600:hover {
@@ -1888,12 +1912,20 @@ video {
     display: none;
   }
 
+  .max-md\:h-7 {
+    height: 1.75rem;
+  }
+
   .max-md\:h-\[30px\] {
     height: 30px;
   }
 
   .max-md\:h-full {
     height: 100%;
+  }
+
+  .max-md\:w-7 {
+    width: 1.75rem;
   }
 
   .max-md\:w-\[350px\] {
@@ -1948,6 +1980,18 @@ video {
 }
 
 @media not all and (min-width: 640px) {
+
+  .max-sm\:absolute {
+    position: absolute;
+  }
+
+  .max-sm\:right-3 {
+    right: 0.75rem;
+  }
+
+  .max-sm\:top-3 {
+    top: 0.75rem;
+  }
 
   .max-sm\:col-span-2 {
     grid-column: span 2 / span 2;

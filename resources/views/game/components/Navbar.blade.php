@@ -36,7 +36,7 @@
             </a>
         </li>
         
-        <li class="relative flex items-center justify-center">
+        <li class="relative flex items-center justify-center max-sm:absolute max-sm:top-3 max-sm:right-3">
             @if(!Session::get('username'))
                 <button id="btn-login" class="bg-[#EE609A] hover:bg-[#d62c65] rounded px-2 py-1 duration-300">Login</button>
             @else

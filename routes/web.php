@@ -62,6 +62,8 @@ Route::prefix('game')->group(function () {
         Route::post('/joining', "GameController@RoomJoining")->Name('RoomJoining');
     
         Route::get('/waiting', "GameController@RoomWaiting")->Name('RoomWaiting')->middleware('redirectIfAuth');
+        Route::post('/player/remove', "GameController@PlayerRemove")->Name('PlayerRemove');
+        Route::post('/delete', "GameController@RoomDelete")->Name('RoomDelete');
         Route::post('/poll/players', "GameController@pollPlayers")->Name('pollPlayers');
     
         Route::post('/change/status', "GameController@ChangeStatus")->Name('ChangeStatus');
@@ -72,7 +74,7 @@ Route::prefix('game')->group(function () {
         Route::get('/start', "GameController@RoomPlay")->Name('RoomPlay')->middleware('redirectIfAuth');
     
         Route::post('/start/timer', "GameController@StartTimer")->Name('StartTimer');
-        Route::post('/poll/cards', "GameController@pollCards")->Name('pollCards');
+        Route::post('/poll/cards', "GameController@PollCards")->Name('PollCards');
         Route::post('/round/card/add', "GameController@CardAdd")->Name('CardAdd');
     });
     

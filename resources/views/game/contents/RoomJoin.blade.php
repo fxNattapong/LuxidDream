@@ -34,61 +34,17 @@
 
 @endsection
 
-@section('script')
+@push('script')
+    <script src="{{ URL('js/game/RoomJoin.js') }}" defer></script>
     <script>
-        const sessionPlayerID = '<?php echo Session::get('player_id') ?>';
-        const sessionUsername = '<?php echo Session::get('username') ?>';
-
+        const RouteRoomJoining = "<?php echo Route('RoomJoining'); ?>";
+        
         document.addEventListener('DOMContentLoaded', function () {
             $('#loading').addClass('hidden');
+
+            @if($room) 
+                window.location.href = '<?php echo Route('RoomWaiting', ['invite_code' => $room->invite_code]) ?>';
+            @endif
         });
-
-        var isLoading = false;
-
-        function RoomJoining(){
-            if(!isLoading) {
-                isLoading = true;
-                fetch("{{ Route('RoomJoining') }}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "X-CSRF-Token": '{{ csrf_token() }}'
-                    },
-                    body:JSON.stringify(
-                        {
-                            invite_code: document.getElementById("invite_code_join").value,
-                            player_id: sessionPlayerID,
-                            username: sessionUsername,
-                            name_ingame: document.getElementById("name_ingame_join").value,
-                        }
-                    )
-                })
-                .then(async response => {
-                    const isJson = response.headers.get('content-type')?.includes('application/json');
-                    const data = isJson ? await response.json() : null; 
-            
-                    if(!response.ok){
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: 'Failed to join room!',
-                            html: `${data.status}`,
-                        });
-            
-                        const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
-                        return Promise.reject(error);
-                    }
-
-                    window.location.href = "{{ Route('RoomWaiting', ['invite_code' => '']) }}" + data.invite_code;
-
-                }).catch((er) => {
-                    console.log('Error: ' + er);
-                })
-                .finally(() => {
-                    isLoading = false;
-                });
-            }
-        }
     </script>
-@endsection
+@endpush

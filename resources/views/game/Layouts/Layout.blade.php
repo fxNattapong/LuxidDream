@@ -25,6 +25,22 @@
         </div>
     </body>
 
-    @yield('script')
+    @stack('script')
+        
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @php
+        $currentRoute = Request::route()->getName();
+    @endphp
+    <script>
+        var sessionPlayerID = "<?php echo Session::get('player_id');  ?>";
+        var sessionUsername = "<?php echo Session::get('username');  ?>";
+        const sessionName = '<?php echo Session::get('name_ingame') ?>';
+        const csrfToken = "{{ csrf_token() }}";
+        const currentRoute = '@php echo $currentRoute; @endphp';
+        const pathAssets = "{{ URL('/assets/') }}/";
+        const pathUploads = "{{ URL('/uploads/') }}/";
+    </script>
 
 </html>

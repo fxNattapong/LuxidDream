@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 use Session;
 use App\Models\Players;
 use App\Models\Players_Stats;
+use App\Models\Players_Rule;
 use App\Models\Levels;
 use App\Models\Cards;
 use App\Models\Rooms;
 use App\Models\Rooms_Players;
 use App\Models\Rooms_Cards;
+use App\Models\Rooms_Nightmares;
 
 // use App\Events\RoomUpdated;
 
@@ -19,7 +21,35 @@ class GameController extends Controller
     public function Home() {
         $levels = Levels::All();
 
-        return view('game/contents/Home', compact('levels'));
+        $players_rule = Players_Rule::All();
+
+        $room = [];
+        if(Session::get('player_id')) {
+            $isCreated = Rooms_Players::where('player_id', Session::get('player_id'))
+                                        ->where('status', 2)
+                                        ->first();
+
+            if($isCreated) {
+                $room = Rooms::where('room_id', $isCreated->room_id)->first();
+
+                $status = (Session::get('username') === $room->creator_name) ? 1 : 0;
+
+                Rooms_Players::where('player_id', Session::get('player_id'))
+                                ->update([
+                                    'status' => $status,
+                                    'updated_at' => now()
+                                ]);
+
+                $isCreator = (Session::get('username') === $room->creator_name);
+                Session::put('creator', $isCreator);
+                Session::put('player', !$isCreator);
+                Session::put('username', Session::get('username'));
+                Session::put('name_ingame', $isCreated->name_ingame);
+            }
+        }
+
+
+        return view('game/contents/Home', compact('levels', 'players_rule', 'room'));
     }
 
     public function RegisterProcess(Request $request) {
@@ -99,47 +129,71 @@ class GameController extends Controller
         $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
         $username = ($request->has('username')) ? trim($request->input('username')) : null;
         $name_ingame = ($request->has('name_ingame')) ? trim($request->input('name_ingame')) : null;
-        $level = ($request->has('level')) ? trim($request->input('level')) : null;
+        $player_rule_id = ($request->has('player_rule_id')) ? trim($request->input('player_rule_id')) : null;
+        $level_id = ($request->has('level_id')) ? trim($request->input('level_id')) : null;
 
         if(!$username) {
-            $status = 'Please login.';
+            $status = 'กรุณาเข้าสู่ระบบ';
             return response()->json(['status' => $status], 400);
         }
-        
-        if ($username && $name_ingame) {
-            $InsertRoom = new Rooms;
-            $InsertRoom->invite_code = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
-            $InsertRoom->creator_name = $username;
-            $InsertRoom->level_id = $level_id;
-            $InsertRoom->save();
-
-            $InsertPlayer = new Rooms_Players;
-            $InsertPlayer->player_id = $player_id;
-            $InsertPlayer->room_id = $InsertRoom->id;
-            $InsertPlayer->name_ingame = $name_ingame;
-            $InsertPlayer->status = 1;
-            $InsertPlayer->role = 1;
-            $InsertPlayer->save();
-
-            session::put('creator', true);
-            session::put('username', $username);
-            session::put('name_ingame', $name_ingame);
-        
-            return response()->json([
-                'status' => 'success',
-                'id' => $InsertRoom->id,
-                'invite_code' => $InsertRoom->invite_code,
-            ], 200);
-        } else {
-            $status = 'Please enter your in-game name.';
+        if (!$name_ingame) {
+            $status = 'กรุณากรอกชื่อในเกม';
             return response()->json(['status' => $status], 401);
         }
+
+        $InsertRoom = new Rooms;
+        $InsertRoom->player_rule_id = $player_rule_id;
+        $InsertRoom->invite_code = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+        $InsertRoom->creator_name = $username;
+        $InsertRoom->level_id = $level_id;
+        $InsertRoom->save();
+
+        $InsertPlayer = new Rooms_Players;
+        $InsertPlayer->player_id = $player_id;
+        $InsertPlayer->room_id = $InsertRoom->id;
+        $InsertPlayer->name_ingame = $name_ingame;
+        $InsertPlayer->status = 1;
+        $InsertPlayer->role = 1;
+        $InsertPlayer->save();
+
+        session::put('creator', true);
+        session::put('username', $username);
+        session::put('name_ingame', $name_ingame);
+    
+        return response()->json([
+            'redirect_url' => Route('RoomWaiting', ['invite_code' => $InsertRoom->invite_code])
+        ], 200);
     }
 
 
 
     public function RoomJoin() {
-        return view('game/contents/RoomJoin', compact('data'));
+        $room = [];
+        if(Session::get('player_id')) {
+            $isCreated = Rooms_Players::where('player_id', Session::get('player_id'))
+                                        ->where('status', 2)
+                                        ->first();
+
+            if($isCreated) {
+                $room = Rooms::where('room_id', $isCreated->room_id)->first();
+
+                $status = (Session::get('username') === $room->creator_name) ? 1 : 0;
+
+                Rooms_Players::where('player_id', Session::get('player_id'))
+                                ->update([
+                                    'status' => $status,
+                                    'updated_at' => now()
+                                ]);
+
+                $isCreator = (Session::get('username') === $room->creator_name);
+                Session::put('creator', $isCreator);
+                Session::put('player', !$isCreator);
+                Session::put('username', Session::get('username'));
+                Session::put('name_ingame', $isCreated->name_ingame);
+            }
+        }
+
+        return view('game/contents/RoomJoin', compact('room'));
     }
 
     public function RoomJoining(Request $request) {
@@ -147,27 +201,38 @@ class GameController extends Controller
         $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
         $username = ($request->has('username')) ? trim($request->input('username')) : null;
         $name_ingame = ($request->has('name_ingame')) ? trim($request->input('name_ingame')) : null;
-
+        
         $isRoom = Rooms::where('invite_code', $invite_code)->first();
-        if($isRoom) {
-            $InsertPlayer = new Rooms_Players;
-            $InsertPlayer->player_id = $player_id;
-            $InsertPlayer->room_id = $isRoom->room_id;
-            $InsertPlayer->name_ingame = $name_ingame;
-            $InsertPlayer->save();
+        if(!$isRoom) {
+            $status = 'กรุณากรอกรหัสและชื่อ';
+            return response()->json(['status' => $status], 400);
+        }
 
+        $player = Players::where('username', $username)->first();
+        $isJoining = Rooms_Players::where('player_id', $player->player_id)->first();
+        if($isJoining) {
             session::put('player', true);
             session::put('username', $username);
             session::put('name_ingame', $name_ingame);
-        
+
             return response()->json([
-                'status' => 'success',
-                'invite_code' => $invite_code,
-            ], 200);
-        } else {
-            $status = 'กรุณากรอกรหัสและชื่อ';
-            return response()->json(['status' => $status], 401);
+                'redirect_url' => Route('RoomWaiting', ['invite_code' => $invite_code])
+                ], 200);
         }
+
+        $InsertPlayer = new Rooms_Players;
+        $InsertPlayer->player_id = $player_id;
+        $InsertPlayer->room_id = $isRoom->room_id;
+        $InsertPlayer->name_ingame = $name_ingame;
+        $InsertPlayer->save();
+
+        session::put('player', true);
+        session::put('username', $username);
+        session::put('name_ingame', $name_ingame);
+    
+        return response()->json([
+            'redirect_url' => Route('RoomWaiting', ['invite_code' => $invite_code])
+        ], 200);
     }
 
 
@@ -175,14 +240,73 @@ class GameController extends Controller
     public function RoomWaiting(Request $request) {
         $invite_code = ($request->has('invite_code')) ? trim($request->input('invite_code')) : null;
         
-        $room = Rooms::where('invite_code', $invite_code)->first();
+        $room = Rooms::leftJoin('players_rule', 'rooms.player_rule_id', '=', 'players_rule.player_rule_id')
+                    ->leftJoin('levels', 'rooms.level_id', '=', 'levels.level_id')
+                    ->select('rooms.*', 'players_rule.amount as amount', 'levels.level as level', 'levels.round as round')
+                    ->where('invite_code', $invite_code)
+                    ->first();
+
+        if(Session::get('player_id')) {
+            $isJoined = Rooms_Players::where('player_id', Session::get('player_id'))
+                                    ->where('room_id', $room->room_id)
+                                    ->first();
+            if(!$isJoined) {
+                return redirect()->Route('Home');
+            }
+        }
 
         $players = Rooms_Players::leftJoin('players', 'rooms_players.player_id', '=', 'players.player_id')
                                 ->select('rooms_players.*', 'players.player_id as player_id', 'players.username as username')
                                 ->where('room_id', $room->room_id)
                                 ->get();
+
+        $isStatus = Rooms_Players::where('player_id', Session::get('player_id'))
+                                    ->where('status', 2)
+                                    ->first();
+        if($isStatus) {
+            $status = (Session::get('username') === $room['creator_name']) ? 1 : 0;
+            Rooms_Players::where('player_id', Session::get('player_id'))
+                            ->update([
+                                'status' => $status,
+                                'updated_at' => now()
+                            ]);
+        }
         
         return view('game/contents/RoomWaiting', compact('room', 'players'));
+    }
+
+    public function RoomDelete(Request $request) {
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
+
+        Rooms::where('room_id', $room_id)->delete();
+
+        Rooms_Players::where('room_id', $room_id)->delete();
+        
+        return response()->json([
+            'redirect_url' => Route('Home')
+        ], 200);
+    }
+
+    public function PlayerRemove(Request $request) {
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
+        $room_player_id = ($request->has('room_player_id')) ? trim($request->input('room_player_id')) : null;
+
+        $isPlayer = Rooms_Players::where('room_player_id', $room_player_id)->first();
+        if(!$isPlayer) {
+            $status = 'ไม่พบข้อมูลผู้เล่น';
+            return response()->json(['status' => $status], 400);
+        }
+
+        $isCreator = Players::where('player_id', $isPlayer->player_id)->first();
+        $isRoom = Rooms::where('room_id', $room_id)->first();
+        if($isCreator->username === $isRoom->creator_name) {
+            $status = 'ไม่สามารถลบตัวเองได้';
+            return response()->json(['status' => $status], 400);
+        }
+
+        Rooms_Players::where('room_player_id', $room_player_id)->delete();
+    
+        return response()->json(200);
     }
 
     public function PollPlayers(Request $request) {
@@ -190,7 +314,19 @@ class GameController extends Controller
         $room = Rooms::where('room_id', $room_id)->first();
         
         if (!$room) {
-            return response()->json(['status' => 'Room not found', 400]);
+            return response()->json([
+                'status' => 'error',
+                'redirect_url' => Route('Home')
+            ], 200);
+        }
+
+        if(Session::get('player_id')) {
+            $isJoined = Rooms_Players::where('player_id', Session::get('player_id'))
+                                    ->where('room_id', $room_id)
+                                    ->first();
+            if(!$isJoined) {
+                return redirect()->Route('Home');
+            }
         }
 
         $players = Rooms_Players::leftJoin('players', 'rooms_players.player_id', '=', 'players.player_id')
@@ -199,9 +335,9 @@ class GameController extends Controller
                                 ->get();
         
         return response()->json([
-            'status' => 'success', 
             'room' => $room, 
-            'players' => $players
+            'players' => $players,
+            'redirect_url' => Route('RoomPlay', ['invite_code' => $room->invite_code])
         ], 200);
     }
 
@@ -221,19 +357,17 @@ class GameController extends Controller
                         'updated_at' => now()
                     ]);
     
-        return response()->json(['status' => 'success'], 200);
+        return response()->json(200);
     }
 
     public function RoomDisconnect(Request $request) {
-        $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
-        
-        Players::where('player_id', $player_id)
-                ->update([
-                    'status' => 3,
-                    'updated_at' => now()
-                ]);
+        Rooms_Players::where('player_id', Session::get('player_id'))
+                    ->update([
+                        'status' => 2,
+                        'updated_at' => now()
+                    ]);
     
-        return response()->json(['status' => 'success'], 200);
+        return response()->json(200);
     }
 
     public function StartGame(Request $request) {
@@ -241,7 +375,7 @@ class GameController extends Controller
 
         $isReady = Rooms_Players::where('room_id', $room_id)->where('status', 0)->first();
         if($isReady) {
-            return response()->json(['status' => 'Some players are not ready yet.'], 401);
+            return response()->json(['status' => 'ผู้เล่นบางคนยังไม่พร้อม'], 400);
         }
         
         Rooms::where('room_id', $room_id)
@@ -251,12 +385,23 @@ class GameController extends Controller
                 ]);
         
         $room = Rooms::where('room_id', $room_id)->first();
+
+        $NightmaresRandom = Nightmares::inRandomOrder()->limit(5)->get()->toArray();
+        foreach ($NightmaresRandom as $nightmare) {
+            Rooms_Nightmares::create([
+                'room_id' => $room_id,
+                'nightmare_id' => $nightmare['nightmare_id'],
+            ]);
+        }
+
+        return response()->json(['message' => 'บันทึกข้อมูลเรียบร้อยแล้ว'], 200);
     
         return response()->json([
-            'status' => 'success', 
-            'invite_code' => $room->invite_code
+            'redirect_url' => Route('RoomPlay', ['invite_code' => $room->invite_code])
         ], 200);
     }
+
+
     
     public function RoomPlay(Request  $request) {
         $invite_code = ($request->has('invite_code')) ? trim($request->input('invite_code')) : null;
@@ -306,7 +451,6 @@ class GameController extends Controller
                                     ->first();
     
         return response()->json([
-            'status' => 'success', 
             'room' => $room,
             'room_cards' => $rooms_cards
         ], 200);
