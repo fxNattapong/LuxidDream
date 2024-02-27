@@ -34,7 +34,8 @@ class GameController extends Controller
 
                 $status = (Session::get('username') === $room->creator_name) ? 1 : 0;
 
-                Rooms_Players::where('player_id', Session::get('player_id'))
+                Rooms_Players::where('room_id', $room->room_id)
+                                ->where('player_id', Session::get('player_id'))
                                 ->update([
                                     'status' => $status,
                                     'updated_at' => now()
@@ -179,7 +180,8 @@ class GameController extends Controller
 
                 $status = (Session::get('username') === $room->creator_name) ? 1 : 0;
 
-                Rooms_Players::where('player_id', Session::get('player_id'))
+                Rooms_Players::where('room_id', $room->room_id)
+                                ->where('player_id', Session::get('player_id'))
                                 ->update([
                                     'status' => $status,
                                     'updated_at' => now()
@@ -209,7 +211,9 @@ class GameController extends Controller
         }
 
         $player = Players::where('username', $username)->first();
-        $isJoining = Rooms_Players::where('player_id', $player->player_id)->first();
+        $isJoining = Rooms_Players::where('room_id', $isRoom->room_id)
+                                ->where('player_id', $player->player_id)
+                                ->first();
         if($isJoining) {
             session::put('player', true);
             session::put('username', $username);
@@ -342,6 +346,7 @@ class GameController extends Controller
     }
 
     public function ChangeStatus(Request $request) {
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
         $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
         $status = ($request->has('status')) ? trim($request->input('status')) : null;
 
@@ -351,7 +356,8 @@ class GameController extends Controller
             $status = 0;
         }
         
-        Rooms_Players::where('player_id', $player_id)
+        Rooms_Players::where('room_id', $room_id)
+                    ->where('player_id', $player_id)
                     ->update([
                         'status' => $status,
                         'updated_at' => now()
@@ -361,7 +367,11 @@ class GameController extends Controller
     }
 
     public function RoomDisconnect(Request $request) {
-        Rooms_Players::where('player_id', Session::get('player_id'))
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
+        $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
+
+        Rooms_Players::where('room_id', $room_id)
+                    ->where('player_id', $player_id)
                     ->update([
                         'status' => 2,
                         'updated_at' => now()

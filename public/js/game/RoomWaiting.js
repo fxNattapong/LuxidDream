@@ -107,19 +107,19 @@ function pollPlayers(room_id){
                             PlayerBox.find('.span-status-color').removeClass('bg-[#FD0000]').addClass('bg-gray-300');
                         }
                     }
-                    
+                    $('#player_id').val(sessionPlayerID);
                     if(data.players[i].username === creatorName) {
                         PlayerBox.find('.span-status-color').removeClass('span-status-color w-[20px] h-[20px]')
                                                             .addClass('text-indigo-900 bg-indigo-300 px-2')
                                                             .text('ผู้สร้าง');
                         PlayerBox.find('.btn-player-remove').remove();
-                        $('#player_id').val(data.players[i].player_id);
+                        // $('#player_id').val(data.players[i].player_id);
                     } else if(data.players[i].name_ingame === sessionName) {
                         if(data.players[i].status === 0) {
                             PlayerBox.find('.span-status-color').removeClass('w-[20px] h-[20px]')
                                                                 .addClass('bg-[#FD0000] text-white px-2')
                                                                 .text('คุณ');
-                            $('#player_id').val(data.players[i].player_id);
+                            // $('#player_id').val(data.players[i].player_id);
                             $('#player_status').val(0);
                             $('#btn-status').text('พร้อม').removeClass('bg-[#ff5757] hover:bg-[#fd0000]')
                                                             .addClass('bg-[#E69FBC] hover:bg-[#d1638a]');
@@ -127,7 +127,7 @@ function pollPlayers(room_id){
                             PlayerBox.find('.span-status-color').removeClass('w-[20px] h-[20px]')
                                                                 .addClass('bg-[#50D255] text-white px-2')
                                                                 .text('คุณ');
-                            $('#player_id').val(data.players[i].player_id);
+                            // $('#player_id').val(data.players[i].player_id);
                             $('#player_status').val(1);
                             $('#btn-status').text('ไม่พร้อม').removeClass('bg-[#E69FBC] hover:bg-[#d1638a]')
                                                                 .addClass('bg-[#ff5757] hover:bg-[#fd0000]');
@@ -135,13 +135,13 @@ function pollPlayers(room_id){
                     } else {
                         if(data.players[i].status === 0) {
                             PlayerBox.find('.span-status-color').addClass('bg-[#FD0000] text-white px-2');
-                            $('#player_id').val(data.players[i].player_id);
+                            // $('#player_id').val(data.players[i].player_id);
                             $('#player_status').val(0);
                             $('#btn-status').text('พร้อม').removeClass('bg-[#ff5757] hover:bg-[#fd0000]')
                                                             .addClass('bg-[#E69FBC] hover:bg-[#d1638a]');
                         } else {
                             PlayerBox.find('.span-status-color').addClass('bg-[#50D255] text-indigo-900 px-2'); 
-                            $('#player_id').val(data.players[i].player_id);      
+                            // $('#player_id').val(data.players[i].player_id);      
                             $('#player_status').val(1);
                             $('#btn-status').text('ไม่พร้อม').removeClass('bg-[#E69FBC] hover:bg-[#d1638a]')
                                                                 .addClass('bg-[#ff5757] hover:bg-[#fd0000]');
@@ -264,6 +264,7 @@ function ChangeStatus(){
             },
             body:JSON.stringify(
                 {
+                    room_id: document.getElementById("room_id").value,
                     player_id: document.getElementById("player_id").value,
                     status: document.getElementById("player_status").value,
                 }
@@ -322,6 +323,7 @@ function RoomDisconnect(){
             },
             body:JSON.stringify(
                 {
+                    room_id: document.getElementById("room_id").value,
                     player_id: document.getElementById("player_id").value,
                 }
             )
