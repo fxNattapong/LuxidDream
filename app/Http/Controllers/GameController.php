@@ -8,11 +8,14 @@ use App\Models\Players;
 use App\Models\Players_Stats;
 use App\Models\Players_Rule;
 use App\Models\Levels;
+use App\Models\Nightmares;
 use App\Models\Cards;
+use App\Models\Links;
 use App\Models\Rooms;
 use App\Models\Rooms_Players;
 use App\Models\Rooms_Cards;
 use App\Models\Rooms_Nightmares;
+use App\Models\Rooms_Links;
 
 // use App\Events\RoomUpdated;
 
@@ -370,42 +373,65 @@ class GameController extends Controller
         $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
         $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
 
-        Rooms_Players::where('room_id', $room_id)
-                    ->where('player_id', $player_id)
-                    ->update([
-                        'status' => 0,
-                        'updated_at' => now()
-                    ]);
+        if(Session::get('player')) {
+            Rooms_Players::where('room_id', $room_id)
+                        ->where('player_id', $player_id)
+                        ->update([
+                            'status' => 0,
+                            'updated_at' => now()
+                        ]);
+        }
+
     
         return response()->json(200);
     }
 
     public function StartGame(Request $request) {
         $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
-
         $isReady = Rooms_Players::where('room_id', $room_id)->where('status', 0)->first();
         if($isReady) {
             return response()->json(['status' => 'ผู้เล่นบางคนยังไม่พร้อม'], 400);
         }
-        
-        Rooms::where('room_id', $room_id)
-                ->update([
-                    'status' => 1,
-                    'updated_at' => now()
-                ]);
+
+        Session::put('circle', 1);
+        // Rooms::where('room_id', $room_id)
+        //         ->update([
+        //             'status' => 1,
+        //             'updated_at' => now()
+        //         ]);
         
         $room = Rooms::where('room_id', $room_id)->first();
+        $nmStart = Nightmares::where('type', 5)->first();
+        $link_empty = Links::where('type', 1)->first();
+        $link_dream = Links::where('type', 2)->first();
+        
+        $InsertRoomLinkEmpty = new Rooms_Links;
+        $InsertRoomLinkEmpty->room_id = $room_id;
+        $InsertRoomLinkEmpty->link_id = $link_empty->link_id;
+        $InsertRoomLinkEmpty->save();
+        
+        $InsertRoomNM = new Rooms_Nightmares;
+        $InsertRoomNM->room_id = $room_id;
+        $InsertRoomNM->room_link_id = $InsertRoomLinkEmpty->id;
+        $InsertRoomNM->nightmare_id = $nmStart->nightmare_id;
+        $InsertRoomNM->circle = 1;
+        $InsertRoomNM->save();
 
-        $NightmaresRandom = Nightmares::inRandomOrder()->limit(5)->get()->toArray();
-        foreach ($NightmaresRandom as $nightmare) {
-            Rooms_Nightmares::create([
-                'room_id' => $room_id,
-                'nightmare_id' => $nightmare['nightmare_id'],
-            ]);
+        $nmRandom = Nightmares::inRandomOrder()->limit(4)->get()->toArray();
+        foreach ($nmRandom as $nightmare) {
+            $InsertRoomLinkDream = new Rooms_Links;
+            $InsertRoomLinkDream->room_id = $room_id;
+            $InsertRoomLinkDream->link_id = $link_dream->link_id;
+            $InsertRoomLinkDream->save();
+
+            $InsertPlayer = new Rooms_Nightmares;
+            $InsertPlayer->room_id = $room_id;
+            $InsertPlayer->room_link_id = $InsertRoomLinkDream->id;
+            $InsertPlayer->nightmare_id = $nightmare['nightmare_id'];
+            $InsertPlayer->circle = 1;
+            $InsertPlayer->save();
         }
 
-        return response()->json(['message' => 'บันทึกข้อมูลเรียบร้อยแล้ว'], 200);
-    
         return response()->json([
             'redirect_url' => Route('RoomPlay', ['invite_code' => $room->invite_code])
         ], 200);

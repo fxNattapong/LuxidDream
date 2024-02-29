@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=Kanit:wght@200;300;400;500;600;700&display=swap);
 /*
-! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.0 | MIT License | https://tailwindcss.com
 *//*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
@@ -821,6 +821,21 @@ video {
 .h-full {
   height: 100%;
 }
+.h-\[200px\] {
+  height: 200px;
+}
+.h-\[100px\] {
+  height: 100px;
+}
+.h-\[50px\] {
+  height: 50px;
+}
+.h-\[150px\] {
+  height: 150px;
+}
+.h-\[120px\] {
+  height: 120px;
+}
 .max-h-\[125px\] {
   max-height: 125px;
 }
@@ -893,6 +908,9 @@ video {
 }
 .w-full {
   width: 100%;
+}
+.w-\[200px\] {
+  width: 200px;
 }
 .min-w-\[250px\] {
   min-width: 250px;
@@ -1029,6 +1047,11 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(2em * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2em * var(--tw-space-y-reverse));
+}
+.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 .overflow-auto {
   overflow: auto;
@@ -1227,13 +1250,9 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
-.bg-\[\#50D255\] {
+.bg-\[\#E4E9F7\] {
   --tw-bg-opacity: 1;
-  background-color: rgb(80 210 85 / var(--tw-bg-opacity));
-}
-.bg-\[\#ff5757\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 87 87 / var(--tw-bg-opacity));
+  background-color: rgb(228 233 247 / var(--tw-bg-opacity));
 }
 .fill-blue-600 {
   fill: #2563eb;
@@ -1708,11 +1727,6 @@ video {
 .hover\:bg-rose-100:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(255 228 230 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-\[\#fd0000\]:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(253 0 0 / var(--tw-bg-opacity));
 }
 
 .hover\:text-blue-700:hover {

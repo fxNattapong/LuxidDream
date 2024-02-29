@@ -21,6 +21,8 @@ Route::get('/register', "WebpagesController@RegisterPage")->Name('RegisterPage')
 Route::get('/rule', "WebpagesController@RulePage")->Name('RulePage');
 
 Route::prefix('admin')->group(function () {
+    Route::get('/', "AdminController@IndexRedirect")->Name('IndexRedirect');
+
     Route::get('/dashboard', "AdminController@Dashboard")->Name('Dashboard');
 
     Route::get('/players', "AdminController@Players")->Name('Players');
@@ -42,6 +44,11 @@ Route::prefix('admin')->group(function () {
     Route::post('/nightmare/add', "AdminController@SubmitNightmareAdd")->Name('SubmitNightmareAdd');
     Route::post('/nightmare/edit', "AdminController@SubmitNightmareEdit")->Name('SubmitNightmareEdit');
     Route::post('/nightmare/delete', "AdminController@SubmitNightmareDelete")->Name('SubmitNightmareDelete');
+
+    Route::get('/links', "AdminController@Links")->Name('Links');
+    Route::post('/link/add', "AdminController@SubmitLinkAdd")->Name('SubmitLinkAdd');
+    Route::post('/link/edit', "AdminController@SubmitLinkEdit")->Name('SubmitLinkEdit');
+    Route::post('/link/delete', "AdminController@SubmitLinkDelete")->Name('SubmitLinkDelete');
 
     Route::get('/cards', "AdminController@Cards")->Name('Cards');
     Route::post('/card/add', "AdminController@SubmitCardAdd")->Name('SubmitCardAdd');

@@ -10,6 +10,7 @@ use App\Models\Players_Stats;
 use App\Models\Players_Rule;
 use App\Models\Levels;
 use App\Models\Nightmares;
+use App\Models\Links;
 use App\Models\Cards;
 use App\Models\Rooms;
 use App\Models\Rooms_Players;
@@ -17,6 +18,16 @@ use App\Models\Rooms_Cards;
 
 class AdminController extends Controller
 {
+    public function IndexRedirect() {
+        if(Session::get('player_id')) {
+            return redirect()->route('Players');
+        } else {
+            return redirect()->route('Home');
+        }
+    }
+
+
+
     public function Dashboard() {
         return view('admin/contents/Dashboard');
     }
@@ -404,6 +415,76 @@ class AdminController extends Controller
         $nightmare_id = ($request->has('nightmare_id')) ? trim($request->input('nightmare_id')) : null;
 
         Nightmares::where('nightmare_id', $nightmare_id)->delete();
+
+        return response()->json(200);
+    }
+
+
+
+    public function Links(Request $request) {
+        $links = Links::paginate(8, ['*'], 'page');
+
+        return view('admin/contents/Links', compact('links'));
+    }
+
+    public function SubmitLinkAdd(Request $request) {
+        $type = ($request->has('type')) ? trim($request->input('type')) : null;
+        $image64 = ($request->has('image64')) ? trim($request->input('image64')) : null;
+
+        if(!$image64) {
+            $status = 'กรุณาแนบรูปภาพ';
+            return response()->json(['status' => $status], 400);
+        }
+
+        $InsertRow = new Links;
+        $InsertRow->type = $type;
+
+        if($image64) {
+            @list($type, $file_data) = explode(';', $image64);
+            @list(, $file_data) = explode(',', $file_data); 
+            $imageName = Str::random(10).'.'.'png';   
+            file_put_contents(config('pathImage.uploads_path') . '/' . $imageName, base64_decode($file_data));
+            
+            $InsertRow->image = $imageName;
+        }
+
+        $InsertRow->save();
+
+        return response()->json(200);
+    }
+
+    public function SubmitLinkEdit(Request $request) {
+        $link_id = ($request->has('link_id')) ? trim($request->input('link_id')) : null;
+        $link_type = ($request->has('type')) ? trim($request->input('type')) : null;
+        $image64 = ($request->has('image64')) ? trim($request->input('image64')) : null;
+        
+        if($image64) {
+            @list($type, $file_data) = explode(';', $image64);
+            @list(, $file_data) = explode(',', $file_data); 
+            $imageName = Str::random(10).'.'.'png';
+            file_put_contents(config('pathImage.uploads_path') . '/' . $imageName, base64_decode($file_data));
+            
+            Links::where('link_id', $link_id)
+                ->update([
+                    'type' => $link_type,
+                    'image' => $imageName,
+                    'updated_at' => now()
+                ]);
+        } else {
+            Links::where('link_id', $link_id)
+                ->update([
+                    'type' => $link_type,
+                    'updated_at' => now()
+                ]);
+        }
+
+        return response()->json(200);
+    }
+
+    public function SubmitLinkDelete(Request $request) {
+        $link_id = ($request->has('link_id')) ? trim($request->input('link_id')) : null;
+
+        Links::where('link_id', $link_id)->delete();
 
         return response()->json(200);
     }
