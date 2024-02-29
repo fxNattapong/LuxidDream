@@ -26,7 +26,7 @@ class GameController extends Controller
         $room = [];
         if(Session::get('player_id')) {
             $isCreated = Rooms_Players::where('player_id', Session::get('player_id'))
-                                        ->where('status', 2)
+                                        ->whereIn('status', [0, 1])
                                         ->first();
 
             if($isCreated) {
@@ -172,7 +172,7 @@ class GameController extends Controller
         $room = [];
         if(Session::get('player_id')) {
             $isCreated = Rooms_Players::where('player_id', Session::get('player_id'))
-                                        ->where('status', 2)
+                                        ->whereIn('status', [0, 1])
                                         ->first();
 
             if($isCreated) {
@@ -373,7 +373,7 @@ class GameController extends Controller
         Rooms_Players::where('room_id', $room_id)
                     ->where('player_id', $player_id)
                     ->update([
-                        'status' => 2,
+                        'status' => 0,
                         'updated_at' => now()
                     ]);
     

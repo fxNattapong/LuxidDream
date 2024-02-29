@@ -69,7 +69,9 @@
                                     @elseif($nightmare['type'] === 3)
                                         เศร้า (Sad)
                                     @elseif($nightmare['type'] === 4)
-                                        สงบ (Peace)
+                                        สงบ (Calm)
+                                    @elseif($nightmare['type'] === 5)
+                                        การ์ดเริ่ม (Start)
                                     @endif
                                 </td>
                                 <td class="px-3 py-2">
@@ -182,6 +184,8 @@
                                 <option value="1" class="font-light">กังวล (Anxiety)</option>
                                 <option value="2" class="font-light">โกรธ (Anger)</option>
                                 <option value="3" class="font-light">เศร้า (Sad)</option>
+                                <option value="4" class="font-light">สงบ (Calm)</option>
+                                <option value="5" class="font-light">การ์ดเริ่ม (Start)</option>
                             </select>
                         </div>
                         <div class="max-sm:col-span-2">
@@ -237,6 +241,8 @@
                                 <option value="1" class="font-light">กังวล (Anxiety)</option>
                                 <option value="2" class="font-light">โกรธ (Anger)</option>
                                 <option value="3" class="font-light">เศร้า (Sad)</option>
+                                <option value="4" class="font-light">สงบ (Calm)</option>
+                                <option value="5" class="font-light">การ์ดเริ่ม (Start)</option>
                             </select>
                         </div>
                         <div class="max-sm:col-span-2">
