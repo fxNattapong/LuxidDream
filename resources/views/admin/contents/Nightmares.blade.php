@@ -61,11 +61,11 @@
                                 </td>
                                 <td class="px-3 py-2">
                                     @if($nightmare['type'] === 0)
-                                        แพนิค (Panic)
+                                        โกรธ (Anger)
                                     @elseif($nightmare['type'] === 1)
                                         กังวล (Anxiety)
                                     @elseif($nightmare['type'] === 2)
-                                        โกรธ (Anger)
+                                        แพนิค (Panic)
                                     @elseif($nightmare['type'] === 3)
                                         เศร้า (Sad)
                                     @elseif($nightmare['type'] === 4)
@@ -120,13 +120,17 @@
                                 <p class="text-sm font-medium text-gray-500 truncate">ประเภท: 
                                     <span class="font-light">
                                         @if($nightmare['type'] === 0)
-                                            แพนิค (Panic)
+                                            โกรธ (Anger)
                                         @elseif($nightmare['type'] === 1)
                                             กังวล (Anxiety)
                                         @elseif($nightmare['type'] === 2)
-                                            โกรธ (Anger)
+                                            แพนิค (Panic)
                                         @elseif($nightmare['type'] === 3)
                                             เศร้า (Sad)
+                                        @elseif($nightmare['type'] === 4)
+                                            สงบ (Calm)
+                                        @elseif($nightmare['type'] === 5)
+                                            การ์ดเริ่ม (Start)
                                         @endif
                                     </span>
                                 </p>
@@ -180,9 +184,9 @@
                         <div class="max-md:col-span-2">
                             <label for="nightmare_type_add" class="block mb-2 text-md font-medium text-gray-700">ประเภท <span class="text-red-800 text-xl">*</span></label>
                             <select id="nightmare_type_add" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                                <option selected value="0" class="font-light">แพนิค (Panic)</option>
+                                <option selected value="0" class="font-light">โกรธ (Anger)</option>
                                 <option value="1" class="font-light">กังวล (Anxiety)</option>
-                                <option value="2" class="font-light">โกรธ (Anger)</option>
+                                <option value="2" class="font-light">แพนิค (Panic)</option>
                                 <option value="3" class="font-light">เศร้า (Sad)</option>
                                 <option value="4" class="font-light">สงบ (Calm)</option>
                                 <option value="5" class="font-light">การ์ดเริ่ม (Start)</option>
@@ -237,9 +241,9 @@
                         <div class="max-md:col-span-2">
                             <label for="nightmare_type_edit" class="block mb-2 text-md font-medium text-gray-700">ประเภท <span class="text-red-800 text-xl">*</span></label>
                             <select id="nightmare_type_edit" class="bg-gray-50 border border-gray-300 text-gray-700 text-md font-light rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2">
-                                <option value="0" class="font-light">แพนิค (Panic)</option>
+                                <option value="0" class="font-light">โกรธ (Anger)</option>
                                 <option value="1" class="font-light">กังวล (Anxiety)</option>
-                                <option value="2" class="font-light">โกรธ (Anger)</option>
+                                <option value="2" class="font-light">แพนิค (Panic)</option>
                                 <option value="3" class="font-light">เศร้า (Sad)</option>
                                 <option value="4" class="font-light">สงบ (Calm)</option>
                                 <option value="5" class="font-light">การ์ดเริ่ม (Start)</option>

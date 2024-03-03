@@ -1,106 +1,134 @@
+var $image;
+$(document).ready(function() {
+    // MODAL IMAGE ZOOM
+    $('.btn-image-zoom').on('click', function () {
+        $('#image_zoom').attr('src', $(this).attr('src'));
+        $("#modal-image-zoom").removeClass('hidden');
+    });
+    $('#icon-image-zoom-close').on('click', function () {
+        var modal = $('#modal-image-zoom');
+        modal.addClass("fade-out-modal");
+
+        setTimeout(function() {
+            modal.addClass('hidden');
+            modal.removeClass("fade-out-modal");
+        }, 500);
+    });
+
+    // MODAL TIPS
+    $('#btn-tips').on('click', function () {
+        $("#modal-tips").removeClass('hidden');
+    });
+    $('#icon-tips-close').on('click', function () {
+        var modal = $('#modal-tips');
+        modal.addClass("fade-out-modal");
+
+        setTimeout(function() {
+            modal.addClass('hidden');
+            modal.removeClass("fade-out-modal");
+        }, 500);
+    });
+
+    // MODAL NIGHTMARE CARD
+    $('.btn-nightmare-card').on('click', function () {
+        $('#modal_nightmare_1').attr('src', $(this).data('image_1'));
+        $('#modal_nightmare_1').attr('data-nightmare_id_1', $(this).data('nightmare_id_1'));
+        $('#modal_nightmare_2').attr('src', $(this).data('image_2'));
+        $('#modal_nightmare_2').attr('data-nightmare_id_2', $(this).data('nightmare_id_2'));
+
+        $("#modal-nightmare").removeClass('hidden');
+
+        $image = $(this).next('div').find('img');
+    });
+    $('#icon-nightmare-close').on('click', function () {
+        var modal = $('#modal-nightmare');
+        modal.addClass("fade-out-modal");
+
+        $('#modal_card_1').attr('src', pathUploads + 'element-empty.png');
+        $('#modal_card_2').attr('src', pathUploads + 'element-empty.png');
+
+        setTimeout(function() {
+            modal.addClass('hidden');
+            modal.removeClass("fade-out-modal");
+        }, 500);
+    });
+
+    $('#icon-result-close').on('click', function () {
+        var modal = $('#modal-result');
+        modal.addClass("fade-out-modal");
+
+        $('#modal_card_1').attr('src', pathUploads + 'element-empty.png');
+        $('#modal_card_2').attr('src', pathUploads + 'element-empty.png');
+
+        setTimeout(function() {
+            modal.addClass('hidden');
+            modal.removeClass("fade-out-modal");
+        }, 500);
+    });
+
+    // MODAL START TIMER
+    $('#btn-start-countdown').on('click', function() {
+        Swal.fire({
+            title: `รอบที่ ${RoomRound}`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'เริ่ม',
+            cancelButtonText: 'ยกเลิก',
+            }).then((result) => {
+            if (result.isConfirmed) {
+                StartTimer();
+            }
+        })
+    });
+});
+
 var x = setInterval(function() {
     var now = new Date().getTime();
         
-    var distance = Timeout - now;
-
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    
-    if(minutes < 10) {
-        if(seconds < 10) {
-            document.getElementById("countdown_timer").innerHTML = '0' + minutes + ' : ' + '0' + seconds;
-        } else {
-            document.getElementById("countdown_timer").innerHTML = '0' + minutes + ' : ' + seconds;
-        }
-    } else {
-        if(seconds < 10) {
-            document.getElementById("countdown_timer").innerHTML = minutes + ' : ' + '0' + seconds;
-        } else {
-            document.getElementById("countdown_timer").innerHTML = minutes + ' : ' + seconds;
-        }
-    }
-
-    if(!Timeout) {
-        $('#input_card_code').addClass('hidden');
+    if(Timeout) {
+        var distance = Timeout - now;
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
         
+        const formattedMinutes = (minutes < 10) ? '0' + minutes : minutes;
+        const formattedSeconds = (seconds < 10) ? '0' + seconds : seconds;
+        document.getElementById("countdown_timer").innerHTML = `${formattedMinutes} : ${formattedSeconds}`;
+    } else {
+        document.getElementById("countdown_timer").innerHTML = "00 : 00";
+        
+        FetchTimeout().then((result) => {
+            Timeout = new Date(result).getTime();
+        });
+    }
+    
+    if(!Timeout) {
         if(isCreator) {
             $('#div-countdown_timer').addClass('hidden');
             $('#btn-start-countdown').removeClass('hidden');
         }
     }
-        
+
     if (distance < 0) {
         clearInterval(x);
-        $('#input_card_code').addClass('hidden');
-        $('#div-countdown_timer').parent().removeClass('col-span-2');
+        document.getElementById("countdown_timer").innerHTML = "00 : 00";
         $('#div-countdown_timer').removeClass('hidden');
-        $('#div-header-grid').addClass('gap-8');
-        $('#div-countdown_timer').removeClass('hidden');
-        document.getElementById("countdown_timer").innerHTML = "TIMEOUT";
+
+        $("#btn-timeout").addClass('hidden');
+        $("#modal-result").removeClass('hidden');
 
         if(isCreator) {
             $('#btn-next-round').removeClass('hidden');
         }
     } else if(distance > 0) {
-        $('#input_card_code').removeClass('hidden');
-        $('#div-countdown_timer').parent().removeClass('col-span-2');
+
     }
 }, 1000);
 
 document.addEventListener('DOMContentLoaded', function () {
     $('#loading').addClass('hidden');
-    
-    pollCards();
 });
-
-function pollCards(element){
-    setInterval(() => {
-        fetch(RoutePollCards, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "X-CSRF-Token": csrfToken
-            },
-            body:JSON.stringify(
-                {
-                    room_id: document.getElementById("room_id").value
-                }
-            )
-        })
-        .then(async response => {
-            const isJson = response.headers.get('content-type')?.includes('application/json');
-            const data = isJson ? await response.json() : null; 
-
-            if(!response.ok){
-                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
-                return Promise.reject(error);
-            }
-
-            console.log('data:', data);
-
-            if(data.room.round_time)  {
-                Timeout = new Date(data.room.round_time).getTime();
-            }
-            
-            if(data.rooms_card) {
-                $('#grid-cards').empty();
-
-                var CardBox = $('.CardBoxPt').clone();
-                CardBox.removeClass("hidden CardBoxPt");
-                const PathImage = "<?php echo URL('/assets/SETUP/'); ?>";
-                CardBox.find('.card_image').attr('src', PathImage + '/' + data.rooms_card.image);
-                CardBox.find('.card_name').text(data.rooms_card.card_name);
-                CardBox.find('.card_details').text(data.rooms_card.details);
-                $("#grid-cards").append(CardBox);
-            }
-
-        })
-        .catch((er) => {
-            console.log('Error' + er);
-        });
-    }, 1000);
-}
 
 var isLoading = false;
 
@@ -140,8 +168,6 @@ function StartTimer(){
             $('#btn-start-countdown').addClass('hidden');
 
             $('#div-countdown_timer').removeClass('hidden');
-            $('#btn-start-countdown').parent().removeClass('col-span-2');
-            $('#input_card_code').removeClass('hidden');
 
         }).catch((er) => {
             console.log('Error: ' + er);
@@ -152,56 +178,206 @@ function StartTimer(){
     }
 }
 
-if(isCreator) {
-    function CardAdd(){
-        if(!isLoading) {
-            isLoading = true;
-            fetch(RouteCardAdd, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "X-CSRF-Token": csrfToken
-                },
-                body:JSON.stringify(
-                    {
-                        room_id: document.getElementById("room_id").value,
-                        card_code: document.getElementById("card_code_add").value,
-                    }
-                )
-            })
-            .then(async response => {
-                const isJson = response.headers.get('content-type')?.includes('application/json');
-                const data = isJson ? await response.json() : null; 
-        
-                if(!response.ok){
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: 'เกิดข้อผิดพลาด!',
-                        html: `${data.status}`,
-                    });
-        
-                    const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
-                    return Promise.reject(error);
+function FetchTimeout(){
+    if(!isLoading) {
+        isLoading = true;
+        return fetch(RouteFetchTimeout, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body:JSON.stringify(
+                {
+                    room_id: document.getElementById("room_id").value,
                 }
-
+            )
+        })
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null; 
+            
+            if(!response.ok){
                 Swal.fire({
                     position: 'center',
-                    icon: 'success',
-                    title: 'เพิ่มการ์ดสำเร็จ!',
-                    timer: 1000,
-                    timerProgressBar: true
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด!',
+                    html: `${data.status}`,
                 });
+    
+                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                return Promise.reject(error);
+            }
 
-                $('#card_code_add').val('');
+            return data.room.time;
 
-            }).catch((er) => {
-                console.log('Error: ' + er);
-            })
-            .finally(() => {
-                isLoading = false;
+        }).catch((er) => {
+            console.log('Error: ' + er);
+        })
+        .finally(() => {
+            isLoading = false;
+        });
+    }
+}
+
+function FetchCards(element){
+    var $image = $(element).next('div').find('img');
+    if(!isLoading) {
+        isLoading = true;
+        fetch(RouteFetchCards, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body:JSON.stringify(
+                {
+                    room_link_id: $(element).data('room_link_id'),
+                }
+            )
+        })
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null; 
+    
+            if(!response.ok){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'แจ้งเตือน!',
+                    html: `${data.status}`,
+                });
+    
+                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                return Promise.reject(error);
+            }
+            console.log(data);
+
+            $('#modal_link').attr('src', pathUploads + data.room_link.link_image);
+            $('#modal_link').attr('data-room_link_id', data.room_link.room_link_id);
+
+            if (data.cards) {
+                for (var i = 0; i < Math.min(data.cards.length, 2); i++) {
+                    var card = data.cards[i];
+                    var targetElement = (card.position === 0) ? $('#modal_card_1') : $('#modal_card_2');
+                    targetElement.attr('src', pathUploads + card.card_image);
+                }
+            }
+
+        }).catch((er) => {
+            console.log('Error: ' + er);
+        })
+        .finally(() => {
+            isLoading = false;
+        });
+    }
+}
+
+function CardAdd(){
+    if(!isLoading) {
+        isLoading = true;
+        fetch(RouteCardAdd, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body:JSON.stringify(
+                {
+                    nightmare_id_1: document.getElementById("modal_nightmare_1").dataset.nightmare_id_1,
+                    room_link_id: document.getElementById("modal_link").dataset.room_link_id,
+                    nightmare_id_2: document.getElementById("modal_nightmare_2").dataset.nightmare_id_2,
+                    card_code: document.getElementById("card_code").value,
+                }
+            )
+        })
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null; 
+    
+            if(!response.ok){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด!',
+                    html: `${data.status}`,
+                });
+    
+                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                return Promise.reject(error);
+            }
+            console.log(data);
+
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'เพิ่มการ์ดสำเร็จ!',
+                timer: 1000,
+                timerProgressBar: true
             });
-        }
+
+            $('#card_code').val('');
+
+            var targetElement = (data.card.position === 0) ? $('#modal_card_1') : $('#modal_card_2');
+            targetElement.attr('src', pathUploads + data.card.card_image);
+            if(data.cards.length === 2) {
+                isLoading = false;
+                CheckNightmareLink();
+            }
+
+        }).catch((er) => {
+            console.log('Error: ' + er);
+        })
+        .finally(() => {
+            isLoading = false;
+        });
+    }
+}
+
+function CheckNightmareLink(){
+    if(!isLoading) {
+        isLoading = true;
+        fetch(RouteCheckNightmareLink, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body:JSON.stringify(
+                {
+                    room_link_id: document.getElementById("modal_link").dataset.room_link_id,
+                }
+            )
+        })
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null; 
+    
+            if(!response.ok){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด!',
+                    html: `${data.status}`,
+                });
+    
+                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                return Promise.reject(error);
+            }
+            console.log(data);
+
+            $('#modal_link').attr('src', pathUploads + data.room_link.link_image);
+            $image.attr('src', pathUploads + data.room_link.link_image);
+
+        }).catch((er) => {
+            console.log('Error: ' + er);
+        })
+        .finally(() => {
+            isLoading = false;
+        });
     }
 }

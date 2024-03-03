@@ -92,10 +92,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             $('#loading').addClass('hidden');
-
-            @if($room) 
-                window.location.href = '<?php echo Route('RoomWaiting', ['invite_code' => $room->invite_code]) ?>';
-            @endif
         });
     </script>
 @endpush

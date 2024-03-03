@@ -135,7 +135,122 @@
         $(document).ready(function() {
             $('#room_id').val(room_id);
         });
-        
+
+
+        function pollPlayers(room_id){
+            setInterval(() => {
+                fetch(RoutePollPlayers, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-CSRF-Token": csrfToken
+                    },
+                    body:JSON.stringify(
+                        {
+                            room_id: room_id
+                        }
+                    )
+                })
+                .then(async response => {
+                    const isJson = response.headers.get('content-type')?.includes('application/json');
+                    const data = isJson ? await response.json() : null; 
+
+                    if(!response.ok){
+                        const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                        return Promise.reject(error);
+                    }
+
+                    console.log('data:', data);
+                    if(data.status === 'error') {
+                        window.location.href = data.redirect_url;
+                    }
+
+                    if(data.room.status === 1) {
+                        window.location.href = data.redirect_url;
+                    }
+                    
+                    $('#grid-players').empty();
+                    var BgBox = $('.bg-set-opacity').clone();
+                    BgBox.removeClass("hidden");
+                    $("#grid-players").append(BgBox);
+
+                    var NumberPlayerBox = $('.NumberPlayerBoxPt').clone();
+                    NumberPlayerBox.removeClass("hidden");
+                    // NumberPlayerBox.find('.number_player').text(data.players.length);
+                    $("#grid-players").append(NumberPlayerBox);
+
+                    if(data.players.length > 0) {
+                        for(let i=0; i<data.players.length; i++) {
+                            var PlayerBox = $('.PlayerBoxPt').clone();
+                            PlayerBox.removeClass("hidden PlayerBoxPt");
+                            PlayerBox.find('.btn-player-remove').attr('data-room_player_id', data.players[i].room_player_id);
+                            PlayerBox.find('.btn-player-remove').attr('data-name_ingame', data.players[i].name_ingame);
+                            PlayerBox.find('.btn-player-remove').attr('data-room_id', data.room.room_id);
+                            PlayerBox.find('.player_id').val(data.players[i].player_id);
+                            PlayerBox.find('.player_name').text(data.players[i].name_ingame);
+
+                            if(data.players[i].username !== creatorName) {
+                                if(data.players[i].status === 0) {
+                                    PlayerBox.find('.span-status-color').removeClass('bg-[#FD0000]').addClass('bg-[#FD0000]');
+                                } else if(data.players[i].status === 1) {
+                                    PlayerBox.find('.span-status-color').removeClass('bg-[#FD0000]').addClass('bg-[#50D255]');
+                                } else if(data.players[i].status === 2) {
+                                    PlayerBox.find('.span-status-color').removeClass('bg-[#FD0000]').addClass('bg-gray-300');
+                                }
+                            }
+                            $('#player_id').val(sessionPlayerID);
+                            if(data.players[i].username === creatorName) {
+                                PlayerBox.find('.span-status-color').removeClass('span-status-color w-[20px] h-[20px]')
+                                                                    .addClass('text-indigo-900 bg-indigo-300 px-2')
+                                                                    .text('ผู้สร้าง');
+                                PlayerBox.find('.btn-player-remove').remove();
+                                // $('#player_id').val(data.players[i].player_id);
+                            } else if(data.players[i].name_ingame === sessionName) {
+                                if(data.players[i].status === 0) {
+                                    PlayerBox.find('.span-status-color').removeClass('w-[20px] h-[20px]')
+                                                                        .addClass('bg-[#FD0000] text-white px-2')
+                                                                        .text('คุณ');
+                                    // $('#player_id').val(data.players[i].player_id);
+                                    $('#player_status').val(0);
+                                    $('#btn-status').text('พร้อม').removeClass('bg-[#ff5757] hover:bg-[#fd0000]')
+                                                                    .addClass('bg-[#E69FBC] hover:bg-[#d1638a]');
+                                } else {
+                                    PlayerBox.find('.span-status-color').removeClass('w-[20px] h-[20px]')
+                                                                        .addClass('bg-[#50D255] text-white px-2')
+                                                                        .text('คุณ');
+                                    // $('#player_id').val(data.players[i].player_id);
+                                    $('#player_status').val(1);
+                                    $('#btn-status').text('ไม่พร้อม').removeClass('bg-[#E69FBC] hover:bg-[#d1638a]')
+                                                                        .addClass('bg-[#ff5757] hover:bg-[#fd0000]');
+                                }
+                            } else {
+                                if(data.players[i].status === 0) {
+                                    PlayerBox.find('.span-status-color').addClass('bg-[#FD0000] text-white px-2');
+                                    // $('#player_id').val(data.players[i].player_id);
+                                    $('#player_status').val(0);
+                                    $('#btn-status').text('พร้อม').removeClass('bg-[#ff5757] hover:bg-[#fd0000]')
+                                                                    .addClass('bg-[#E69FBC] hover:bg-[#d1638a]');
+                                } else {
+                                    PlayerBox.find('.span-status-color').addClass('bg-[#50D255] text-indigo-900 px-2'); 
+                                    // $('#player_id').val(data.players[i].player_id);      
+                                    $('#player_status').val(1);
+                                    $('#btn-status').text('ไม่พร้อม').removeClass('bg-[#E69FBC] hover:bg-[#d1638a]')
+                                                                        .addClass('bg-[#ff5757] hover:bg-[#fd0000]');
+                                }
+                            }
+                            
+
+                            $("#grid-players").append(PlayerBox);
+                        }
+                    }
+
+                })
+                .catch((er) => {
+                    console.log('Error' + er);
+                });
+            }, 1000);
+        }
         
     </script>
 @endpush

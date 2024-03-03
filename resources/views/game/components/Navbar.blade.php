@@ -6,7 +6,7 @@
 <!-- END BACKGROUND -->
 
 <!-- START HEADER -->
-<div class="z-[100] top-0 left-0 flex w-full pt-[2em] px-[5em] max-lg:flex-col ">
+<div class="z-[100] top-0 left-0 flex w-full pt-[1em] px-[5em] max-lg:flex-col ">
     <!-- START IMAGES -->
     <div class="z-[100] flex items-center w-fit max-lg:mx-auto">
         <div class="max-w-[125px] max-h-[125px] overflow-hidden">
@@ -15,8 +15,12 @@
     </div>
     <!-- END IMAGES -->
 
+    <div class="z-[100] hidden max-sm:block w-fit h-fit absolute top-0 left-0">
+        <i class='bx bx-menu bg-white rounded-md text-2xl'></i>
+    </div>
+
     <!-- START LIST MENU -->
-    <ul class="z-[100] ml-auto flex w-fit gap-8 max-sm:gap-4 text-xl text-white font-medium whitespace-nowrap max-lg:mt-0 max-lg:mx-auto">
+    <ul class="z-[100] max-sm:hidden ml-auto flex w-fit gap-8 max-sm:gap-4 text-xl text-white font-medium whitespace-nowrap max-lg:mt-0 max-lg:mx-auto">
         <li class="flex items-center justify-center">
             <a href="{{ Route('RulePage') }}" class="group hover:text-sky-300 transition duration-300">
             How to play
@@ -35,40 +39,39 @@
             <span class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-sky-300"></span>
             </a>
         </li>
-        
-        <li class="relative flex items-center justify-center max-sm:absolute max-sm:top-3 max-sm:right-3">
-            @if(!Session::get('username'))
-                <button id="btn-login" class="bg-[#EE609A] hover:bg-[#d62c65] rounded px-2 py-1 duration-300">Login</button>
-            @else
-                <div id="btn-logged-in" class="flex items-center gap-1 text-gray-900 cursor-pointer">
-                    <div class="relative flex items-center w-full text-gray-700 gap-2 px-2 py-1.5">
-                        <div class="z-10 w-full h-full absolute top-0 left-0 bg-indigo-200 opacity-50 rounded-full"></div>
-                        <div class="z-20 relative bg-white w-9 h-9 rounded-full p-1 overflow-hidden border">
-                            @if(Session::get('image'))
-                                <img src="{{ URL('/uploads/'.Session::get('image')) }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
-                            @else
-                                <img src="{{ URL('/assets/'.'member.png') }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
-                            @endif
-                        </div>
-                        <div id="span-firstname" class="z-20 inline-flex flex items-center text-white hover:text-gray-800">
-                            <span class="text-lg overflow-x-hidden duration-300">{{ Session::get('username') }}</span>
-                            <i id="icon-logged-sort" class='bx bx-chevron-up mt-[-3px] text-2xl duration-300' ></i>
-                        </div>
-                    </div>
-                </div>
-                <div id="popup-logged-in" class="hidden z-50 absolute mt-[125px] right-0 z-10 w-40 origin-top-right rounded-md bg-white drop-shadow overflow-hidden ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div class="">
-                        <a href="" class="flex items-center gap-1 px-4 py-2 text-sm text-gray-500 hover:bg-blue-100 hover:text-blue-700 duration-300">
-                            <i class="fi fi-rr-portrait text-lg"></i>บัญชีของฉัน
-                        </a>
-                        <button id="btn-logout" class="flex items-center gap-1 w-full px-4 py-2 text-sm text-gray-500 hover:bg-rose-100 hover:text-rose-700 duration-300">
-                            <i class="fi fi-rr-sign-out-alt text-lg ml-1"></i>ออกจากระบบ
-                        </button>
-                    </div>
-                </div>
-            @endif
-        </li>
     </ul>
+    <li class="ml-8 relative flex items-center justify-center max-sm:absolute max-sm:top-3 max-sm:right-3">
+        @if(!Session::get('username'))
+            <button id="btn-login" class="bg-[#EE609A] hover:bg-[#d62c65] rounded px-2 py-1 duration-300">Login</button>
+        @else
+            <div id="btn-logged-in" class="flex items-center gap-1 text-gray-900 cursor-pointer">
+                <div class="relative flex items-center w-full text-gray-700 gap-2 px-2 py-1.5">
+                    <div class="z-10 w-full h-full absolute top-0 left-0 bg-indigo-200 opacity-50 rounded-full"></div>
+                    <div class="z-20 relative bg-white w-9 h-9 rounded-full p-1 overflow-hidden border">
+                        @if(Session::get('image'))
+                            <img src="{{ URL('/uploads/'.Session::get('image')) }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
+                        @else
+                            <img src="{{ URL('/assets/'.'member.png') }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
+                        @endif
+                    </div>
+                    <div id="span-firstname" class="z-20 inline-flex flex items-center text-white hover:text-gray-800">
+                        <span class="text-lg overflow-x-hidden duration-300">{{ Session::get('username') }}</span>
+                        <i id="icon-logged-sort" class='bx bx-chevron-up mt-[-3px] text-2xl duration-300' ></i>
+                    </div>
+                </div>
+            </div>
+            <div id="popup-logged-in" class="hidden z-50 absolute mt-[125px] right-0 z-10 w-40 origin-top-right rounded-md bg-white drop-shadow overflow-hidden ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div class="">
+                    <a href="" class="flex items-center gap-1 px-4 py-2 text-sm text-gray-500 hover:bg-blue-100 hover:text-blue-700 duration-300">
+                        <i class="fi fi-rr-portrait text-lg"></i>บัญชีของฉัน
+                    </a>
+                    <button id="btn-logout" class="flex items-center gap-1 w-full px-4 py-2 text-sm text-gray-500 hover:bg-rose-100 hover:text-rose-700 duration-300">
+                        <i class="fi fi-rr-sign-out-alt text-lg ml-1"></i>ออกจากระบบ
+                    </button>
+                </div>
+            </div>
+        @endif
+    </li>
     <!-- END LIST MENU -->
 </div>
 <!-- END HEADER -->

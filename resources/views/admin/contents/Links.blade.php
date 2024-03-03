@@ -61,6 +61,8 @@
                                         แผ่นมั่นคง
                                     @elseif($link['type'] === 1)
                                         แผ่นมั่นคงเปล่า
+                                    @elseif($link['type'] === 2)
+                                        แผ่นความฝัน
                                     @endif
                                 </td>
                                 <td class="px-3 py-2 text-2xl whitespace-nowrap">
@@ -91,11 +93,11 @@
             <!-- START MOBILE -->
             @if(sizeof($links))
                 <div class="hidden max-md:block min-w-[250px] bg-white p-4 rounded-t-2xl overflow-hidden">
-                    @foreach($links as $key => $nightmare)
+                    @foreach($links as $key => $link)
                         <div class="flex items-center relative">
                             <div class="min-w-[60px] max-w-[80px] pr-2">
-                                @if($nightmare['image'])
-                                    <img src="{{ URL('/uploads/'.$nightmare['image']) }}" alt="" class="w-full h-auto object-scale-down mx-auto rounded border p-1">
+                                @if($link['image'])
+                                    <img src="{{ URL('/uploads/'.$link['image']) }}" alt="" class="w-full h-auto object-scale-down mx-auto rounded border p-1">
                                 @else
                                     <img src="{{ URL('/assets/mini-logo.png') }}" alt="" class="w-full h-auto object-scale-down mx-auto rounded border p-1">
                                 @endif
@@ -104,31 +106,24 @@
                             <div class="flex-col">
                                 <p class="text-sm font-medium text-gray-500 truncate">ประเภท: 
                                     <span class="font-light">
-                                        @if($nightmare['type'] === 0)
-                                            แพนิค (Panic)
-                                        @elseif($nightmare['type'] === 1)
-                                            กังวล (Anxiety)
-                                        @elseif($nightmare['type'] === 2)
-                                            โกรธ (Anger)
-                                        @elseif($nightmare['type'] === 3)
-                                            เศร้า (Sad)
-                                        @endif
-                                    </span>
-                                </p>
-                                <p class="text-sm font-medium text-gray-500">รายละเอียด: 
-                                    <span class="font-light">
-                                        {{ $nightmare['description'] }}
+                                    @if($link['type'] === 0)
+                                        แผ่นมั่นคง
+                                    @elseif($link['type'] === 1)
+                                        แผ่นมั่นคงเปล่า
+                                    @elseif($link['type'] === 2)
+                                        แผ่นความฝัน
+                                    @endif
                                     </span>
                                 </p>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-1 mt-2">
-                            <button class="btn-nightmare-edit flex items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
-                            data-nightmare_id="{{ $nightmare['nightmare_id'] }}" data-type="{{ $nightmare['type'] }}" data-description="{{ $nightmare['description'] }}" data-email="{{ $nightmare['email'] }}" data-image="{{ isset($nightmare['image']) ? URL('/uploads/' . $nightmare['image']) : '' }}">
+                            <button class="btn-link-edit flex items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
+                            data-link_id="{{ $link['link_id'] }}" data-type="{{ $link['type'] }}" data-image="{{ isset($link['image']) ? URL('/uploads/' . $link['image']) : '' }}">
                             <i class='bx bx-edit' ></i>แก้ไข</button>
     
-                            <button class="btn-nightmare-delete flex items-center justify-center gap-1 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
-                            data-route="{{ Route('SubmitNightmareDelete') }}" data-nightmare_id="{{ $nightmare['nightmare_id'] }}" data-description="{{ $nightmare['description'] }}">
+                            <button class="btn-link-delete flex items-center justify-center gap-1 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
+                            data-route="{{ Route('SubmitLinkDelete') }}" data-link_id="{{ $link['link_id'] }}" data-description="{{ $link['description'] }}">
                             <i class='bx bx-trash' ></i>ลบ</button>
                         </div>
                         <hr class="bg-blue-300 border-dashed border-gray-300 w-full my-2 rounded-2xl ">

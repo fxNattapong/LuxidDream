@@ -335,7 +335,7 @@ class AdminController extends Controller
 
 
     public function Nightmares(Request $request) {
-        $nightmares = Nightmares::paginate(8, ['*'], 'page');
+        $nightmares = Nightmares::orderBy('type', 'desc')->paginate(8, ['*'], 'page');
 
         return view('admin/contents/Nightmares', compact('nightmares'));
     }
@@ -422,7 +422,7 @@ class AdminController extends Controller
 
 
     public function Links(Request $request) {
-        $links = Links::paginate(8, ['*'], 'page');
+        $links = Links::orderBy('type', 'desc')->paginate(8, ['*'], 'page');
 
         return view('admin/contents/Links', compact('links'));
     }

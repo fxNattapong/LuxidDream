@@ -49,9 +49,10 @@ class GameController extends Controller
                 Session::put('player', !$isCreator);
                 Session::put('username', Session::get('username'));
                 Session::put('name_ingame', $isCreated->name_ingame);
+
+                return redirect()->Route('RoomWaiting', ['invite_code' => $room->invite_code]);
             }
         }
-
 
         return view('game/contents/Home', compact('levels', 'players_rule', 'room'));
     }
@@ -142,7 +143,7 @@ class GameController extends Controller
         }
         if (!$name_ingame) {
             $status = 'กรุณากรอกชื่อในเกม';
-            return response()->json(['status' => $status], 401);
+            return response()->json(['status' => $status], 400);
         }
 
         $InsertRoom = new Rooms;
@@ -195,6 +196,8 @@ class GameController extends Controller
                 Session::put('player', !$isCreator);
                 Session::put('username', Session::get('username'));
                 Session::put('name_ingame', $isCreated->name_ingame);
+
+                return redirect()->Route('RoomWaiting', ['invite_code' => $room->invite_code]);
             }
         }
 
@@ -249,7 +252,7 @@ class GameController extends Controller
         
         $room = Rooms::leftJoin('players_rule', 'rooms.player_rule_id', '=', 'players_rule.player_rule_id')
                     ->leftJoin('levels', 'rooms.level_id', '=', 'levels.level_id')
-                    ->select('rooms.*', 'players_rule.amount as amount', 'levels.level as level', 'levels.round as round')
+                    ->select('rooms.*', 'players_rule.amount as amount', 'levels.level as level', 'levels.round as level_round')
                     ->where('invite_code', $invite_code)
                     ->first();
 
@@ -260,6 +263,10 @@ class GameController extends Controller
             if(!$isJoined) {
                 return redirect()->Route('Home');
             }
+        }
+
+        if($room->round !== 0) {
+            return redirect()->Route('RoomPlay', ['invite_code' => $room->invite_code]);
         }
 
         $players = Rooms_Players::leftJoin('players', 'rooms_players.player_id', '=', 'players.player_id')
@@ -325,6 +332,10 @@ class GameController extends Controller
                 'status' => 'error',
                 'redirect_url' => Route('Home')
             ], 200);
+        }
+
+        if ($room->round !== 0) {
+            return redirect()->Route('RoomPlay', ['invite_code' => $room->invite_code]);
         }
 
         if(Session::get('player_id')) {
@@ -393,12 +404,12 @@ class GameController extends Controller
             return response()->json(['status' => 'ผู้เล่นบางคนยังไม่พร้อม'], 400);
         }
 
-        Session::put('circle', 1);
-        // Rooms::where('room_id', $room_id)
-        //         ->update([
-        //             'status' => 1,
-        //             'updated_at' => now()
-        //         ]);
+        Rooms::where('room_id', $room_id)
+                ->update([
+                    'round' => 1,
+                    'circle' => 1,
+                    'updated_at' => now()
+                ]);
         
         $room = Rooms::where('room_id', $room_id)->first();
         $nmStart = Nightmares::where('type', 5)->first();
@@ -417,19 +428,41 @@ class GameController extends Controller
         $InsertRoomNM->circle = 1;
         $InsertRoomNM->save();
 
-        $nmRandom = Nightmares::inRandomOrder()->limit(4)->get()->toArray();
+        Rooms_Links::where('room_link_id', $InsertRoomLinkEmpty->id)
+                    ->update([
+                        'nightmare_id' => $InsertRoomNM->id,
+                        'updated_at' => now()
+                    ]);
+
+        $existingNightmaresIds = Rooms_Nightmares::pluck('nightmare_id')->toArray();
+        $nmRandom = Nightmares::whereNotIn('nightmare_id', $existingNightmaresIds)
+            ->inRandomOrder()
+            ->limit(4)
+            ->get()
+            ->toArray();
+        $fourthNightmare = end($nmRandom);
+
         foreach ($nmRandom as $nightmare) {
             $InsertRoomLinkDream = new Rooms_Links;
             $InsertRoomLinkDream->room_id = $room_id;
             $InsertRoomLinkDream->link_id = $link_dream->link_id;
+            if ($nightmare === $fourthNightmare) {
+                $InsertRoomLinkDream->link_id = $link_empty->link_id;
+            }
             $InsertRoomLinkDream->save();
 
-            $InsertPlayer = new Rooms_Nightmares;
-            $InsertPlayer->room_id = $room_id;
-            $InsertPlayer->room_link_id = $InsertRoomLinkDream->id;
-            $InsertPlayer->nightmare_id = $nightmare['nightmare_id'];
-            $InsertPlayer->circle = 1;
-            $InsertPlayer->save();
+            $InsertNM = new Rooms_Nightmares;
+            $InsertNM->room_id = $room_id;
+            $InsertNM->room_link_id = $InsertRoomLinkDream->id;
+            $InsertNM->nightmare_id = $nightmare['nightmare_id'];
+            $InsertNM->circle = 1;
+            $InsertNM->save();
+
+            Rooms_Links::where('room_link_id', $InsertRoomLinkDream->id)
+                    ->update([
+                        'nightmare_id' => $InsertNM->id,
+                        'updated_at' => now()
+                    ]);
         }
 
         return response()->json([
@@ -444,25 +477,47 @@ class GameController extends Controller
 
         $room = Rooms::where('invite_code', $invite_code)->first();
         
-        $players = Rooms_Players::where('room_id', $room->id)->get();
+        $players = Rooms_Players::where('room_id', $room->room_id)->get();
 
-        $room_card = Rooms_Cards::leftJoin('cards', 'rooms_cards.code', '=', 'cards.code')
-                                    ->select('rooms_cards.*', 'cards.name as card_name', 'cards.description as description',
-                                            'cards.image as image')
-                                    ->where('room_id', $room->id)
-                                    ->latest()
-                                    ->first();
+        $room_nightmares = Rooms_Nightmares::leftJoin('nightmares', 'rooms_nightmares.nightmare_id', '=', 'nightmares.nightmare_id')
+                                            ->leftJoin('rooms_links', 'rooms_nightmares.room_link_id', '=', 'rooms_links.room_link_id')
+                                            ->leftJoin('links', 'rooms_links.link_id', '=', 'links.link_id')
+                                            ->where('rooms_nightmares.room_id', $room->room_id)
+                                            ->where('rooms_nightmares.circle', $room->circle)
+                                            ->select('rooms_nightmares.*', 
+                                                    'nightmares.type as nm_type', 'nightmares.description as nm_description', 'nightmares.image as nm_image', 
+                                                    'rooms_links.room_link_id as room_link_id', 'links.type as link_type', 'links.image as link_image')
+                                            ->get();
+
+        // echo '<pre>';
+        // print_r($room_nightmares);
+        // echo '</pre>';
                                     
-        return view('game/contents/RoomPlay', compact('room', 'players', 'room_card'));
+        return view('game/contents/RoomPlay', compact('room', 'players', 'room_nightmares', 'room_card'));
     }
 
     public function StartTimer(Request $request) {
         $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
 
+        $isTime = Rooms::leftJoin('levels', 'rooms.level_id', '=', 'levels.level_id')
+                        ->where('rooms.room_id', $room_id)
+                        ->select('rooms.*', 'levels.level as level', 'levels.round as level_round',
+                                'levels.time_1 as time_1', 'levels.time_2 as time_2', 'levels.time_3 as time_3', 
+                                'levels.time_4 as time_4', 'levels.time_5 as time_5')
+                        ->first();
+
+        $roundTimes = [
+            1 => $isTime->time_1,
+            2 => $isTime->time_2,
+            3 => $isTime->time_3,
+            4 => $isTime->time_4,
+            5 => $isTime->time_5,
+        ];
+        $set_time = $roundTimes[$isTime->round] ?? null;
+
         Rooms::where('room_id', $room_id)
                 ->update([
-                    'status' => 1,
-                    'round_time' => now()->addMinutes(5)->toDateTimeString(),
+                    'time' => now()->addMinutes($set_time)->toDateTimeString(),
                     'updated_at' => now()
                 ]);
         
@@ -470,49 +525,128 @@ class GameController extends Controller
     
         return response()->json([
             'status' => 'success', 
-            'round_time' => $room->round_time
+            'round_time' => $room->time
         ], 200);
     }
 
-    public function PollCards(Request $request) {
+    public function FetchTimeout(Request $request) {
         $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
 
-        $room = Rooms::where('room_id', $room_id)->first();
+        $room = Rooms::where('room_id', $room_id)
+                    ->select('time')
+                    ->first();
         
-        $room_cards = Rooms_Cards::leftJoin('cards', 'rooms_cards.card_code', '=', 'cards.card_code')
-                                    ->select('rooms_cards.*', 'cards.card_name as card_name', 'cards.details as details',
-                                            'cards.image as image')
-                                    ->where('room_id', $room_id)
-                                    ->latest()
-                                    ->first();
-    
+        return response()->json(['room' => $room], 200);
+    }
+
+    public function FetchCards(Request  $request) {
+        $room_link_id = ($request->has('room_link_id')) ? trim($request->input('room_link_id')) : null;
+
+        $room_link = Rooms_Links::leftJoin('links', 'rooms_links.link_id', '=', 'links.link_id')
+                                ->where('rooms_links.room_link_id', $room_link_id)
+                                ->select('rooms_links.*', 'links.type as link_type', 'links.image as link_image')
+                                ->first();
+
+        $cards = Rooms_Cards::leftJoin('cards', 'rooms_cards.code', '=', 'cards.code')
+                            ->where('room_link_id', $room_link_id)
+                            ->select('rooms_cards.*', 'cards.color as card_color', 'cards.image as card_image', 
+                                    'cards.name as card_name', 'cards.description as card_description')
+                            ->get();
+
+                                    
         return response()->json([
-            'room' => $room,
-            'room_cards' => $rooms_cards
+            'room_link' => $room_link,
+            'cards' => $cards
         ], 200);
     }
 
     public function CardAdd(Request $request) {
-        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
+        $nightmare_id_1 = ($request->has('nightmare_id_1')) ? trim($request->input('nightmare_id_1')) : null;
+        $room_link_id = ($request->has('room_link_id')) ? trim($request->input('room_link_id')) : null;
+        $nightmare_id_2 = ($request->has('nightmare_id_2')) ? trim($request->input('nightmare_id_2')) : null;
         $card_code = ($request->has('card_code')) ? trim($request->input('card_code')) : null;
         
         if (!$card_code) {
-            $status = 'Please enter card code.';
-            return response()->json(['status' => $status], 401);
+            $status = 'กรุณากรอกรหัสการ์ด';
+            return response()->json(['status' => $status], 400);
         }
 
-        $isCard = Cards::where('card_code', $card_code)->first();
+        $isCard = Cards::where('code', $card_code)->first();
         if(!$isCard) {
-            $status = 'Not the correct card code.';
-            return response()->json(['status' => $status], 401);
+            $status = 'รหัสการ์ดไม่ถูกต้อง';
+            return response()->json(['status' => $status], 400);
         }
 
-        $InsertRow = new Rooms_Cards;
-        $InsertRow->room_id = $room_id;
-        $InsertRow->card_code = $card_code;
-        $InsertRow->save();
+        $nightmares = Nightmares::whereIn('nightmare_id', [$nightmare_id_1, $nightmare_id_2])->get();
+        if($isCard->color !== $nightmares[0]->type && $isCard->color !== $nightmares[1]->type) {
+            $status = 'การ์ดใบนี้ไม่เข้าเงื่อนไข';
+            return response()->json(['status' => $status], 400);
+        }
 
-        return response()->json(['status' => 'success'], 200);
+        $isInsertedPosition0 = Rooms_Cards::where('room_link_id', $room_link_id)
+                                            ->where('position', 0)
+                                            ->exists();
+
+        $isInsertedPosition1 = Rooms_Cards::where('room_link_id', $room_link_id)
+                                            ->where('position', 1)
+                                            ->exists();
+
+        if($isInsertedPosition0 && $isCard->color === $nightmares[1]->type) {
+            $status = 'การ์ดช่องที่ 1 ถูกใส่แล้ว';
+            return response()->json(['status' => $status], 400);
+        } else if($isInsertedPosition1 && $isCard->color === $nightmares[0]->type) {
+            $status = 'การ์ดช่องที่ 2 ถูกใส่แล้ว';
+            return response()->json(['status' => $status], 400);
+        } else {
+            $InsertRow = new Rooms_Cards;
+            $InsertRow->room_link_id = $room_link_id;
+            $InsertRow->code = $card_code;
+            if($isCard->color === $nightmares[1]->type) {
+                $InsertRow->position = 0;
+            } else if($isCard->color === $nightmares[0]->type) {
+                $InsertRow->position = 1;
+            }
+            $InsertRow->save();
+
+            $card = Rooms_Cards::leftJoin('cards', 'rooms_cards.code', '=', 'cards.code')
+                                ->where('rooms_cards.room_card_id', $InsertRow->id)
+                                ->select('rooms_cards.*', 'cards.color as card_color', 'cards.image as card_image', 
+                                        'cards.name as card_name', 'cards.description as card_description')
+                                ->first();
+
+            $cards = Rooms_Cards::where('room_link_id', $room_link_id)->get();
+        }
+
+        return response()->json([
+            'card' => $card,
+            'cards' => $cards
+        ], 200);
+    }
+
+    public function CheckNightmareLink(Request $request) {
+        $room_link_id = ($request->has('room_link_id')) ? trim($request->input('room_link_id')) : null;
+        
+        $isCards = Rooms_Cards::where('room_link_id', $room_link_id)->get();
+
+        if($isCards->count() == 2) {
+            $existingLinksIds = Rooms_Links::pluck('link_id')->toArray();
+            $linkRandom = Links::whereNotIn('link_id', array_merge($existingLinksIds, [21, 22]))
+                                ->inRandomOrder()
+                                ->first();
+
+            Rooms_Links::where('room_link_id', $room_link_id)
+                        ->update([
+                            'link_id' => $linkRandom->link_id,
+                            'updated_at' => now()
+                        ]);
+
+            $room_link = Rooms_Links::leftJoin('links', 'rooms_links.link_id', '=', 'links.link_id')
+                        ->where('rooms_links.room_link_id', $room_link_id)
+                        ->select('rooms_links.*', 'links.type as link_type', 'links.image as link_image')
+                        ->first();
+        }
+
+        return response()->json(['room_link' => $room_link], 200);
     }
     
 }

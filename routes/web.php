@@ -81,8 +81,12 @@ Route::prefix('game')->group(function () {
         Route::get('/start', "GameController@RoomPlay")->Name('RoomPlay')->middleware('redirectIfAuth');
     
         Route::post('/start/timer', "GameController@StartTimer")->Name('StartTimer');
-        Route::post('/poll/cards', "GameController@PollCards")->Name('PollCards');
+        Route::post('/fetch/timeout', "GameController@FetchTimeout")->Name('FetchTimeout');
+        Route::post('/fetch/cards', "GameController@FetchCards")->Name('FetchCards');
         Route::post('/round/card/add', "GameController@CardAdd")->Name('CardAdd');
+        Route::post('/check/nightmare/link', "GameController@CheckNightmareLink")->Name('CheckNightmareLink');
+
+        Route::post('/poll/cards', "GameController@PollCards")->Name('PollCards');
     });
     
 });
