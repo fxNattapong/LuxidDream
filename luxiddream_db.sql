@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 04, 2024 at 11:26 AM
+-- Generation Time: Mar 04, 2024 at 02:12 PM
 -- Server version: 10.1.32-MariaDB
 -- PHP Version: 7.2.5
 
@@ -294,7 +294,7 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`room_id`, `player_rule_id`, `level_id`, `invite_code`, `creator_name`, `round`, `circle`, `time`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, '445777', 'admin', 0, 1, NULL, '2024-03-04 16:14:52', '2024-03-04 16:15:08');
+(1, 2, 2, '411131', 'admin', 1, 1, NULL, '2024-03-04 18:09:38', '2024-03-04 18:09:42');
 
 -- --------------------------------------------------------
 
@@ -311,6 +311,20 @@ CREATE TABLE `rooms_cards` (
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `rooms_cards`
+--
+
+INSERT INTO `rooms_cards` (`room_card_id`, `room_link_id`, `code`, `position`, `created_at`, `updated_at`) VALUES
+(1, 2, '222', 0, '2024-03-04 18:42:31', '2024-03-04 18:42:31'),
+(2, 2, '311', 1, '2024-03-04 18:42:37', '2024-03-04 18:42:37'),
+(3, 2, '211', 2, '2024-03-04 19:47:02', '2024-03-04 19:47:02'),
+(4, 2, '331', 3, '2024-03-04 19:59:00', '2024-03-04 19:59:00'),
+(5, 3, '221', 1, '2024-03-04 20:08:45', '2024-03-04 20:08:45'),
+(6, 3, '121', 0, '2024-03-04 20:08:53', '2024-03-04 20:08:53'),
+(7, 3, '111', 2, '2024-03-04 20:09:03', '2024-03-04 20:09:03'),
+(8, 3, '211', 3, '2024-03-04 20:09:08', '2024-03-04 20:09:08');
+
 -- --------------------------------------------------------
 
 --
@@ -325,6 +339,17 @@ CREATE TABLE `rooms_links` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `rooms_links`
+--
+
+INSERT INTO `rooms_links` (`room_link_id`, `room_id`, `nightmare_id`, `link_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 21, '2024-03-04 18:09:42', '2024-03-04 18:09:42'),
+(2, 1, 2, 8, '2024-03-04 18:09:42', '2024-03-04 19:59:01'),
+(3, 1, 3, 7, '2024-03-04 18:09:42', '2024-03-04 20:09:08'),
+(4, 1, 4, 22, '2024-03-04 18:09:42', '2024-03-04 18:09:42'),
+(5, 1, 5, 21, '2024-03-04 18:09:42', '2024-03-04 18:09:42');
 
 -- --------------------------------------------------------
 
@@ -342,6 +367,17 @@ CREATE TABLE `rooms_nightmares` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `rooms_nightmares`
+--
+
+INSERT INTO `rooms_nightmares` (`room_nightmare_id`, `room_id`, `room_link_id`, `nightmare_id`, `circle`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 18, 1, 0, '2024-03-04 18:09:42', '2024-03-04 18:09:42'),
+(2, 1, 2, 4, 1, 0, '2024-03-04 18:09:42', '2024-03-04 18:09:42'),
+(3, 1, 3, 5, 1, 0, '2024-03-04 18:09:42', '2024-03-04 18:09:42'),
+(4, 1, 4, 10, 1, 0, '2024-03-04 18:09:42', '2024-03-04 18:09:42'),
+(5, 1, 5, 15, 1, 0, '2024-03-04 18:09:42', '2024-03-04 18:09:42');
 
 -- --------------------------------------------------------
 
@@ -365,7 +401,7 @@ CREATE TABLE `rooms_players` (
 --
 
 INSERT INTO `rooms_players` (`room_player_id`, `player_id`, `room_id`, `name_ingame`, `status`, `role`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'creator', 1, 1, '2024-03-04 16:14:52', '2024-03-04 16:49:05');
+(1, 1, 1, 'creator', 1, 1, '2024-03-04 18:09:38', '2024-03-04 18:09:38');
 
 --
 -- Indexes for dumped tables
@@ -511,19 +547,19 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `rooms_cards`
 --
 ALTER TABLE `rooms_cards`
-  MODIFY `room_card_id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `room_card_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `rooms_links`
 --
 ALTER TABLE `rooms_links`
-  MODIFY `room_link_id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `room_link_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `rooms_nightmares`
 --
 ALTER TABLE `rooms_nightmares`
-  MODIFY `room_nightmare_id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `room_nightmare_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `rooms_players`
