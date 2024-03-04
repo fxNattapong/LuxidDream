@@ -38,14 +38,13 @@ $(document).ready(function() {
 
         $("#modal-nightmare").removeClass('hidden');
 
-        $image = $(this).next('div').find('img');
+        $image = $(this).find('img');
     });
     $('#icon-nightmare-close').on('click', function () {
         var modal = $('#modal-nightmare');
         modal.addClass("fade-out-modal");
 
-        $('#modal_card_1').attr('src', pathUploads + 'element-empty.png');
-        $('#modal_card_2').attr('src', pathUploads + 'element-empty.png');
+        $('#modal_card_1, #modal_card_2, #modal_card_3, #modal_card_4').attr('src', pathUploads + 'element-empty.png');
 
         setTimeout(function() {
             modal.addClass('hidden');
@@ -105,6 +104,7 @@ var x = setInterval(function() {
     
     if(!Timeout) {
         if(isCreator) {
+            // $('#card_code_1, #card_code_2').addClass('hidden');
             $('#div-countdown_timer').addClass('hidden');
             $('#btn-start-countdown').removeClass('hidden');
         }
@@ -115,6 +115,8 @@ var x = setInterval(function() {
         document.getElementById("countdown_timer").innerHTML = "00 : 00";
         $('#div-countdown_timer').removeClass('hidden');
 
+        // $('#card_code_1, #card_code_2').addClass('hidden');
+
         $("#btn-timeout").addClass('hidden');
         $("#modal-result").removeClass('hidden');
 
@@ -122,7 +124,7 @@ var x = setInterval(function() {
             $('#btn-next-round').removeClass('hidden');
         }
     } else if(distance > 0) {
-
+        // $('#card_code_1, #card_code_2').removeClass('hidden');
     }
 }, 1000);
 
@@ -259,9 +261,10 @@ function FetchCards(element){
             $('#modal_link').attr('data-room_link_id', data.room_link.room_link_id);
 
             if (data.cards) {
-                for (var i = 0; i < Math.min(data.cards.length, 2); i++) {
+                for (var i = 0; i < Math.min(data.cards.length, 4); i++) {
                     var card = data.cards[i];
-                    var targetElement = (card.position === 0) ? $('#modal_card_1') : $('#modal_card_2');
+                    var targetElements = ['#modal_card_1', '#modal_card_2', '#modal_card_3', '#modal_card_4'];
+                    var targetElement = $(targetElements[card.position]);
                     targetElement.attr('src', pathUploads + card.card_image);
                 }
             }
@@ -275,7 +278,7 @@ function FetchCards(element){
     }
 }
 
-function CardAdd(){
+function CardAdd(element){
     if(!isLoading) {
         isLoading = true;
         fetch(RouteCardAdd, {
@@ -290,7 +293,8 @@ function CardAdd(){
                     nightmare_id_1: document.getElementById("modal_nightmare_1").dataset.nightmare_id_1,
                     room_link_id: document.getElementById("modal_link").dataset.room_link_id,
                     nightmare_id_2: document.getElementById("modal_nightmare_2").dataset.nightmare_id_2,
-                    card_code: document.getElementById("card_code").value,
+                    card_code: $("#" + ($(element).data('button_input') === 'nm_left' ? "card_code_1" : "card_code_2")).val(),
+                    from_nm: $(element).data('button_input') === 'nm_left' ? 'left' : 'right',
                 }
             )
         })
@@ -321,9 +325,10 @@ function CardAdd(){
 
             $('#card_code').val('');
 
-            var targetElement = (data.card.position === 0) ? $('#modal_card_1') : $('#modal_card_2');
+            var targetElements = ['#modal_card_1', '#modal_card_2', '#modal_card_3', '#modal_card_4'];
+            var targetElement = $(targetElements[data.card.position]);
             targetElement.attr('src', pathUploads + data.card.card_image);
-            if(data.cards.length === 2) {
+            if(data.cards.length === 4) {
                 isLoading = false;
                 CheckNightmareLink();
             }

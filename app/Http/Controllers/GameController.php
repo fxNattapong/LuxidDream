@@ -404,12 +404,12 @@ class GameController extends Controller
             return response()->json(['status' => 'ผู้เล่นบางคนยังไม่พร้อม'], 400);
         }
 
-        // Rooms::where('room_id', $room_id)
-        //         ->update([
-        //             'round' => 1,
-        //             'circle' => 1,
-        //             'updated_at' => now()
-        //         ]);
+        Rooms::where('room_id', $room_id)
+                ->update([
+                    'round' => 1,
+                    'circle' => 1,
+                    'updated_at' => now()
+                ]);
         
         $room = Rooms::where('room_id', $room_id)->first();
         $nmStart = Nightmares::where('type', 5)->first();
@@ -498,6 +498,10 @@ class GameController extends Controller
         $invite_code = ($request->has('invite_code')) ? trim($request->input('invite_code')) : null;
 
         $room = Rooms::where('invite_code', $invite_code)->first();
+
+        if(!$room) {
+            return redirect()->Route('Home');
+        }
         
         $players = Rooms_Players::where('room_id', $room->room_id)->get();
 
@@ -587,6 +591,7 @@ class GameController extends Controller
         $room_link_id = ($request->has('room_link_id')) ? trim($request->input('room_link_id')) : null;
         $nightmare_id_2 = ($request->has('nightmare_id_2')) ? trim($request->input('nightmare_id_2')) : null;
         $card_code = ($request->has('card_code')) ? trim($request->input('card_code')) : null;
+        $from_nm = ($request->has('from_nm')) ? trim($request->input('from_nm')) : null;
         
         if (!$card_code) {
             $status = 'กรุณากรอกรหัสการ์ด';
@@ -605,29 +610,41 @@ class GameController extends Controller
             return response()->json(['status' => $status], 400);
         }
 
-        $isInsertedPosition0 = Rooms_Cards::where('room_link_id', $room_link_id)
-                                            ->where('position', 0)
-                                            ->exists();
+        if($from_nm === 'left') {
+            $isInsertedPosition0 = Rooms_Cards::where('room_link_id', $room_link_id)
+                                                ->where('position', 0)
+                                                ->exists();
+    
+            $isInsertedPosition1 = Rooms_Cards::where('room_link_id', $room_link_id)
+                                                ->where('position', 1)
+                                                ->exists();
+        } else {
+            $isInsertedPosition0 = Rooms_Cards::where('room_link_id', $room_link_id)
+                                                ->where('position', 2)
+                                                ->exists();
+    
+            $isInsertedPosition1 = Rooms_Cards::where('room_link_id', $room_link_id)
+                                                ->where('position', 3)
+                                                ->exists();
+        }
 
-        $isInsertedPosition1 = Rooms_Cards::where('room_link_id', $room_link_id)
-                                            ->where('position', 1)
-                                            ->exists();
 
         if($isInsertedPosition0 && $isCard->color === $nightmares[1]->type) {
             $status = 'การ์ดช่องที่ 1 ถูกใส่แล้ว';
             return response()->json(['status' => $status], 400);
-        } else if($isInsertedPosition1 && $isCard->color === $nightmares[0]->type) {
+        } else if ($isInsertedPosition1 && $isCard->color === $nightmares[0]->type) {
             $status = 'การ์ดช่องที่ 2 ถูกใส่แล้ว';
             return response()->json(['status' => $status], 400);
         } else {
             $InsertRow = new Rooms_Cards;
             $InsertRow->room_link_id = $room_link_id;
             $InsertRow->code = $card_code;
-            if($isCard->color === $nightmares[1]->type) {
-                $InsertRow->position = 0;
-            } else if($isCard->color === $nightmares[0]->type) {
-                $InsertRow->position = 1;
-            }
+            if ($from_nm === 'left') {
+                $InsertRow->position = ($isCard->color === $nightmares[1]->type) ? 0 : (($isCard->color === $nightmares[0]->type) ? 1 : null);
+            } else {
+                $InsertRow->position = ($isCard->color === $nightmares[1]->type) ? 2 : (($isCard->color === $nightmares[0]->type) ? 3 : null);
+            }            
+            
             $InsertRow->save();
 
             $card = Rooms_Cards::leftJoin('cards', 'rooms_cards.code', '=', 'cards.code')
@@ -650,7 +667,7 @@ class GameController extends Controller
         
         $isCards = Rooms_Cards::where('room_link_id', $room_link_id)->get();
 
-        if($isCards->count() == 2) {
+        if($isCards->count() == 4) {
             $existingLinksIds = Rooms_Links::pluck('link_id')->toArray();
             $linkRandom = Links::whereNotIn('link_id', array_merge($existingLinksIds, [21, 22]))
                                 ->inRandomOrder()

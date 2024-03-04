@@ -33,7 +33,7 @@
                                         ยาก
                                     @endif
                                 </span>
-                                <span class="text-white">จำนวน: {{ $room->round }} รอบ</span>
+                                <span class="text-white">จำนวน: {{ $room->level_round }} รอบ</span>
                             </div>
                             <div class="w-full grid grid-cols-3 gap-2">
                                 <input id="room_id" type="hidden">

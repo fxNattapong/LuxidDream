@@ -42,17 +42,17 @@
                     <!-- END TIMER -->
 
                     <!-- START NIGHTMARE CARD 1 -->
-                    <div class="z-50 absolute bottom-0 left-1/5 transform translate-y-14">
+                    <div class="z-[100] absolute bottom-0 left-1/5 transform translate-y-14 cursor-pointer rounded-full">
                         <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[90px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[0]->nm_image) }}" class="nm_image w-full h-auto object-cover" alt="">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[0]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
                     <div class="z-50 absolute bottom-0 right-0 transform -translate-x-5 translate-y-2 rotate-[140deg]">
                         <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[90px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[0]->link_image) }}" class="link_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[0]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
@@ -119,17 +119,17 @@
                     <!-- END NIGHTMARE CARD 4 -->
 
                     <!-- START NIGHTMARE CARD 5 -->
-                    <div class="z-[100] absolute bottom-0 left-0 transform -translate-x-7 -translate-y-14 rotate-[75deg]">
+                    <div class="z-[100] absolute bottom-0 left-0 transform -translate-x-7 -translate-y-14 rotate-[75deg] cursor-pointer">
                         <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[85px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}" class="nm_image w-full h-auto object-cover" alt="">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
                     <div class="z-50 absolute bottom-0 left-0 transform translate-x-5 translate-y-2 -rotate-[140deg]">
                         <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[90px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[4]->link_image) }}" class="link_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[4]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
@@ -251,8 +251,8 @@
                     <div>
                         <!-- START INPUT -->
                         <div class="relative">
-                            <input type="text" id="card_code" placeholder="รหัสการ์ด" class="placeholder-white w-full text-sm font-light bg-[#A39FC6] border-2 border-white rounded-full px-3 py-1.5 focus:outline-none">
-                            <button onclick="CardAdd()" class="absolute top-[5px] right-1.5 w-fit text-white p-1 rounded-full bg-[#EE609A] border border-white hover:bg-[#d62c65] duration-300 focus:ring-4 focus:outline-none focus:ring-indigo-200"><i class='bx bx-plus'></i></button>
+                            <input type="text" id="card_code_1" placeholder="รหัสการ์ด" class="placeholder-white w-full text-sm font-light bg-[#A39FC6] border-2 border-white rounded-full px-3 py-1.5 focus:outline-none">
+                            <button onclick="CardAdd(this)" data-button_input="nm_left" class="absolute top-[5px] right-1.5 w-fit text-white p-1 rounded-full bg-[#EE609A] border border-white hover:bg-[#d62c65] duration-300 focus:ring-4 focus:outline-none focus:ring-indigo-200"><i class='bx bx-plus'></i></button>
                             <style>
                                 .placeholder-white::placeholder {
                                     color: white;
@@ -280,8 +280,8 @@
                     <div>
                         <!-- START INPUT -->
                         <div class="relative">
-                            <input type="text" id="card_code" placeholder="รหัสการ์ด" class="placeholder-white w-full text-sm font-light bg-[#A39FC6] border-2 border-white rounded-full px-3 py-1.5 focus:outline-none">
-                            <button onclick="CardAdd()" class="absolute top-[5px] right-1.5 w-fit text-white p-1 rounded-full bg-[#EE609A] border border-white hover:bg-[#d62c65] duration-300 focus:ring-4 focus:outline-none focus:ring-indigo-200"><i class='bx bx-plus'></i></button>
+                            <input type="text" id="card_code_2" placeholder="รหัสการ์ด" class="placeholder-white w-full text-sm font-light bg-[#A39FC6] border-2 border-white rounded-full px-3 py-1.5 focus:outline-none">
+                            <button onclick="CardAdd(this)" data-button_input="nm_right" class="absolute top-[5px] right-1.5 w-fit text-white p-1 rounded-full bg-[#EE609A] border border-white hover:bg-[#d62c65] duration-300 focus:ring-4 focus:outline-none focus:ring-indigo-200"><i class='bx bx-plus'></i></button>
                             <style>
                                 .placeholder-white::placeholder {
                                     color: white;
