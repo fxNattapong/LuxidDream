@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=Kanit:wght@200;300;400;500;600;700&display=swap);
 /*
-! tailwindcss v3.4.0 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.1 | MIT License | https://tailwindcss.com
 *//*
 1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
 2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
@@ -755,6 +755,9 @@ video {
 .mt-9 {
   margin-top: 2.25rem;
 }
+.mt-\[-28px\] {
+  margin-top: -28px;
+}
 .mt-\[-35px\] {
   margin-top: -35px;
 }
@@ -847,6 +850,9 @@ video {
 }
 .h-\[40px\] {
   height: 40px;
+}
+.h-\[48px\] {
+  height: 48px;
 }
 .h-\[80px\] {
   height: 80px;
@@ -1003,16 +1009,16 @@ video {
   --tw-translate-x: -1.75rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
-.-translate-y-11 {
-  --tw-translate-y: -2.75rem;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
 .-translate-y-12 {
   --tw-translate-y: -3rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .-translate-y-14 {
   --tw-translate-y: -3.5rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.-translate-y-4 {
+  --tw-translate-y: -1rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .-translate-y-7 {
@@ -1043,8 +1049,8 @@ video {
   --tw-translate-y: 0.5rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
-.translate-y-20 {
-  --tw-translate-y: 5rem;
+.translate-y-28 {
+  --tw-translate-y: 7rem;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .-rotate-\[140deg\] {
@@ -1230,51 +1236,9 @@ video {
 .rounded-xl {
   border-radius: 0.75rem;
 }
-.rounded-\[10\] {
-  border-radius: 10;
-}
-.rounded-\[10\%\] {
-  border-radius: 10%;
-}
 .rounded-t-2xl {
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
-}
-.rounded-t-lg {
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-}
-.rounded-t-full {
-  border-top-left-radius: 9999px;
-  border-top-right-radius: 9999px;
-}
-.rounded-b-full {
-  border-bottom-right-radius: 9999px;
-  border-bottom-left-radius: 9999px;
-}
-.rounded-b-\[20\%\] {
-  border-bottom-right-radius: 20%;
-  border-bottom-left-radius: 20%;
-}
-.rounded-b-\[20px\] {
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-}
-.rounded-b-lg {
-  border-bottom-right-radius: 0.5rem;
-  border-bottom-left-radius: 0.5rem;
-}
-.rounded-bl-full {
-  border-bottom-left-radius: 9999px;
-}
-.rounded-bl-\[100\%\] {
-  border-bottom-left-radius: 100%;
-}
-.rounded-bl-\[10\%\] {
-  border-bottom-left-radius: 10%;
-}
-.rounded-bl-\[10\] {
-  border-bottom-left-radius: 10;
 }
 .border {
   border-width: 1px;
@@ -1526,6 +1490,10 @@ video {
 .px-\[1em\] {
   padding-left: 1em;
   padding-right: 1em;
+}
+.px-\[1px\] {
+  padding-left: 1px;
+  padding-right: 1px;
 }
 .px-\[5em\] {
   padding-left: 5em;

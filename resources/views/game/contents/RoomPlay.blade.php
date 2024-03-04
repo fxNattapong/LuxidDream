@@ -59,60 +59,60 @@
                     <!-- END NIGHTMARE CARD 1 -->
                     
                     <!-- START NIGHTMARE CARD 2 -->
-                    <div class="btn-nightmare-card z-[100] absolute bottom-0 right-1 transform translate-x-8 -translate-y-14 -rotate-[75deg] cursor-pointer border-2 rounded-t-full rounded-b-full"
-                    onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[1]->room_link_id }}" 
-                    data-nightmare_id_1="{{ $room_nightmares[1]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" 
-                    data-nightmare_id_2="{{ $room_nightmares[2]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}">
+                    <div class="z-[100] absolute bottom-0 right-1 transform translate-x-8 -translate-y-14 -rotate-[75deg] cursor-pointer rounded-full">
                         <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[86px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" class="nm_image w-full h-auto object-cover" alt="">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
-                    <div class="z-50 absolute top-1/5 right-0 transform translate-x-7 -translate-y-12 rotate-[70deg]">
+                    <div class="btn-nightmare-card z-50 absolute top-1/5 right-0 transform translate-x-7 -translate-y-12 rotate-[70deg] cursor-pointer rounded-full"
+                    onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[1]->room_link_id }}" 
+                    data-nightmare_id_1="{{ $room_nightmares[1]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" 
+                    data-nightmare_id_2="{{ $room_nightmares[2]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}">
                         <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[90px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[1]->link_image) }}" class="link_image btn-image-zoom w-full h-auto object-cover" alt="">
+                            <div class="z-20 w-[90px] h-[40px] overflow-hidden">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[1]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
                     <!-- END NIGHTMARE CARD 2 -->
 
                     <!-- START NIGHTMARE CARD 3 -->
-                    <div class="btn-nightmare-card z-[100] absolute top-0 right-0 transform -translate-x-5 -translate-y-7 -rotate-[140deg] cursor-pointer"
-                    onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[2]->room_link_id }}" 
-                    data-nightmare_id_1="{{ $room_nightmares[2]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" 
-                    data-nightmare_id_2="{{ $room_nightmares[3]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}">
+                    <div class="z-[100] absolute top-0 right-0 transform -translate-x-5 -translate-y-7 -rotate-[140deg] cursor-pointer rounded-full">
                         <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[85px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" class="nm_image w-full h-auto object-cover" alt="">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
-                    <div class="z-50 absolute top-0 left-1/5 transform translate-x-1 -translate-y-11 rotate-[0deg]">
+                    <div class="btn-nightmare-card z-50 absolute top-0 left-1/5 transform translate-x-1 -translate-y-4 rotate-[0deg] cursor-pointer rounded-full"
+                    onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[2]->room_link_id }}" 
+                    data-nightmare_id_1="{{ $room_nightmares[2]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" 
+                    data-nightmare_id_2="{{ $room_nightmares[3]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}">
                         <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[90px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[2]->link_image) }}" class="link_image btn-image-zoom w-full h-auto object-cover" alt="">
+                            <div class="z-20 w-[90px] h-[40px] overflow-hidden">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[2]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
                     <!-- END NIGHTMARE CARD 3 -->
 
                     <!-- START NIGHTMARE CARD 4 -->
-                    <div class="btn-nightmare-card z-[100] absolute top-0 left-0 transform translate-x-7 -translate-y-7 rotate-[140deg] cursor-pointer"
-                    onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[3]->room_link_id }}" 
-                    data-nightmare_id_1="{{ $room_nightmares[3]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" 
-                    data-nightmare_id_2="{{ $room_nightmares[4]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}">
+                    <div class="z-[100] absolute top-0 left-0 transform translate-x-7 -translate-y-7 rotate-[140deg] cursor-pointer">
                         <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[85px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" class="nm_image w-full h-auto object-cover" alt="">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
-                    <div class="z-50 absolute bottom-1/5 left-0 transform -translate-x-5 -translate-y-12 -rotate-[70deg]">
+                    <div class="btn-nightmare-card z-50 absolute bottom-1/5 left-0 transform -translate-x-5 -translate-y-12 -rotate-[70deg] cursor-pointer rounded-full"
+                    onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[3]->room_link_id }}" 
+                    data-nightmare_id_1="{{ $room_nightmares[3]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" 
+                    data-nightmare_id_2="{{ $room_nightmares[4]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}">
                         <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[90px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[3]->link_image) }}" class="link_image btn-image-zoom w-full h-auto object-cover" alt="">
+                            <div class="z-20 w-[90px] h-[40px] overflow-hidden">
+                                <img src="{{ URL('/uploads/' . $room_nightmares[3]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>
@@ -232,45 +232,81 @@
                 <!-- START IMAGE -->
                 <div class="flex justify-between w-full">
                     <div class="relative w-[100px] overflow-hidden">
-                        <img id="modal_nightmare_1" src="{{ URL('/assets/nightmare_crop/NM for print-01.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
+                        <img id="modal_nightmare_1" src="{{ URL('/assets/nightmare_crop/NM for print-01.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto cursor-pointer rounded-full px-[1px]" alt="nightmare-card">
                     </div>
-                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-20 w-[110px] overflow-hidden m-auto rotate-180">
-                        <img id="modal_link" src="{{ URL('/uploads/jHzHqAZ53u.png') }}" class="btn-image-zoom w-full h-full" alt="link-card">
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 translate-y-28 w-[110px] h-[48px] overflow-hidden m-auto rotate-180">
+                        <img id="modal_link" src="{{ URL('/assets/web_based_board_game/element add-69.png') }}" class="btn-image-zoom w-full h-full object-cover cursor-pointer rounded-full" alt="link-card">
                     </div>
                     <div class="relative w-[100px] overflow-hidden">
-                        <img id="modal_nightmare_2" src="{{ URL('/assets/nightmare_crop/NM for print-02.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
+                        <img id="modal_nightmare_2" src="{{ URL('/assets/nightmare_crop/NM for print-02.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto cursor-pointer rounded-full px-[1px]" alt="nightmare-card">
                     </div>
                 </div>
                 <!-- END IMAGE -->
 
                 <hr class="my-4 w-full h-px bg-gray-400 border-0">
                 
-                <!-- START INPUT -->
-                <div class="relative">
-                    <input type="text" id="card_code" placeholder="รหัสการ์ด" class="placeholder-white w-full text-sm font-light bg-[#A39FC6] border-2 border-white rounded-full px-3 py-1.5 focus:outline-none">
-                    <button onclick="CardAdd()" class="absolute top-[5px] right-1.5 w-fit text-white p-1 rounded-full bg-[#EE609A] border border-white hover:bg-[#d62c65] duration-300 focus:ring-4 focus:outline-none focus:ring-indigo-200"><i class='bx bx-plus'></i></button>
-                    <style>
-                        .placeholder-white::placeholder {
-                            color: white;
-                        }
-                    </style>
-                </div>
-                <!-- END INPUT -->
 
-                <!-- START IMAGE -->
-                <div class="mt-1 grid grid-cols-1 gap-1">
-                    <div class="relative">
-                        <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
-                            <img id="modal_card_1" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
+                <!-- START INPUT CARDS -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <!-- START INPUT -->
+                        <div class="relative">
+                            <input type="text" id="card_code" placeholder="รหัสการ์ด" class="placeholder-white w-full text-sm font-light bg-[#A39FC6] border-2 border-white rounded-full px-3 py-1.5 focus:outline-none">
+                            <button onclick="CardAdd()" class="absolute top-[5px] right-1.5 w-fit text-white p-1 rounded-full bg-[#EE609A] border border-white hover:bg-[#d62c65] duration-300 focus:ring-4 focus:outline-none focus:ring-indigo-200"><i class='bx bx-plus'></i></button>
+                            <style>
+                                .placeholder-white::placeholder {
+                                    color: white;
+                                }
+                            </style>
                         </div>
+                        <!-- END INPUT -->
+        
+                        <!-- START IMAGE -->
+                        <div class="mt-1 grid grid-cols-1 gap-3">
+                            <div class="relative">
+                                <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
+                                    <img id="modal_card_1" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
+                                    <img id="modal_card_2" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END IMAGE -->
                     </div>
-                    <div class="relative">
-                        <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
-                            <img id="modal_card_2" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
+
+                    <div>
+                        <!-- START INPUT -->
+                        <div class="relative">
+                            <input type="text" id="card_code" placeholder="รหัสการ์ด" class="placeholder-white w-full text-sm font-light bg-[#A39FC6] border-2 border-white rounded-full px-3 py-1.5 focus:outline-none">
+                            <button onclick="CardAdd()" class="absolute top-[5px] right-1.5 w-fit text-white p-1 rounded-full bg-[#EE609A] border border-white hover:bg-[#d62c65] duration-300 focus:ring-4 focus:outline-none focus:ring-indigo-200"><i class='bx bx-plus'></i></button>
+                            <style>
+                                .placeholder-white::placeholder {
+                                    color: white;
+                                }
+                            </style>
                         </div>
+                        <!-- END INPUT -->
+        
+                        <!-- START IMAGE -->
+                        <div class="mt-1 grid grid-cols-1 gap-3">
+                            <div class="relative">
+                                <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
+                                    <img id="modal_card_3" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
+                                    <img id="modal_card_4" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END IMAGE -->
                     </div>
                 </div>
-                <!-- END IMAGE -->
+                <!-- END INPUT CARDS -->
                 
             </div>
         </div>

@@ -404,12 +404,12 @@ class GameController extends Controller
             return response()->json(['status' => 'ผู้เล่นบางคนยังไม่พร้อม'], 400);
         }
 
-        Rooms::where('room_id', $room_id)
-                ->update([
-                    'round' => 1,
-                    'circle' => 1,
-                    'updated_at' => now()
-                ]);
+        // Rooms::where('room_id', $room_id)
+        //         ->update([
+        //             'round' => 1,
+        //             'circle' => 1,
+        //             'updated_at' => now()
+        //         ]);
         
         $room = Rooms::where('room_id', $room_id)->first();
         $nmStart = Nightmares::where('type', 5)->first();
@@ -434,12 +434,34 @@ class GameController extends Controller
                         'updated_at' => now()
                     ]);
 
+        // $existingNightmaresIds = Rooms_Nightmares::pluck('nightmare_id')->toArray();
+        // $nmRandom = Nightmares::whereNotIn('nightmare_id', array_merge($existingNightmaresIds, [17]))
+        //                         ->inRandomOrder()
+        //                         ->limit(4)
+        //                         ->get()
+        //                         ->toArray();
+
         $existingNightmaresIds = Rooms_Nightmares::pluck('nightmare_id')->toArray();
-        $nmRandom = Nightmares::whereNotIn('nightmare_id', $existingNightmaresIds)
-            ->inRandomOrder()
-            ->limit(4)
-            ->get()
-            ->toArray();
+        $randomNightmareIds = [];
+        $previousType = null;
+
+        $excludedNightmares = array_merge($existingNightmaresIds, [17]);
+
+        while (count($randomNightmareIds) < 4) {
+            $randomNightmare = Nightmares::whereNotIn('nightmare_id', $excludedNightmares)
+                                          ->where('type', '!=', $previousType)
+                                          ->inRandomOrder()
+                                          ->first();
+        
+            if ($randomNightmare) {
+                $randomNightmareIds[] = $randomNightmare->nightmare_id;
+                $previousType = $randomNightmare->type;
+                $excludedNightmares[] = $randomNightmare->nightmare_id;
+            }
+        }
+        $nmRandom = Nightmares::whereIn('nightmare_id', $randomNightmareIds)
+                                ->get()
+                                ->toArray();
         $fourthNightmare = end($nmRandom);
 
         foreach ($nmRandom as $nightmare) {
