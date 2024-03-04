@@ -419,6 +419,7 @@ class GameController extends Controller
         $InsertRoomLinkEmpty = new Rooms_Links;
         $InsertRoomLinkEmpty->room_id = $room_id;
         $InsertRoomLinkEmpty->link_id = $link_empty->link_id;
+        $InsertRoomLinkEmpty->status = 1;
         $InsertRoomLinkEmpty->save();
         
         $InsertRoomNM = new Rooms_Nightmares;
@@ -470,6 +471,7 @@ class GameController extends Controller
             $InsertRoomLinkDream->link_id = $link_dream->link_id;
             if ($nightmare === $fourthNightmare) {
                 $InsertRoomLinkDream->link_id = $link_empty->link_id;
+                $InsertRoomLinkDream->status = 1;
             }
             $InsertRoomLinkDream->save();
 
@@ -522,6 +524,38 @@ class GameController extends Controller
         return view('game/contents/RoomPlay', compact('room', 'players', 'room_nightmares', 'room_card'));
     }
 
+    public function PollLinks(Request $request) {
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
+        $circle = ($request->has('circle')) ? trim($request->input('circle')) : null;
+        $room = Rooms::where('room_id', $room_id)->first();
+        
+        if (!$room) {
+            return redirect()->Route('Home');
+        }
+
+        if(Session::get('player_id')) {
+            $isJoined = Rooms_Players::where('player_id', Session::get('player_id'))
+                                    ->where('room_id', $room_id)
+                                    ->first();
+            if(!$isJoined) {
+                return redirect()->Route('Home');
+            }
+        }
+
+        $links = Rooms_Nightmares::leftJoin('rooms_links', 'rooms_nightmares.room_link_id', '=', 'rooms_links.room_link_id')
+                                ->leftJoin('links', 'rooms_links.link_id', '=', 'links.link_id')
+                                ->select('rooms_nightmares.*', 'rooms_links.status as room_link_status', 'links.image as link_image')
+                                ->where('rooms_nightmares.room_id', $room_id)
+                                ->where('rooms_nightmares.circle', $circle)
+                                ->orderBy('rooms_nightmares.room_nightmare_id', 'asc')
+                                ->get();
+        
+        return response()->json([
+            'room' => $room, 
+            'links' => $links
+        ], 200);
+    }
+
     public function StartTimer(Request $request) {
         $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
 
@@ -551,6 +585,22 @@ class GameController extends Controller
     
         return response()->json([
             'status' => 'success', 
+            'round_time' => $room->time
+        ], 200);
+    }
+
+    public function EndTimer(Request $request) {
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
+        $circle = ($request->has('circle')) ? trim($request->input('circle')) : null;
+
+        Rooms::where('room_id', $room_id)->update([
+            'time' => now(),
+            'updated_at' => now()
+        ]);
+
+        $room = where('room_id', $room_id)->first();
+        
+        return response()->json([
             'round_time' => $room->time
         ], 200);
     }
@@ -676,13 +726,14 @@ class GameController extends Controller
             Rooms_Links::where('room_link_id', $room_link_id)
                         ->update([
                             'link_id' => $linkRandom->link_id,
+                            'status' => 1,
                             'updated_at' => now()
                         ]);
 
             $room_link = Rooms_Links::leftJoin('links', 'rooms_links.link_id', '=', 'links.link_id')
-                        ->where('rooms_links.room_link_id', $room_link_id)
-                        ->select('rooms_links.*', 'links.type as link_type', 'links.image as link_image')
-                        ->first();
+                                    ->where('rooms_links.room_link_id', $room_link_id)
+                                    ->select('rooms_links.*', 'links.type as link_type', 'links.image as link_image')
+                                    ->first();
         }
 
         return response()->json(['room_link' => $room_link], 200);

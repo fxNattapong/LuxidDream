@@ -22,9 +22,9 @@
                         <div class="w-fit m-auto text-center flex-col flex justify-center items-center">
                             <h1 class="text-xl text-white font-bold uppercase">สิ้นสุดใน:</h1>
     
-                            <div id="div-countdown_timer" class="relative mx-auto w-[90px] h-fit p-3 rounded-full overflow-hidden text-center">
+                            <div id="div-countdown_timer" class="relative mx-auto w-[100px] h-fit p-3 rounded-full overflow-hidden text-center">
                                 <div class="z-10 w-full h-full absolute top-0 left-0 bg-white opacity-50"></div>
-                                <span id="countdown_timer" class="z-20 relative text-[#EE609A] text-xl font-bold">00 : 00</span>
+                                <span id="countdown_timer" class="z-20 relative text-[#EE609A] text-xl font-bold whitespace-nowrap">00 : 00</span>
                             </div>
     
                             @if(Session::get('creator'))
@@ -33,6 +33,8 @@
                                 </div>
 
                                 <button id="btn-timeout" class="hidden z-[100] mt-2 bg-[#EE609A] hover:bg-[#d62c65] rounded-full py-1 px-1.5 w-[60px] border border-white text-white text-center text-sm duration-300">จบรอบ</button>
+
+                                <button id="btn-end-timer" class="hidden z-[100] mt-2 bg-[#EE609A] hover:bg-[#d62c65] rounded-full py-1 px-1.5 w-[60px] border border-white text-white text-center text-sm duration-300">สิ้นสุด</button>
 
                                 <button id="btn-next-round" class="hidden z-[100] mt-2 bg-[#EE609A] hover:bg-[#d62c65] rounded-full py-1 px-1.5 w-[60px] border border-white text-white text-center text-sm duration-300">ยืนยัน</button>
                             @endif
@@ -162,7 +164,7 @@
     <!-- START MODAL TIPS -->
     <div id="modal-tips" class="modal hidden fixed z-[100] flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:px-[10px]">
         <!-- START MODAL CONTENT -->
-        <div class="modal-content bg-white m-auto rounded-md drop-shadow-xl">
+        <div class="modal-content bg-white m-auto rounded-2xl drop-shadow-xl">
         <span id="icon-tips-close" class="z-20 text-black bg-white rounded-full drop-shadow border text-[24px] font-bold h-fit font-medium absolute top-0 right-0 mt-2 mr-2 hover:text-indigo-600 hover:bg-indigo-200 duration-300 cursor-pointer"><i class='bx bx-x'></i></span>
             <div class="relative w-fit max-sm:w-[300px] grid grid-cols-2 max-sm:grid-cols-1 p-3 gap-3">
                 <!-- START IMAGE -->
@@ -220,7 +222,7 @@
     <!-- START MODAL NIGHTMARE -->
     <div id="modal-nightmare" class="modal hidden fixed z-[100] flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:px-[10px]">
         <!-- START MODAL CONTENT -->
-        <div class="modal-content w-[350px] bg-[#e6e4f0] m-auto rounded-xl drop-shadow-xl">
+        <div class="modal-content w-[350px] bg-[#e6e4f0] m-auto rounded-2xl drop-shadow-xl">
             <span id="icon-nightmare-close" class="z-20 text-black bg-white rounded-full drop-shadow border text-[24px] font-bold h-fit font-medium absolute top-0 right-0 mt-2 mr-2 hover:text-indigo-600 hover:bg-indigo-200 duration-300 cursor-pointer"><i class='bx bx-x'></i></span>
             <div class="relative p-4 flex-col flex items-center justify-center">
                 
@@ -318,8 +320,8 @@
     <!-- START MODAL RESULT -->
     <div id="modal-result" class="modal hidden fixed z-[100] flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:px-[10px]">
         <!-- START MODAL CONTENT -->
-        <div class="modal-content bg-white m-auto rounded-md drop-shadow-xl">
-        <span id="icon-result-close" class="z-20 text-black bg-white rounded-full drop-shadow border text-[24px] font-bold h-fit font-medium absolute top-0 right-0 mt-2 mr-2 hover:text-indigo-600 hover:bg-indigo-200 duration-300 cursor-pointer"><i class='bx bx-x'></i></span>
+        <div class="modal-content bg-white m-auto rounded-2xl drop-shadow-xl">
+            <span id="icon-result-close" class="z-20 text-black bg-white rounded-full drop-shadow border text-[24px] font-bold h-fit font-medium absolute top-0 right-0 mt-2 mr-2 hover:text-indigo-600 hover:bg-indigo-200 duration-300 cursor-pointer"><i class='bx bx-x'></i></span>
             <div class="relative w-fit max-sm:w-[300px] grid grid-cols-2 max-sm:grid-cols-1 p-3 gap-3">
                 <!-- START IMAGE -->
                 <div class="w-fit flex items-center justify-center pr-3 border-r border-gray-300 max-sm:hidden">
@@ -339,7 +341,7 @@
     <div id="modal-image-zoom" class="modal hidden fixed z-[100] left-0 top-0 w-[100%] h-[100%] overflow-auto">
         <!-- Modal content -->
         <div class="modal-content fixed inset-0 flex items-center justify-center px-[10px]">
-            <div class="relative w-[640px] h-auto max-h-[90vh] object-cover bg-[#e6e4f0] rounded">
+            <div class="relative w-[640px] h-auto max-h-[90vh] object-cover bg-[#e6e4f0] rounded-2xl overflow-hidden">
                 <span id="icon-image-zoom-close" class="text-black bg-white rounded-full drop-shadow border text-[24px] font-bold h-fit font-medium absolute top-0 right-0 mt-2 mr-2 hover:text-indigo-600 hover:bg-indigo-200 duration-300 cursor-pointer"><i class='bx bx-x'></i></span>
                 <div class="w-auto h-auto flex justify-center border-2 rounded p-3">
                     <img id="image_zoom" src="{{ URL('/assets/mini-logo.png') }}" alt="" class="w-auto h-auto object-cover">
@@ -349,17 +351,42 @@
     </div>
     <!-- END MODAL IMAGE ZOOM -->
 
+    <!-- START MODAL TIPS -->
+    <div id="modal-timeup" class="modal hidden fixed z-[100] flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:px-[10px]">
+        <!-- START MODAL CONTENT -->
+        <div class="modal-content bg-[#E6E4F0] m-auto rounded-2xl drop-shadow-xl">
+        <span id="icon-timeup-close" class="z-20 text-black bg-white rounded-full drop-shadow border text-[24px] font-bold h-fit font-medium absolute top-0 right-0 mt-2 mr-2 hover:text-indigo-600 hover:bg-indigo-200 duration-300 cursor-pointer"><i class='bx bx-x'></i></span>
+            <div class="relative w-fit max-sm:w-[300px] p-3">
+                <div class="relative text-[#52459A]">
+                    <div class="text-center text-xl">
+                        <h1 class="font-bold">TIME UP</h1>
+                        <h1 class="font-medium">หมดเวลา!</h1>
+                    </div>
+                    <div class="mt-4 text-center space-y-4">
+                        <p class="font-light">ผู้เล่นสามารถทำภารกิจสุดท้ายได้<br>จนลูกเต๋าหมดมือ</p>
+                        <i class='bx bxs-time text-4xl animate-bounce'></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END MODAL CONTENT -->
+    </div>
+    <!-- END MODAL TIPS -->
+
 @endsection
 
 @push('script')
     <script src="{{ URL('js/game/RoomPlay.js') }}" defer></script>
     <script>
         var isCreator = "<?php echo Session::get('creator') ?>";
+        var room_id = "<?php echo $room->room_id ?>";
         var RoomRound = "<?php echo $room->round ?>";
+        var RoomCircle = "<?php echo $room->circle ?>";
         var Timeout = new Date('<?php echo $room->time ?>').getTime();
 
-        const RoutePollCards = "<?php echo Route('PollCards'); ?>";
+        const RoutePollLinks = "<?php echo Route('PollLinks'); ?>";
         const RouteStartTimer = "<?php echo Route('StartTimer'); ?>";
+        const RouteEndTimer = "<?php echo Route('EndTimer'); ?>";
         const RouteFetchTimeout = "<?php echo Route('FetchTimeout'); ?>";
         const RouteFetchCards = "<?php echo Route('FetchCards'); ?>";
         const RouteCardAdd = "<?php echo Route('CardAdd'); ?>";

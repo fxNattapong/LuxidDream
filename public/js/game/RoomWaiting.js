@@ -93,7 +93,6 @@ function RoomDelete(room_id){
 }
 
 function PlayerRemove(room_id, room_player_id){
-    console.log(room_player_id);
     if(!isLoading) {
         isLoading = true;
         fetch(RoutePlayerRemove, {

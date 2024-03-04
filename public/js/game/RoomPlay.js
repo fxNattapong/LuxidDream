@@ -81,6 +81,40 @@ $(document).ready(function() {
             }
         })
     });
+
+    // MODAL END TIMER
+    $('#btn-end-timer').on('click', function() {
+        Swal.fire({
+            title: `รอบที่ ${RoomRound}`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'สิ้นสุด',
+            cancelButtonText: 'ยกเลิก',
+            }).then((result) => {
+            if (result.isConfirmed) {
+                EndTimer();
+            }
+        })
+    });
+
+    // MODAL CONFIRM NIGHTMARE FOR OPEN
+    $('#btn-next-round').on('click', function() {
+        Swal.fire({
+            title: `เริ่มรอบถัดไป`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก',
+            }).then((result) => {
+            if (result.isConfirmed) {
+                StartNextRound();
+            }
+        })
+    });
 });
 
 var x = setInterval(function() {
@@ -103,8 +137,8 @@ var x = setInterval(function() {
     }
     
     if(!Timeout) {
+        $('#card_code_1, #card_code_2').addClass('hidden');
         if(isCreator) {
-            // $('#card_code_1, #card_code_2').addClass('hidden');
             $('#div-countdown_timer').addClass('hidden');
             $('#btn-start-countdown').removeClass('hidden');
         }
@@ -112,25 +146,79 @@ var x = setInterval(function() {
 
     if (distance < 0) {
         clearInterval(x);
-        document.getElementById("countdown_timer").innerHTML = "00 : 00";
+        document.getElementById("countdown_timer").innerHTML = "หมดเวลา";
         $('#div-countdown_timer').removeClass('hidden');
 
-        // $('#card_code_1, #card_code_2').addClass('hidden');
+        $('#card_code_1, #card_code_2').addClass('hidden');
 
         $("#btn-timeout").addClass('hidden');
-        $("#modal-result").removeClass('hidden');
-
+        ModalTimeUp();
         if(isCreator) {
             $('#btn-next-round').removeClass('hidden');
         }
     } else if(distance > 0) {
-        // $('#card_code_1, #card_code_2').removeClass('hidden');
+        $('#card_code_1, #card_code_2').removeClass('hidden');
     }
 }, 1000);
 
 document.addEventListener('DOMContentLoaded', function () {
     $('#loading').addClass('hidden');
+    pollLinks(room_id);
 });
+
+
+function pollLinks(room_id){
+    var pollLinks = setInterval(() => {
+        fetch(RoutePollLinks, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body:JSON.stringify(
+                {
+                    room_id: room_id,
+                    circle: RoomCircle
+                }
+            )
+        })
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null; 
+
+            if(!response.ok){
+                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                return Promise.reject(error);
+            }
+            console.log('data:', data);
+
+            let status = 0;
+            data.links.forEach(link => {
+                if (link.room_link_status === 1) {
+                    status++;
+                }
+            });
+            
+            if(status === 5) {
+                var now = new Date().getTime();
+                var distance = Timeout - now;
+                // clearInterval(pollLinks);
+                if(distance > 0) {
+                    $('#btn-end-timer').removeClass('hidden');
+                }
+            }
+            $('.link_image').each(function(index) {
+                var newSource = data.links[index].link_image;
+                $(this).attr('src', pathUploads + newSource);
+            });
+
+        })
+        .catch((er) => {
+            console.log('Error' + er);
+        });
+    }, 1000);
+}
 
 var isLoading = false;
 
@@ -170,6 +258,51 @@ function StartTimer(){
             $('#btn-start-countdown').addClass('hidden');
 
             $('#div-countdown_timer').removeClass('hidden');
+
+        }).catch((er) => {
+            console.log('Error: ' + er);
+        })
+        .finally(() => {
+            isLoading = false;
+        });
+    }
+}
+
+function EndTimer(){
+    if(!isLoading) {
+        isLoading = true;
+        fetch(RouteEndTimer, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body:JSON.stringify(
+                {
+                    room_id: document.getElementById("room_id").value,
+                    circle: RoomCircle
+                }
+            )
+        })
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null; 
+    
+            if(!response.ok){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด!',
+                    html: `${data.status}`,
+                });
+    
+                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                return Promise.reject(error);
+            }
+
+            Timeout = new Date(data.round_time).getTime();
+            $('#btn-end-timer').addClass('hidden');
 
         }).catch((er) => {
             console.log('Error: ' + er);
@@ -221,6 +354,16 @@ function FetchTimeout(){
             isLoading = false;
         });
     }
+}
+
+function ModalTimeUp() {
+    var modal = $('#modal-timeup');
+    modal.addClass("fade-out-modal");
+    modal.removeClass('hidden');
+    setTimeout(function() {
+        modal.addClass('hidden');
+        modal.removeClass("fade-out-modal");
+    }, 5000);
 }
 
 function FetchCards(element){
