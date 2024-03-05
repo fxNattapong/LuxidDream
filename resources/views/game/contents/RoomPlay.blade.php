@@ -62,6 +62,12 @@
                     
                     <!-- START NIGHTMARE CARD 2 -->
                     <div class="z-[100] absolute bottom-0 right-1 transform translate-x-8 -translate-y-14 -rotate-[75deg] cursor-pointer rounded-full">
+                        <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                        data-nightmare_id="{{ $room_nightmares[1]->nightmare_id }}">
+                            <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                            </div>
+                        </div>
                         <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[86px] h-full overflow-hidden">
                                 <img src="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
@@ -82,6 +88,12 @@
 
                     <!-- START NIGHTMARE CARD 3 -->
                     <div class="z-[100] absolute top-0 right-0 transform -translate-x-5 -translate-y-7 -rotate-[140deg] cursor-pointer rounded-full">
+                        <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                        data-nightmare_id="{{ $room_nightmares[2]->nightmare_id }}">
+                            <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                            </div>
+                        </div>
                         <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[85px] h-full overflow-hidden">
                                 <img src="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
@@ -102,6 +114,12 @@
 
                     <!-- START NIGHTMARE CARD 4 -->
                     <div class="z-[100] absolute top-0 left-0 transform translate-x-7 -translate-y-7 rotate-[140deg] cursor-pointer">
+                        <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                        data-nightmare_id="{{ $room_nightmares[3]->nightmare_id }}">
+                            <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                            </div>
+                        </div>
                         <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[85px] h-full overflow-hidden">
                                 <img src="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
@@ -122,6 +140,12 @@
 
                     <!-- START NIGHTMARE CARD 5 -->
                     <div class="z-[100] absolute bottom-0 left-0 transform -translate-x-7 -translate-y-14 rotate-[75deg] cursor-pointer">
+                        <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                        data-nightmare_id="{{ $room_nightmares[4]->nightmare_id }}">
+                            <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                            </div>
+                        </div>
                         <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                             <div class="z-20 w-[85px] h-full overflow-hidden">
                                 <img src="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
@@ -265,12 +289,12 @@
         
                         <!-- START IMAGE -->
                         <div class="mt-1 grid grid-cols-1 gap-3">
-                            <div class="relative">
+                            <div class="relative cursor-pointer">
                                 <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
                                     <img id="modal_card_1" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
                                 </div>
                             </div>
-                            <div class="relative">
+                            <div class="relative cursor-pointer">
                                 <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
                                     <img id="modal_card_2" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
                                 </div>
@@ -294,12 +318,12 @@
         
                         <!-- START IMAGE -->
                         <div class="mt-1 grid grid-cols-1 gap-3">
-                            <div class="relative">
+                            <div class="relative cursor-pointer">
                                 <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
                                     <img id="modal_card_3" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
                                 </div>
                             </div>
-                            <div class="relative">
+                            <div class="relative cursor-pointer">
                                 <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
                                     <img id="modal_card_4" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
                                 </div>
@@ -320,16 +344,51 @@
     <!-- START MODAL RESULT -->
     <div id="modal-result" class="modal hidden fixed z-[100] flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:px-[10px]">
         <!-- START MODAL CONTENT -->
-        <div class="modal-content bg-white m-auto rounded-2xl drop-shadow-xl">
+        <div class="modal-content bg-[#E6E4F0] m-auto rounded-2xl drop-shadow-xl">
             <span id="icon-result-close" class="z-20 text-black bg-white rounded-full drop-shadow border text-[24px] font-bold h-fit font-medium absolute top-0 right-0 mt-2 mr-2 hover:text-indigo-600 hover:bg-indigo-200 duration-300 cursor-pointer"><i class='bx bx-x'></i></span>
-            <div class="relative w-fit max-sm:w-[300px] grid grid-cols-2 max-sm:grid-cols-1 p-3 gap-3">
-                <!-- START IMAGE -->
-                <div class="w-fit flex items-center justify-center pr-3 border-r border-gray-300 max-sm:hidden">
-                    <div class="relative w-[400px] max-md:w-[300px] overflow-hidden border">
-                        <img src="" class="w-full h-full my-auto" alt="logo">
-                    </div>
+            <div class="relative p-4 flex-col flex items-center justify-center">
+                
+                <div class="text-center text-xl text-[#52459A]">
+                    <h1 class="font-bold">TIME UP</h1>
+                    <h1 class="font-medium">หมดเวลา!</h1>
                 </div>
-                <!-- END IMAGE -->
+
+                <hr class="my-4 w-full h-px bg-gray-400 border-0">
+
+                <!-- START RESULT -->
+                <div class="grid grid-cols-2 gap-3">
+                    <!-- START CARDS -->
+                    <div class="mt-1 grid grid-cols-1 gap-3">
+                        <div class="relative">
+                            <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
+                                <img id="modal_card_1" src="{{ URL('/assets/skill card crop/element-24.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
+                                <img id="modal_card_2" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END CARDS -->
+    
+                    <!-- START LINKS -->
+                    <div class="mt-1 grid grid-cols-1 gap-3">
+                        <div class="relative">
+                            <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
+                                <img id="modal_card_3" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <div class="relative h-[120px] overflow-hidden border border-[#EE609A]">
+                                <img id="modal_card_4" src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END LINKS -->
+                </div>
+                <!-- END RESULT -->
+                
             </div>
         </div>
         <!-- END MODAL CONTENT -->
@@ -351,7 +410,7 @@
     </div>
     <!-- END MODAL IMAGE ZOOM -->
 
-    <!-- START MODAL TIPS -->
+    <!-- START MODAL TIMEUP -->
     <div id="modal-timeup" class="modal hidden fixed z-[100] flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:px-[10px]">
         <!-- START MODAL CONTENT -->
         <div class="modal-content bg-[#E6E4F0] m-auto rounded-2xl drop-shadow-xl">
@@ -371,7 +430,7 @@
         </div>
         <!-- END MODAL CONTENT -->
     </div>
-    <!-- END MODAL TIPS -->
+    <!-- END MODAL TIMEUP -->
 
 @endsection
 

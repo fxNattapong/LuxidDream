@@ -99,6 +99,37 @@ $(document).ready(function() {
         })
     });
 
+    $('.nightmare-select').on('click', function() {
+        if(!($(this).hasClass('nightmare-selected')) && ($('.nightmare-selected').length >= 2)) {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด!',
+                html: `ไม่สามารถเลือกฝันร้ายเพิ่มได้`,
+            });
+        } else {
+            if($('.nightmare-selected').length == 0 || $(this).hasClass('nightmare-selected')) {
+                $(this).toggleClass('nightmare-selected');
+                $(this).find('.circle').toggleClass('hidden');
+            } else {
+                var hasSelectedBefore = $(this).prevAll('.nightmare-selected').length > 0;
+                var hasSelectedAfter = $(this).nextAll('.nightmare-selected').length > 0;
+                console.log($(this).next().next());
+                if (hasSelectedBefore || hasSelectedAfter) {
+                    $(this).toggleClass('nightmare-selected');
+                    $(this).find('.circle').toggleClass('hidden');
+                } else {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด!',
+                        html: `ฝันร้ายต้องอยู่ติดกัน`,
+                    });
+                }
+            }
+        }
+    });
+
     // MODAL CONFIRM NIGHTMARE FOR OPEN
     $('#btn-next-round').on('click', function() {
         Swal.fire({
@@ -152,9 +183,13 @@ var x = setInterval(function() {
         $('#card_code_1, #card_code_2').addClass('hidden');
 
         $("#btn-timeout").addClass('hidden');
-        ModalTimeUp();
+        // ModalTimeUp();
+        
         if(isCreator) {
             $('#btn-next-round').removeClass('hidden');
+            $('.nm_image').removeClass('btn-image-zoom').off('click');
+            $('#modal-image-zoom').addClass('hidden');
+            $('.nightmare-select').removeClass('hidden');
         }
     } else if(distance > 0) {
         $('#card_code_1, #card_code_2').removeClass('hidden');
@@ -358,12 +393,12 @@ function FetchTimeout(){
 
 function ModalTimeUp() {
     var modal = $('#modal-timeup');
-    modal.addClass("fade-out-modal");
     modal.removeClass('hidden');
+
     setTimeout(function() {
         modal.addClass('hidden');
-        modal.removeClass("fade-out-modal");
-    }, 5000);
+        $('#modal-result').removeClass('hidden');
+    }, 3000);
 }
 
 function FetchCards(element){
