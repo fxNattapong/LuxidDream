@@ -87,8 +87,7 @@ Route::prefix('game')->group(function () {
         Route::post('/fetch/cards', "GameController@FetchCards")->Name('FetchCards');
         Route::post('/round/card/add', "GameController@CardAdd")->Name('CardAdd');
         Route::post('/check/nightmare/link', "GameController@CheckNightmareLink")->Name('CheckNightmareLink');
-
-        Route::post('/poll/cards', "GameController@PollCards")->Name('PollCards');
+        Route::post('/start/next/circle', "GameController@StartNextCircle")->Name('StartNextCircle');
     });
     
 });

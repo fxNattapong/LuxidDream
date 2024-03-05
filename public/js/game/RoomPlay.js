@@ -1,4 +1,6 @@
 var $image;
+var pollLinks;
+
 $(document).ready(function() {
     // MODAL IMAGE ZOOM
     $('.btn-image-zoom').on('click', function () {
@@ -100,7 +102,7 @@ $(document).ready(function() {
     });
 
     $('.nightmare-select').on('click', function() {
-        if(!($(this).hasClass('nightmare-selected')) && ($('.nightmare-selected').length >= 2)) {
+        if(!($(this).hasClass('nightmare-selected')) && ($('.nightmare-selected').length >= amtNMSelect)) {
             Swal.fire({
                 position: 'center',
                 icon: 'error',
@@ -112,9 +114,8 @@ $(document).ready(function() {
                 $(this).toggleClass('nightmare-selected');
                 $(this).find('.circle').toggleClass('hidden');
             } else {
-                var hasSelectedBefore = $(this).prevAll('.nightmare-selected').length > 0;
-                var hasSelectedAfter = $(this).nextAll('.nightmare-selected').length > 0;
-                console.log($(this).next().next());
+                var hasSelectedBefore = $(this).parent().prev().prev().find('.nightmare-selected').length > 0;
+                var hasSelectedAfter = $(this).parent().next().next().find('.nightmare-selected').length > 0;
                 if (hasSelectedBefore || hasSelectedAfter) {
                     $(this).toggleClass('nightmare-selected');
                     $(this).find('.circle').toggleClass('hidden');
@@ -131,7 +132,7 @@ $(document).ready(function() {
     });
 
     // MODAL CONFIRM NIGHTMARE FOR OPEN
-    $('#btn-next-round').on('click', function() {
+    $('#btn-next-circle').on('click', function() {
         Swal.fire({
             title: `เริ่มรอบถัดไป`,
             icon: 'warning',
@@ -142,7 +143,7 @@ $(document).ready(function() {
             cancelButtonText: 'ยกเลิก',
             }).then((result) => {
             if (result.isConfirmed) {
-                StartNextRound();
+                StartNextCircle();
             }
         })
     });
@@ -177,6 +178,7 @@ var x = setInterval(function() {
 
     if (distance < 0) {
         clearInterval(x);
+        clearInterval(pollLinks);
         document.getElementById("countdown_timer").innerHTML = "หมดเวลา";
         $('#div-countdown_timer').removeClass('hidden');
 
@@ -186,7 +188,7 @@ var x = setInterval(function() {
         // ModalTimeUp();
         
         if(isCreator) {
-            $('#btn-next-round').removeClass('hidden');
+            $('#btn-next-circle').removeClass('hidden');
             $('.nm_image').removeClass('btn-image-zoom').off('click');
             $('#modal-image-zoom').addClass('hidden');
             $('.nightmare-select').removeClass('hidden');
@@ -203,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 function pollLinks(room_id){
-    var pollLinks = setInterval(() => {
+    pollLinks = setInterval(() => {
         fetch(RoutePollLinks, {
             method: "POST",
             headers: {
@@ -555,6 +557,53 @@ function CheckNightmareLink(){
 
             $('#modal_link').attr('src', pathUploads + data.room_link.link_image);
             $image.attr('src', pathUploads + data.room_link.link_image);
+
+        }).catch((er) => {
+            console.log('Error: ' + er);
+        })
+        .finally(() => {
+            isLoading = false;
+        });
+    }
+}
+
+function StartNextCircle(){
+    var selectedIds = $('.nightmare-selected').map(function() {
+        return $(this).data('room_nightmare_id');
+    }).get();
+
+    if(!isLoading) {
+        isLoading = true;
+        fetch(RouteStartNextCircle, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body:JSON.stringify(
+                {
+                    room_id: room_id,
+                    nm_selected_ids: selectedIds,
+                }
+            )
+        })
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null; 
+    
+            if(!response.ok){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด!',
+                    html: `${data.status}`,
+                });
+    
+                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                return Promise.reject(error);
+            }
+            console.log(data);
 
         }).catch((er) => {
             console.log('Error: ' + er);

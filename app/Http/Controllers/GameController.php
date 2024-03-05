@@ -431,7 +431,7 @@ class GameController extends Controller
 
         Rooms_Links::where('room_link_id', $InsertRoomLinkEmpty->id)
                     ->update([
-                        'nightmare_id' => $InsertRoomNM->id,
+                        'room_nightmare_id' => $InsertRoomNM->id,
                         'updated_at' => now()
                     ]);
 
@@ -484,7 +484,7 @@ class GameController extends Controller
 
             Rooms_Links::where('room_link_id', $InsertRoomLinkDream->id)
                     ->update([
-                        'nightmare_id' => $InsertNM->id,
+                        'room_nightmare_id' => $InsertNM->id,
                         'updated_at' => now()
                     ]);
         }
@@ -499,10 +499,26 @@ class GameController extends Controller
     public function RoomPlay(Request  $request) {
         $invite_code = ($request->has('invite_code')) ? trim($request->input('invite_code')) : null;
 
-        $room = Rooms::where('invite_code', $invite_code)->first();
+        $room = Rooms::leftJoin('players_rule', 'rooms.player_rule_id', '=', 'players_rule.player_rule_id')
+                    ->where('rooms.invite_code', $invite_code)
+                    ->select('rooms.*', 'players_rule.nightmare_5 as rule_nm5', 'players_rule.nightmare_6 as rule_nm6')
+                    ->first();
 
         if(!$room) {
             return redirect()->Route('Home');
+        }
+
+        $rule_nm = array_merge(array_fill(0, $room->rule_nm5, 5), array_fill($room->rule_nm5, $room->rule_nm6, 6));
+
+        $amt_next_circle = null;
+        $nextCircle = $room->circle + 1;
+        if($nextCircle <= count($rule_nm)) {
+            for ($i = 0; $i < count($rule_nm); $i++) {
+                if ($nextCircle == $i + 2) {
+                    $amt_next_circle = $rule_nm[$i + 1];
+                    break;
+                }
+            }
         }
         
         $players = Rooms_Players::where('room_id', $room->room_id)->get();
@@ -521,7 +537,7 @@ class GameController extends Controller
         // print_r($room_nightmares);
         // echo '</pre>';
                                     
-        return view('game/contents/RoomPlay', compact('room', 'players', 'room_nightmares', 'room_card'));
+        return view('game/contents/RoomPlay', compact('room', 'amt_next_circle', 'players', 'room_nightmares', 'room_card'));
     }
 
     public function PollLinks(Request $request) {
@@ -737,6 +753,115 @@ class GameController extends Controller
         }
 
         return response()->json(['room_link' => $room_link], 200);
+    }
+
+    public function StartNextCircle(Request $request) {
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
+        $nm_selected_ids = ($request->has('nm_selected_ids')) ? implode(',', $request->input('nm_selected_ids')) : null;
+
+        if (!$nm_selected_ids) {
+            $status = 'กรุณาเลือกฝันร้าย';
+            return response()->json(['status' => $status], 400);
+        }
+        $nm_selected_ids_array = explode(',', $nm_selected_ids);
+
+        $room = Rooms::leftJoin('players_rule', 'rooms.player_rule_id', '=', 'players_rule.player_rule_id')
+                        ->where('rooms.room_id', $room_id)
+                        ->select('rooms.*', 'players_rule.nightmare_5 as rule_nm5', 'players_rule.nightmare_6 as rule_nm6')
+                        ->first();
+
+        $rule_nm = array_merge(array_fill(0, $room->rule_nm5, 5), array_fill($room->rule_nm5, $room->rule_nm6, 6));
+    
+        $amt_nightmares = null;
+        $nextCircle = $room->circle + 1;
+        for ($i = 0; $i < count($rule_nm); $i++) {
+            if ($nextCircle == $i + 2) {
+                $amt_nightmares = $rule_nm[$i + 1];
+                break;
+            }
+        }
+
+        $new_ids = [];
+        foreach ($nm_selected_ids_array as $room_nightmare_id) {
+            $originalNightmare = Rooms_Nightmares::where('room_nightmare_id', $room_nightmare_id)->first();
+            $clonedNightmare = new Rooms_Nightmares;
+            $clonedNightmare->room_id = $originalNightmare->room_id;
+            $clonedNightmare->room_link_id = $originalNightmare->room_link_id;
+            $clonedNightmare->nightmare_id = $originalNightmare->nightmare_id;
+            $clonedNightmare->circle = $nextCircle;
+            $clonedNightmare->save();
+            
+            $new_ids[] = $clonedNightmare->id;
+        }
+
+        // CHANGE LINK NIGHTMARE
+        $link_dream = Links::where('type', 2)->first();
+        $InsertRoomLinkDream = new Rooms_Links;
+        $InsertRoomLinkDream->room_id = $room_id;
+        $InsertRoomLinkDream->link_id = $link_dream->link_id;
+        $InsertRoomLinkDream->room_nightmare_id = $clonedNightmare->id;
+        $InsertRoomLinkDream->save();
+        $index = ($amt_nightmares == 5) ? 0 : 1;
+        
+        Rooms_Nightmares::where('room_nightmare_id', $new_ids[$index])
+                        ->where('circle', $nextCircle)
+                        ->update([
+                            'room_link_id' => $InsertRoomLinkDream->id,
+                            'updated_at' => now()
+                        ]);
+                        
+        // RANDOM 4 NIGHTMARES
+        $existingNightmaresIds = Rooms_Nightmares::pluck('nightmare_id')->toArray();
+        $randomNightmareIds = [];
+        $previousType = null;
+
+        $excludedNightmares = array_merge($existingNightmaresIds, [17]);
+
+        while (count($randomNightmareIds) < 4) {
+            $randomNightmare = Nightmares::whereNotIn('nightmare_id', $excludedNightmares)
+                                        ->where('type', '!=', $previousType)
+                                        ->inRandomOrder()
+                                        ->first();
+        
+            if ($randomNightmare) {
+                $randomNightmareIds[] = $randomNightmare->nightmare_id;
+                $previousType = $randomNightmare->type;
+                $excludedNightmares[] = $randomNightmare->nightmare_id;
+            }
+        }
+        $nmRandom = Nightmares::whereIn('nightmare_id', $randomNightmareIds)
+                                ->get()
+                                ->toArray();
+
+        foreach ($nmRandom as $nightmare) {
+            $InsertRoomLinkDream = new Rooms_Links;
+            $InsertRoomLinkDream->room_id = $room_id;
+            $InsertRoomLinkDream->link_id = $link_dream->link_id;
+            $InsertRoomLinkDream->save();
+
+            $InsertNM = new Rooms_Nightmares;
+            $InsertNM->room_id = $room_id;
+            $InsertNM->room_link_id = $InsertRoomLinkDream->id;
+            $InsertNM->nightmare_id = $nightmare['nightmare_id'];
+            $InsertNM->circle = $nextCircle;
+            $InsertNM->save();
+
+            Rooms_Links::where('room_link_id', $InsertRoomLinkDream->id)
+                    ->update([
+                        'room_nightmare_id' => $InsertNM->id,
+                        'updated_at' => now()
+                    ]);
+        }
+
+        Rooms::where('room_id', $room_id)
+                ->update([
+                    'round' => $room->round + 1,
+                    'circle' => $nextCircle,
+                    'time' => null,
+                    'updated_at' => now()
+                ]);
+
+        return response()->json(['room' => $room], 200);
     }
     
 }

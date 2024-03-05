@@ -10,12 +10,21 @@
         <input id="room_id" type="hidden" value="{{ $room->room_id }}">
 
         <!-- START CIRCLE -->
+        @if(count($room_nightmares) == 5)
         <div class="z-50 relative w-[400px] max-sm:w-full h-[400px] overflow-hidden">
+        @else
+        <div class="z-50 relative w-[400px] max-sm:w-full h-[450px] overflow-hidden">
+        @endif
             <div class="z-50 flex justify-center items-center h-full">
+                <h1 class="z-[100] absolute top-2 right-2 text-white text- font-medium bg-indigo-900 rounded-full px-2 py-1">วงที่ {{ $room->circle }}</h1>
                 <div class="z-10 w-full h-full absolute top-0 left-0 bg-indigo-100 opacity-50"></div>
 
                 <!-- START NIGHTMARE CARD -->
+                @if(count($room_nightmares) == 5)
                 <div class="mt-[-35px] w-[300px] h-[300px] flex justify-center items-center relative">
+                @else
+                <div class="mt-[25px] w-[300px] h-[300px] flex justify-center items-center relative">
+                @endif
 
                     <!-- START TIMER -->
                     <div class="z-50 w-full h-full flex">
@@ -36,130 +45,282 @@
 
                                 <button id="btn-end-timer" class="hidden z-[100] mt-2 bg-[#EE609A] hover:bg-[#d62c65] rounded-full py-1 px-1.5 w-[60px] border border-white text-white text-center text-sm duration-300">สิ้นสุด</button>
 
-                                <button id="btn-next-round" class="hidden z-[100] mt-2 bg-[#EE609A] hover:bg-[#d62c65] rounded-full py-1 px-1.5 w-[60px] border border-white text-white text-center text-sm duration-300">ยืนยัน</button>
+                                <button id="btn-next-circle" class="hidden z-[100] mt-2 bg-[#EE609A] hover:bg-[#d62c65] rounded-full py-1 px-1.5 w-[60px] border border-white text-white text-center text-sm duration-300">ยืนยัน</button>
                             @endif
 
                         </div>
                     </div>
                     <!-- END TIMER -->
 
-                    <!-- START NIGHTMARE CARD 1 -->
-                    <div class="z-[100] absolute bottom-0 left-1/5 transform translate-y-14 cursor-pointer rounded-full">
-                        <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[90px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[0]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                    @if(count($room_nightmares) == 5)
+                        <!-- START NIGHTMARE CARD 1 -->
+                        <div class="z-[100] absolute bottom-0 left-1/5 transform translate-y-14 cursor-pointer rounded-full">
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[0]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="z-50 absolute bottom-0 right-0 transform -translate-x-5 translate-y-2 rotate-[140deg]">
-                        <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[90px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[0]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
+                        <div class="z-50 absolute bottom-0 right-0 transform -translate-x-5 translate-y-2 rotate-[140deg]">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[0]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- END NIGHTMARE CARD 1 -->
-                    
-                    <!-- START NIGHTMARE CARD 2 -->
-                    <div class="z-[100] absolute bottom-0 right-1 transform translate-x-8 -translate-y-14 -rotate-[75deg] cursor-pointer rounded-full">
-                        <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
-                        data-nightmare_id="{{ $room_nightmares[1]->nightmare_id }}">
-                            <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
-                                <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                        <!-- END NIGHTMARE CARD 1 -->
+                        
+                        <!-- START NIGHTMARE CARD 2 -->
+                        <div class="z-[100] absolute bottom-0 right-1 transform translate-x-8 -translate-y-14 -rotate-[75deg] cursor-pointer rounded-full">
+                            <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            data-room_nightmare_id="{{ $room_nightmares[1]->room_nightmare_id }}">
+                                <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                    <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[86px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                        <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[86px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                        <div class="btn-nightmare-card z-50 absolute top-1/5 right-0 transform translate-x-7 -translate-y-12 rotate-[70deg] cursor-pointer rounded-full"
+                        onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[1]->room_link_id }}" 
+                        data-nightmare_id_1="{{ $room_nightmares[1]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" 
+                        data-nightmare_id_2="{{ $room_nightmares[2]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-[40px] overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[1]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="btn-nightmare-card z-50 absolute top-1/5 right-0 transform translate-x-7 -translate-y-12 rotate-[70deg] cursor-pointer rounded-full"
-                    onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[1]->room_link_id }}" 
-                    data-nightmare_id_1="{{ $room_nightmares[1]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" 
-                    data-nightmare_id_2="{{ $room_nightmares[2]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}">
-                        <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[90px] h-[40px] overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[1]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END NIGHTMARE CARD 2 -->
+                        <!-- END NIGHTMARE CARD 2 -->
 
-                    <!-- START NIGHTMARE CARD 3 -->
-                    <div class="z-[100] absolute top-0 right-0 transform -translate-x-5 -translate-y-7 -rotate-[140deg] cursor-pointer rounded-full">
-                        <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
-                        data-nightmare_id="{{ $room_nightmares[2]->nightmare_id }}">
-                            <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
-                                <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                        <!-- START NIGHTMARE CARD 3 -->
+                        <div class="z-[100] absolute top-0 right-0 transform -translate-x-5 -translate-y-7 -rotate-[140deg] cursor-pointer rounded-full">
+                            <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            data-room_nightmare_id="{{ $room_nightmares[2]->room_nightmare_id }}">
+                                <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                    <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[85px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                        <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[85px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                        <div class="btn-nightmare-card z-50 absolute top-0 left-1/5 transform translate-x-1 -translate-y-4 rotate-[0deg] cursor-pointer rounded-full"
+                        onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[2]->room_link_id }}" 
+                        data-nightmare_id_1="{{ $room_nightmares[2]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" 
+                        data-nightmare_id_2="{{ $room_nightmares[3]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-[40px] overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[2]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="btn-nightmare-card z-50 absolute top-0 left-1/5 transform translate-x-1 -translate-y-4 rotate-[0deg] cursor-pointer rounded-full"
-                    onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[2]->room_link_id }}" 
-                    data-nightmare_id_1="{{ $room_nightmares[2]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" 
-                    data-nightmare_id_2="{{ $room_nightmares[3]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}">
-                        <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[90px] h-[40px] overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[2]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END NIGHTMARE CARD 3 -->
+                        <!-- END NIGHTMARE CARD 3 -->
 
-                    <!-- START NIGHTMARE CARD 4 -->
-                    <div class="z-[100] absolute top-0 left-0 transform translate-x-7 -translate-y-7 rotate-[140deg] cursor-pointer">
-                        <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
-                        data-nightmare_id="{{ $room_nightmares[3]->nightmare_id }}">
-                            <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
-                                <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                        <!-- START NIGHTMARE CARD 4 -->
+                        <div class="z-[100] absolute top-0 left-0 transform translate-x-7 -translate-y-7 rotate-[140deg] cursor-pointer">
+                            <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            data-room_nightmare_id="{{ $room_nightmares[3]->room_nightmare_id }}">
+                                <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                    <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[85px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                        <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[85px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                        <div class="btn-nightmare-card z-50 absolute bottom-1/5 left-0 transform -translate-x-5 -translate-y-12 -rotate-[70deg] cursor-pointer rounded-full"
+                        onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[3]->room_link_id }}" 
+                        data-nightmare_id_1="{{ $room_nightmares[3]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" 
+                        data-nightmare_id_2="{{ $room_nightmares[4]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-[40px] overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[3]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="btn-nightmare-card z-50 absolute bottom-1/5 left-0 transform -translate-x-5 -translate-y-12 -rotate-[70deg] cursor-pointer rounded-full"
-                    onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[3]->room_link_id }}" 
-                    data-nightmare_id_1="{{ $room_nightmares[3]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" 
-                    data-nightmare_id_2="{{ $room_nightmares[4]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}">
-                        <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[90px] h-[40px] overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[3]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END NIGHTMARE CARD 4 -->
+                        <!-- END NIGHTMARE CARD 4 -->
 
-                    <!-- START NIGHTMARE CARD 5 -->
-                    <div class="z-[100] absolute bottom-0 left-0 transform -translate-x-7 -translate-y-14 rotate-[75deg] cursor-pointer">
-                        <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
-                        data-nightmare_id="{{ $room_nightmares[4]->nightmare_id }}">
-                            <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
-                                <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                        <!-- START NIGHTMARE CARD 5 -->
+                        <div class="z-[100] absolute bottom-0 left-0 transform -translate-x-7 -translate-y-14 rotate-[75deg] cursor-pointer">
+                            <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            data-room_nightmare_id="{{ $room_nightmares[4]->room_nightmare_id }}">
+                                <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                    <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[85px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                        <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[85px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                        <div class="z-50 absolute bottom-0 left-0 transform translate-x-5 translate-y-2 -rotate-[140deg]">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[4]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="z-50 absolute bottom-0 left-0 transform translate-x-5 translate-y-2 -rotate-[140deg]">
-                        <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
-                            <div class="z-20 w-[90px] h-full overflow-hidden">
-                                <img src="{{ URL('/uploads/' . $room_nightmares[4]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
+                        <!-- END NIGHTMARE CARD 5 -->
+                    @else
+                        <!-- START NIGHTMARE CARD 1 -->
+                        <div class="z-[100] absolute bottom-0 left-1/5 transform translate-y-14 cursor-pointer rounded-full">
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[80px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[0]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- END NIGHTMARE CARD 5 -->
+                        <div class="btn-nightmare-card z-50 absolute bottom-0 right-0 transform -translate-x-6 translate-y-6 rotate-[150deg] cursor-pointer rounded-full"
+                        onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[0]->room_link_id }}" 
+                        data-nightmare_id_1="{{ $room_nightmares[0]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" 
+                        data-nightmare_id_2="{{ $room_nightmares[1]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[0]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END NIGHTMARE CARD 1 -->
+                        
+                        <!-- START NIGHTMARE CARD 2 -->
+                        <div class="z-[100] absolute bottom-0 right-1 transform translate-x-8 -translate-y-8 -rotate-[70deg] cursor-pointer rounded-full">
+                            <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            data-room_nightmare_id="{{ $room_nightmares[1]->room_nightmare_id }}">
+                                <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                    <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[80px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-nightmare-card z-50 absolute top-1/5 right-0 transform translate-x-12 -translate-y-3 rotate-[90deg] cursor-pointer rounded-full"
+                        onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[1]->room_link_id }}" 
+                        data-nightmare_id_1="{{ $room_nightmares[1]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" 
+                        data-nightmare_id_2="{{ $room_nightmares[2]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-[40px] overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[1]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END NIGHTMARE CARD 2 -->
+
+                        <!-- START NIGHTMARE CARD 3 -->
+                        <div class="z-[100] absolute top-0 right-0 transform translate-x-8 translate-y-0 -rotate-[120deg] cursor-pointer rounded-full">
+                            <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            data-room_nightmare_id="{{ $room_nightmares[2]->room_nightmare_id }}">
+                                <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                    <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[80px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-nightmare-card z-50 absolute top-0 left-1/5 transform translate-x-20 -translate-y-6 rotate-[30deg] cursor-pointer rounded-full"
+                        onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[2]->room_link_id }}" 
+                        data-nightmare_id_1="{{ $room_nightmares[2]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" 
+                        data-nightmare_id_2="{{ $room_nightmares[3]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-[40px] overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[2]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END NIGHTMARE CARD 3 -->
+
+                        <!-- START NIGHTMARE CARD 4 -->
+                        <div class="z-[100] absolute top-0 left-1/5 transform translate-x-0 -translate-y-20 rotate-[180deg] cursor-pointer">
+                            <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            data-room_nightmare_id="{{ $room_nightmares[3]->room_nightmare_id }}">
+                                <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                    <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[80px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-nightmare-card z-50 absolute top-0 left-0 transform translate-x-6 -translate-y-5 -rotate-[30deg] cursor-pointer rounded-full"
+                        onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[3]->room_link_id }}" 
+                        data-nightmare_id_1="{{ $room_nightmares[3]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" 
+                        data-nightmare_id_2="{{ $room_nightmares[4]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-[40px] overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[3]->link_image) }}" class="link_image mt-[-28px] w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END NIGHTMARE CARD 4 -->
+
+                        <!-- START NIGHTMARE CARD 5 -->
+                        <div class="z-[100] absolute top-0 left-0 transform -translate-x-8 translate-y-1 rotate-[120deg] cursor-pointer">
+                            <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            data-room_nightmare_id="{{ $room_nightmares[4]->room_nightmare_id }}">
+                                <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                    <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[80px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-nightmare-card z-50 absolute top-1/2 left-0 transform -translate-x-14 -translate-y-14 -rotate-[90deg] cursor-pointer rounded-full"
+                        onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[4]->room_link_id }}" 
+                        data-nightmare_id_1="{{ $room_nightmares[4]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}" 
+                        data-nightmare_id_2="{{ $room_nightmares[5]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[5]->nm_image) }}">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[4]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END NIGHTMARE CARD 5 -->
+
+                        <!-- START NIGHTMARE CARD 6 -->
+                        <div class="z-[100] absolute bottom-0 left-0 transform -translate-x-7 -translate-y-9 rotate-[70deg] cursor-pointer">
+                            <div class="nightmare-select hidden z-[101] w-full h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            data-room_nightmare_id="{{ $room_nightmares[5]->room_nightmare_id }}">
+                                <div class="w-8 h-8 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white border-[3px] border-[#7068ec] bg-white rounded-full p-1">
+                                    <div class="circle hidden w-5 h-5 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#8586f4] rounded-full"></div>
+                                </div>
+                            </div>
+                            <div class="relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[80px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[5]->nm_image) }}" class="nm_image btn-image-zoom w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-nightmare-card z-50 absolute bottom-0 left-0 transform translate-x-6 translate-y-6 -rotate-[150deg] cursor-pointer rounded-full"
+                        onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[5]->room_link_id }}" 
+                        data-nightmare_id_1="{{ $room_nightmares[5]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[5]->nm_image) }}" 
+                        data-nightmare_id_2="{{ $room_nightmares[0]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[0]->nm_image) }}">
+                            <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
+                                <div class="z-20 w-[90px] h-full overflow-hidden">
+                                    <img src="{{ URL('/uploads/' . $room_nightmares[5]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- END NIGHTMARE CARD 5 -->
+                    @endif
 
                 </div>
                 <!-- END NIGHTMARE CARD -->
@@ -442,6 +603,8 @@
         var RoomRound = "<?php echo $room->round ?>";
         var RoomCircle = "<?php echo $room->circle ?>";
         var Timeout = new Date('<?php echo $room->time ?>').getTime();
+        var AmtNextCircle = "<?php echo $amt_next_circle ?>";
+        var amtNMSelect = (AmtNextCircle == 5) ? 1 : 2;
 
         const RoutePollLinks = "<?php echo Route('PollLinks'); ?>";
         const RouteStartTimer = "<?php echo Route('StartTimer'); ?>";
@@ -450,5 +613,6 @@
         const RouteFetchCards = "<?php echo Route('FetchCards'); ?>";
         const RouteCardAdd = "<?php echo Route('CardAdd'); ?>";
         const RouteCheckNightmareLink = "<?php echo Route('CheckNightmareLink'); ?>";
+        const RouteStartNextCircle = "<?php echo Route('StartNextCircle'); ?>";
     </script>
 @endpush
