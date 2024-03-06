@@ -85,9 +85,12 @@ Route::prefix('game')->group(function () {
         Route::post('/poll/links', "GameController@PollLinks")->Name('PollLinks');
         Route::post('/fetch/timeout', "GameController@FetchTimeout")->Name('FetchTimeout');
         Route::post('/fetch/cards', "GameController@FetchCards")->Name('FetchCards');
+        Route::post('/fetch/results', "GameController@FetchResults")->Name('FetchResults');
         Route::post('/round/card/add', "GameController@CardAdd")->Name('CardAdd');
         Route::post('/check/nightmare/link', "GameController@CheckNightmareLink")->Name('CheckNightmareLink');
+        Route::post('/start/next/round', "GameController@StartNextRound")->Name('StartNextRound');
         Route::post('/start/next/circle', "GameController@StartNextCircle")->Name('StartNextCircle');
+        Route::post('/end', "GameController@GameEnd")->Name('GameEnd');
     });
     
 });

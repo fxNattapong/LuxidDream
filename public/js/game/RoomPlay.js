@@ -1,6 +1,11 @@
 var $image;
 var pollLinks;
 
+// const audio = document.getElementById('audioPlayer');
+// audio.addEventListener('ended', function() {
+//   audio.play();
+// });
+
 $(document).ready(function() {
     // MODAL IMAGE ZOOM
     $('.btn-image-zoom').on('click', function () {
@@ -9,6 +14,34 @@ $(document).ready(function() {
     });
     $('#icon-image-zoom-close').on('click', function () {
         var modal = $('#modal-image-zoom');
+        modal.addClass("fade-out-modal");
+
+        setTimeout(function() {
+            modal.addClass('hidden');
+            modal.removeClass("fade-out-modal");
+        }, 500);
+    });
+
+    // MODAL RESULT
+    $('#btn-result').on('click', function () {
+        $("#modal-result").removeClass('hidden');
+    });
+    $('#icon-result-close').on('click', function () {
+        var modal = $('#modal-result');
+        modal.addClass("fade-out-modal");
+
+        setTimeout(function() {
+            modal.addClass('hidden');
+            modal.removeClass("fade-out-modal");
+        }, 500);
+    });
+
+    // MODAL GAME END
+    $('#btn-game-end').on('click', function () {
+        $("#modal-game-end").removeClass('hidden');
+    });
+    $('#icon-game-end-close').on('click', function () {
+        var modal = $('#modal-game-end');
         modal.addClass("fade-out-modal");
 
         setTimeout(function() {
@@ -32,7 +65,7 @@ $(document).ready(function() {
     });
 
     // MODAL NIGHTMARE CARD
-    $('.btn-nightmare-card').on('click', function () {
+    $('.btn-link').on('click', function () {
         $('#modal_nightmare_1').attr('src', $(this).data('image_1'));
         $('#modal_nightmare_1').attr('data-nightmare_id_1', $(this).data('nightmare_id_1'));
         $('#modal_nightmare_2').attr('src', $(this).data('image_2'));
@@ -47,19 +80,6 @@ $(document).ready(function() {
         modal.addClass("fade-out-modal");
 
         $('#modal_card_1, #modal_card_2, #modal_card_3, #modal_card_4').attr('src', pathUploads + 'element-empty.png');
-
-        setTimeout(function() {
-            modal.addClass('hidden');
-            modal.removeClass("fade-out-modal");
-        }, 500);
-    });
-
-    $('#icon-result-close').on('click', function () {
-        var modal = $('#modal-result');
-        modal.addClass("fade-out-modal");
-
-        $('#modal_card_1').attr('src', pathUploads + 'element-empty.png');
-        $('#modal_card_2').attr('src', pathUploads + 'element-empty.png');
 
         setTimeout(function() {
             modal.addClass('hidden');
@@ -132,9 +152,26 @@ $(document).ready(function() {
     });
 
     // MODAL CONFIRM NIGHTMARE FOR OPEN
-    $('#btn-next-circle').on('click', function() {
+    $('#btn-next-round').on('click', function() {
         Swal.fire({
             title: `เริ่มรอบถัดไป`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก',
+            }).then((result) => {
+            if (result.isConfirmed) {
+                StartNextRound();
+            }
+        })
+    });
+
+    // MODAL CONFIRM NIGHTMARE FOR OPEN
+    $('#btn-next-circle').on('click', function() {
+        Swal.fire({
+            title: `เริ่มวงถัดไป`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -149,6 +186,7 @@ $(document).ready(function() {
     });
 });
 
+var countNumber = 0;
 var x = setInterval(function() {
     var now = new Date().getTime();
         
@@ -176,22 +214,86 @@ var x = setInterval(function() {
         }
     }
 
+    // TIMEOUT
     if (distance < 0) {
-        clearInterval(x);
-        clearInterval(pollLinks);
         document.getElementById("countdown_timer").innerHTML = "หมดเวลา";
         $('#div-countdown_timer').removeClass('hidden');
-
         $('#card_code_1, #card_code_2').addClass('hidden');
-
         $("#btn-timeout").addClass('hidden');
-        // ModalTimeUp();
         
+        if(countNumber == 0) {
+            var showGameEndModal = function(status) {
+                var imageSrc = (status == 1) ? 'ending-01.png' : 'ending-03.png';
+                $('#image_game_end').attr('src', pathAssets + 'web_based_board_game/' + imageSrc);
+                $('#loading').addClass('hidden');
+                $('#btn-game-end').removeClass('hidden');
+                $('#modal-timeup').removeClass('hidden');
+                setTimeout(function() {
+                    $('#modal-timeup').addClass('hidden');
+                    $('#modal-game-end').removeClass('hidden');
+                }, 3000);
+                $('#btn-result-final').removeClass('hidden');
+            };
+
+            if(RoomRound == RuleRound) {
+                $('#loading').removeClass('hidden');
+                if (RoomStatus == 0) {
+                    GameEnd()
+                    .then(status => {
+                        showGameEndModal(status);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    showGameEndModal(RoomStatus);
+                }
+            } else {
+                $('#modal-timeup').removeClass('hidden');
+                setTimeout(function() {
+                    $('#modal-timeup').addClass('hidden');
+                    $('#modal-result').removeClass('hidden');
+                }, 3000);
+            }
+            
+            countNumber++;
+        }
+
+        var links_calm;
         if(isCreator) {
-            $('#btn-next-circle').removeClass('hidden');
-            $('.nm_image').removeClass('btn-image-zoom').off('click');
-            $('#modal-image-zoom').addClass('hidden');
-            $('.nightmare-select').removeClass('hidden');
+            pollLinksCalm(room_id)
+                .then(links_calm => {
+                    if(links_calm < 3) {
+                        $('#btn-next-round').removeClass('hidden');
+                    } else {
+                        clearInterval(x);
+                        if(RoomCircle == RuleCircle) {
+                            $('#countdown_timer').text('จบเกม');
+                            $('#btn-new-room').removeClass('hidden');
+                        } else {
+                            $('#btn-next-circle').removeClass('hidden');
+                            $('.nm_image').removeClass('btn-image-zoom').off('click');
+                            $('#modal-image-zoom').addClass('hidden');
+                            $('.nightmare-select').removeClass('hidden');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } else {
+            pollLinksCalm(room_id)
+                .then(links_calm => {
+                    if(links_calm > 3) {
+                        clearInterval(x);
+                        if(RoomCircle == RuleCircle) {
+                            $('#countdown_timer').text('จบเกม');
+                        } 
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
     } else if(distance > 0) {
         $('#card_code_1, #card_code_2').removeClass('hidden');
@@ -230,17 +332,21 @@ function pollLinks(room_id){
             }
             console.log('data:', data);
 
-            let status = 0;
+            if(data.room.circle != RoomCircle || data.room.round != RoomRound) {
+                window.location.reload();
+            }
+
+            var link_calm = 0;
             data.links.forEach(link => {
                 if (link.room_link_status === 1) {
-                    status++;
+                    link_calm++;
                 }
             });
-            
-            if(status === 5) {
+
+            if(link_calm === 5) {
                 var now = new Date().getTime();
                 var distance = Timeout - now;
-                // clearInterval(pollLinks);
+                clearInterval(pollLinks);
                 if(distance > 0) {
                     $('#btn-end-timer').removeClass('hidden');
                 }
@@ -255,6 +361,39 @@ function pollLinks(room_id){
             console.log('Error' + er);
         });
     }, 1000);
+}
+
+function pollLinksCalm(room_id){
+    return fetch(RoutePollLinks, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-CSRF-Token": csrfToken
+        },
+        body:JSON.stringify(
+            {
+                room_id: room_id,
+                circle: RoomCircle,
+                status: 1
+            }
+        )
+    })
+    .then(async response => {
+        const isJson = response.headers.get('content-type')?.includes('application/json');
+        const data = isJson ? await response.json() : null; 
+
+        if(!response.ok){
+            const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+            return Promise.reject(error);
+        }
+        console.log('data:', data);
+
+        return data.links.length;
+    })
+    .catch((er) => {
+        console.log('Error' + er);
+    });
 }
 
 var isLoading = false;
@@ -393,16 +532,6 @@ function FetchTimeout(){
     }
 }
 
-function ModalTimeUp() {
-    var modal = $('#modal-timeup');
-    modal.removeClass('hidden');
-
-    setTimeout(function() {
-        modal.addClass('hidden');
-        $('#modal-result').removeClass('hidden');
-    }, 3000);
-}
-
 function FetchCards(element){
     var $image = $(element).next('div').find('img');
     if(!isLoading) {
@@ -448,6 +577,50 @@ function FetchCards(element){
                     targetElement.attr('src', pathUploads + card.card_image);
                 }
             }
+
+        }).catch((er) => {
+            console.log('Error: ' + er);
+        })
+        .finally(() => {
+            isLoading = false;
+        });
+    }
+}
+
+function FetchResults(){
+    if(!isLoading) {
+        isLoading = true;
+        fetch(RouteFetchResults, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body:JSON.stringify(
+                {
+                    room_id: room_id
+                }
+            )
+        })
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null; 
+    
+            if(!response.ok){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'แจ้งเตือน!',
+                    html: `${data.status}`,
+                });
+    
+                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                return Promise.reject(error);
+            }
+            console.log(data);
+
+           
 
         }).catch((er) => {
             console.log('Error: ' + er);
@@ -567,6 +740,52 @@ function CheckNightmareLink(){
     }
 }
 
+function StartNextRound(){
+    if(!isLoading) {
+        isLoading = true;
+        fetch(RouteStartNextRound, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body:JSON.stringify(
+                {
+                    room_id: document.getElementById("room_id").value,
+                }
+            )
+        })
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson ? await response.json() : null; 
+    
+            if(!response.ok){
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด!',
+                    html: `${data.status}`,
+                });
+    
+                const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+                return Promise.reject(error);
+            }
+
+            Timeout = new Date(data.time).getTime();
+            $('#btn-start-countdown').addClass('hidden');
+
+            $('#round-text').text(data.round);
+
+        }).catch((er) => {
+            console.log('Error: ' + er);
+        })
+        .finally(() => {
+            isLoading = false;
+        });
+    }
+}
+
 function StartNextCircle(){
     var selectedIds = $('.nightmare-selected').map(function() {
         return $(this).data('room_nightmare_id');
@@ -605,6 +824,8 @@ function StartNextCircle(){
             }
             console.log(data);
 
+            window.location.reload();
+
         }).catch((er) => {
             console.log('Error: ' + er);
         })
@@ -612,4 +833,54 @@ function StartNextCircle(){
             isLoading = false;
         });
     }
+}
+
+function GameEnd(){
+    var linksStatus = $('.btn-link').map(function() {
+        return $(this).data('link_status');
+    }).get();
+
+    var countStatus = 0;
+    linksStatus.forEach(function(status) {
+        if (status === 1) {
+            countStatus++;
+        }
+    });
+
+    return fetch(RouteGameEnd, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-CSRF-Token": csrfToken
+        },
+        body:JSON.stringify(
+            {
+                room_id: room_id,
+                linksStatus: linksStatus,
+                countStatus: countStatus,
+            }
+        )
+    })
+    .then(async response => {
+        const isJson = response.headers.get('content-type')?.includes('application/json');
+        const data = isJson ? await response.json() : null; 
+
+        if(!response.ok){
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด!',
+                html: `${data.status}`,
+            });
+
+            const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+            return Promise.reject(error);
+        }
+        console.log(data);
+        
+        return data.status;
+    }).catch((er) => {
+        console.log('Error: ' + er);
+    })
 }

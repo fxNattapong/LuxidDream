@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 05, 2024 at 09:07 PM
+-- Generation Time: Mar 06, 2024 at 06:45 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 7.2.5
 
@@ -283,6 +283,7 @@ CREATE TABLE `rooms` (
   `round` tinyint(1) DEFAULT 0,
   `circle` tinyint(1) DEFAULT NULL,
   `time` datetime DEFAULT NULL,
+  `status` tinyint(1) DEFAULT 0 COMMENT '0=playing, 1=good end, 2=bad end',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -291,8 +292,8 @@ CREATE TABLE `rooms` (
 -- Dumping data for table `rooms`
 --
 
-INSERT INTO `rooms` (`room_id`, `player_rule_id`, `level_id`, `invite_code`, `creator_name`, `round`, `circle`, `time`, `created_at`, `updated_at`) VALUES
-(1, 1, 2, '411131', 'admin', 2, 2, NULL, '2024-03-04 18:09:38', '2024-03-06 02:10:24');
+INSERT INTO `rooms` (`room_id`, `player_rule_id`, `level_id`, `invite_code`, `creator_name`, `round`, `circle`, `time`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 2, '411131', 'admin', 4, 2, '2024-03-06 20:23:49', 2, '2024-03-04 18:09:38', '2024-03-06 22:56:47');
 
 -- --------------------------------------------------------
 
@@ -325,7 +326,15 @@ INSERT INTO `rooms_cards` (`room_card_id`, `room_link_id`, `code`, `position`, `
 (9, 4, '111', 1, '2024-03-05 00:23:31', '2024-03-05 00:23:31'),
 (10, 4, '421', 0, '2024-03-05 00:24:15', '2024-03-05 00:24:15'),
 (11, 4, '112', 3, '2024-03-05 00:24:57', '2024-03-05 00:24:57'),
-(12, 4, '422', 2, '2024-03-05 00:25:00', '2024-03-05 00:25:00');
+(12, 4, '422', 2, '2024-03-05 00:25:00', '2024-03-05 00:25:00'),
+(13, 6, '311', 1, '2024-03-06 15:17:59', '2024-03-06 15:17:59'),
+(14, 6, '231', 0, '2024-03-06 15:18:02', '2024-03-06 15:18:02'),
+(15, 6, '211', 2, '2024-03-06 15:18:06', '2024-03-06 15:18:06'),
+(16, 6, '331', 3, '2024-03-06 15:18:20', '2024-03-06 15:18:20'),
+(17, 7, '311', 1, '2024-03-06 15:19:13', '2024-03-06 15:19:13'),
+(18, 7, '231', 0, '2024-03-06 15:19:22', '2024-03-06 15:19:22'),
+(19, 7, '231', 2, '2024-03-06 20:24:02', '2024-03-06 20:24:02'),
+(20, 7, '331', 3, '2024-03-06 20:24:07', '2024-03-06 20:24:07');
 
 -- --------------------------------------------------------
 
@@ -353,8 +362,8 @@ INSERT INTO `rooms_links` (`room_link_id`, `room_id`, `room_nightmare_id`, `link
 (3, 1, 3, 7, 1, '2024-03-04 18:09:42', '2024-03-04 20:09:08'),
 (4, 1, 4, 11, 1, '2024-03-04 18:09:42', '2024-03-05 00:25:00'),
 (5, 1, 5, 21, 1, '2024-03-04 18:09:42', '2024-03-04 18:09:42'),
-(6, 1, 7, 22, 0, '2024-03-06 02:10:24', '2024-03-06 02:10:24'),
-(7, 1, 8, 22, 0, '2024-03-06 02:10:24', '2024-03-06 02:10:24'),
+(6, 1, 7, 16, 1, '2024-03-06 02:10:24', '2024-03-06 15:18:20'),
+(7, 1, 8, 5, 1, '2024-03-06 02:10:24', '2024-03-06 20:24:07'),
 (8, 1, 9, 22, 0, '2024-03-06 02:10:24', '2024-03-06 02:10:24'),
 (9, 1, 10, 22, 0, '2024-03-06 02:10:24', '2024-03-06 02:10:24'),
 (10, 1, 11, 22, 0, '2024-03-06 02:10:24', '2024-03-06 02:10:24');
@@ -414,8 +423,8 @@ CREATE TABLE `rooms_players` (
 --
 
 INSERT INTO `rooms_players` (`room_player_id`, `player_id`, `room_id`, `name_ingame`, `status`, `role`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'creator', 1, 1, '2024-03-04 18:09:38', '2024-03-05 22:04:46'),
-(2, 2, 1, 'player', 0, 0, '2024-03-04 18:09:38', '2024-03-06 02:15:24');
+(1, 1, 1, 'creator', 1, 1, '2024-03-04 18:09:38', '2024-03-06 12:40:07'),
+(2, 2, 1, 'player', 0, 0, '2024-03-04 18:09:38', '2024-03-06 19:44:19');
 
 --
 -- Indexes for dumped tables
@@ -561,7 +570,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `rooms_cards`
 --
 ALTER TABLE `rooms_cards`
-  MODIFY `room_card_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `room_card_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `rooms_links`
