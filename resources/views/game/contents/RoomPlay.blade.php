@@ -476,58 +476,62 @@
     <!-- START MODAL RESULT -->
     <div id="modal-result" class="modal hidden fixed z-[100] flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:p-[10px]">
         <!-- START MODAL CONTENT -->
-        <div class="modal-content bg-[#E6E4F0] w-fit m-auto rounded-2xl drop-shadow-xl">
+        <div class="modal-content bg-[#E6E4F0] w-fit min-w-[300px] m-auto rounded-2xl drop-shadow-xl">
             <span id="icon-result-close" class="z-20 text-black bg-white rounded-full drop-shadow border text-[24px] font-bold h-fit font-medium absolute top-0 right-0 mt-2 mr-2 hover:text-indigo-600 hover:bg-indigo-200 duration-300 cursor-pointer"><i class='bx bx-x'></i></span>
             <div class="relative p-4 flex-col flex items-center justify-center">
-                
                 <div class="text-center text-xl text-[#52459A]">
                     <h1 class="font-bold">TIME UP</h1>
                     <h1 class="font-medium">หมดเวลา!</h1>
                 </div>
 
-                <hr class="my-4 w-full h-px bg-gray-400 border-0">
+                <hr class="my-3 w-full h-px bg-gray-400 border-0">
 
                 <button id="btn-game-end" class="hidden mb-4 bg-[#EE609A] hover:bg-[#d62c65] rounded-full py-1.5 px-2 w-fit border border-white text-white text-center duration-300">ผลลัพธ์เกม</button>
 
-                <div id="results-items" class="gap-2">
-                    
-                </div>
+                <div id="alls-items" class="h-[437px] overflow-auto gap-4"></div>
 
+                <div class="noItems hidden w-full text-center">
+                    <p class="font-light text-gray-500 text-sm">ไม่พบข้อมูล</p>
+                </div>
+                
                 <!-- START RESULT PROTOTYPE -->
-                <div class="resultBoxPt w-full bg-[#A39FC6] rounded-lg p-2 border-2 border-white space-y-3">
+                <div id="linkBoxPt" class="hidden w-full bg-[#A39FC6] rounded-lg p-2 border-2 border-white space-y-3">
                     <div class="relative flex-col flex items-center justify-center w-full">
+
+                        <h1 class="absolute top-1 left-1 text-white text-sm font-light">#<span class="circleText"> n</span></h1>
+
                         <!-- START LINK -->
                         <div class="relative w-[100px] h-[40px] overflow-hidden">
-                            <img src="{{ URL('/assets/web_based_board_game/element-48.png') }}" class="modal_link btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
+                            <img src="{{ URL('/assets/nightmare_crop/element-15.png') }}" class="modal_link_image btn-image-zoom w-full h-full object-cover my-auto" alt="link_image">
                         </div>
                         <!-- END LINK -->
 
                         <i class='bx bxs-up-arrow text-xl text-white mt-[-5px] mb-2 animate-bounce'></i>
 
-                        <!-- START CARDS -->
+                        <!-- START CARDS PROTOTYPE -->
                         <div class="w-full flex gap-1">
                             <div class="relative">
                                 <div class="relative h-[60px] overflow-hidden border border-[#EE609A]">
-                                    <img src="{{ URL('/assets/skill card crop/element-24.png') }}" class="modal_card_1 btn-image-zoom w-full h-full object-cover my-auto" alt="nightmare-card">
+                                    <img src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="modal_card_0 btn-image-zoom w-full h-full object-cover my-auto" alt="card-image">
                                 </div>
                             </div>
                             <div class="relative">
                                 <div class="relative h-[60px] overflow-hidden border border-[#EE609A]">
-                                    <img src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="modal_card_2 btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
+                                    <img src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="modal_card_1 btn-image-zoom w-full h-full my-auto" alt="card-image">
                                 </div>
                             </div>
                             <div class="relative">
                                 <div class="relative h-[60px] overflow-hidden border border-[#EE609A]">
-                                    <img src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="modal_card_3 btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
+                                    <img src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="modal_card_2 btn-image-zoom w-full h-full my-auto" alt="card-image">
                                 </div>
                             </div>
                             <div class="relative">
                                 <div class="relative h-[60px] overflow-hidden border border-[#EE609A]">
-                                    <img src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="modal_card_4 btn-image-zoom w-full h-full my-auto" alt="nightmare-card">
+                                    <img src="{{ URL('/assets/skill card crop/element-empty.png') }}" class="modal_card_3 btn-image-zoom w-full h-full my-auto" alt="card-image">
                                 </div>
                             </div>
                         </div>
-                        <!-- END CARDS -->
+                        <!-- END CARDS PROTOTYPE -->
 
                     </div>
                 </div>
@@ -578,9 +582,11 @@
                         <h1 class="font-bold">TIME UP</h1>
                         <h1 class="font-medium">หมดเวลา!</h1>
                     </div>
-                    <div class="mt-4 text-center space-y-4">
+                    <div class="mt-4 flex items-center justify-center space-y-4">
                         <!-- <p class="font-light">ผู้เล่นสามารถทำภารกิจสุดท้ายได้<br>จนลูกเต๋าหมดมือ</p> -->
-                        <i class='bx bxs-time text-4xl animate-bounce'></i>
+                        <div class="w-[250px] h-auto flex justify-center border-2 rounded p-3">
+                            <img id="image_zoom" src="{{ URL('/assets/web_based_board_game/element [Recovered].png') }}" alt="" class="w-auto h-auto object-cover animate-shake">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -605,6 +611,7 @@
         var AmtNextCircle = "<?php echo $amt_next_circle ?>";
         var amtNMSelect = (AmtNextCircle == 5) ? 1 : 2;
         
+        const RouteLeaveRoom = "<?php echo Route('LeaveRoom'); ?>";
         const RoutePollLinks = "<?php echo Route('PollLinks'); ?>";
         const RouteStartTimer = "<?php echo Route('StartTimer'); ?>";
         const RouteEndTimer = "<?php echo Route('EndTimer'); ?>";
@@ -616,5 +623,6 @@
         const RouteStartNextRound = "<?php echo Route('StartNextRound'); ?>";
         const RouteStartNextCircle = "<?php echo Route('StartNextCircle'); ?>";
         const RouteGameEnd = "<?php echo Route('GameEnd'); ?>";
+        const RouteUpdateStats = "<?php echo Route('UpdateStats'); ?>";
     </script>
 @endpush

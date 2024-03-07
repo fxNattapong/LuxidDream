@@ -7,13 +7,40 @@ var pollLinks;
 // });
 
 $(document).ready(function() {
+    $('#btn-leave-room').on('click', function() {
+        Swal.fire({
+            title: `คุณแน่ใจหรือไม่`,
+            html: 'ออกจากห้อง',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'ยืนยัน',
+            cancelButtonText: 'ยกเลิก',
+            }).then((result) => {
+            if (result.isConfirmed) {
+                LeaveRoom();
+            }
+        })
+    });
+
     // MODAL IMAGE ZOOM
-    $('.btn-image-zoom').on('click', function () {
+    $(document).on('click', '.btn-image-zoom', function () {
         $('#image_zoom').attr('src', $(this).attr('src'));
         $("#modal-image-zoom").removeClass('hidden');
     });
     $('#icon-image-zoom-close').on('click', function () {
         var modal = $('#modal-image-zoom');
+        modal.addClass("fade-out-modal");
+
+        setTimeout(function() {
+            modal.addClass('hidden');
+            modal.removeClass("fade-out-modal");
+        }, 500);
+    });
+
+    $('#icon-timeup-close').on('click', function () {
+        var modal = $('#modal-timeup');
         modal.addClass("fade-out-modal");
 
         setTimeout(function() {
@@ -245,6 +272,9 @@ var x = setInterval(function() {
             if(RoomRound == RuleRound) {
                 $('#loading').removeClass('hidden');
                 if (RoomStatus == 0) {
+                    if(isCreator) {
+                        UpdateStats();
+                    }
                     GameEnd()
                     .then(status => {
                         showGameEndModal(status);
@@ -259,7 +289,7 @@ var x = setInterval(function() {
                 $('#modal-timeup').removeClass('hidden');
                 setTimeout(function() {
                     $('#modal-timeup').addClass('hidden');
-                    $('#modal-result').removeClass('hidden');
+                    $('#btn-result').click();
                 }, 3000);
             }
             
@@ -279,7 +309,7 @@ var x = setInterval(function() {
                     };
 
                     if(links_calm < 3) {
-                        if(RoomRound === RuleRound && RoomCircle !== RuleCircle) {
+                        if(RoomRound === RuleRound) {
                             if(RoomCircle === RuleCircle) {
                                 $('#btn-new-room').removeClass('hidden');
                             } else {
@@ -296,7 +326,7 @@ var x = setInterval(function() {
                                 showButtonAndNmSelect();
                             }
                         } else {
-                            $('#btn-next-round').removeClass('hidden');
+                            showButtonAndNmSelect();
                         }
                     }
                 })
@@ -307,10 +337,15 @@ var x = setInterval(function() {
             pollLinksCalm(room_id)
                 .then(links_calm => {
                     if(links_calm > 3) {
-                        clearInterval(x);
-                        if(RoomCircle == RuleCircle) {
-                            $('#countdown_timer').text('จบเกม');
-                        } 
+                        if(RoomRound === RuleRound) {
+                            if(RoomCircle == RuleCircle) {
+                                $('#countdown_timer').text('จบเกม');
+                            } else {
+                                showButtonAndNmSelect();
+                            }
+                        } else {
+                            showButtonAndNmSelect();
+                        }
                     }
                 })
                 .catch(error => {
@@ -419,6 +454,42 @@ function pollLinksCalm(room_id){
 }
 
 var isLoading = false;
+
+function LeaveRoom(){
+    fetch(RouteLeaveRoom, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-CSRF-Token": csrfToken
+        },
+        body:JSON.stringify(
+            {
+                room_id: room_id,
+            }
+        )
+    })
+    .then(async response => {
+        const isJson = response.headers.get('content-type')?.includes('application/json');
+        const data = isJson ? await response.json() : null; 
+
+        if(!response.ok){
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด!',
+                html: `${data.status}`,
+            });
+
+            const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+            return Promise.reject(error);
+        }
+        console.log(data);
+        
+    }).catch((er) => {
+        console.log('Error: ' + er);
+    })
+}
 
 function StartTimer(){
     if(!isLoading) {
@@ -642,7 +713,26 @@ function FetchResults(){
             }
             console.log(data);
 
-           
+            $('#alls-items').empty();
+            if(data.links_all.length) {
+                for (let i = data.links_all.length - 1; i >= 0; i--) {
+                    var _newBox = $('#linkBoxPt').clone();
+                    _newBox.removeClass('hidden');
+                    _newBox.attr('id', 'boxNo' + data.links_all[i].room_link_id);
+                    _newBox.find('.modal_link_image').attr('src', pathUploads + data.links_all[i].link_image);
+                    _newBox.find('.circleText').text(data.links_all[i].circle);
+
+                    for(let j=0; j<data.links_all[i].cards_items.length; j++) {
+                        _newBox.find('.modal_card_' + j).attr('src', pathUploads + data.links_all[i].cards_items[j].card_image);
+                    }
+
+                    $('#alls-items').append(_newBox);
+                }
+            } else {
+                var _newBox = $('.noItems').clone();
+                _newBox.removeClass('hidden');
+                $('#alls-items').append(_newBox);
+            }
 
         }).catch((er) => {
             console.log('Error: ' + er);
@@ -813,6 +903,8 @@ function StartNextCircle(){
         return $(this).data('room_nightmare_id');
     }).get();
 
+    $('#loading').removeClass('hidden');
+
     if(!isLoading) {
         isLoading = true;
         fetch(RouteStartNextCircle, {
@@ -853,6 +945,7 @@ function StartNextCircle(){
         })
         .finally(() => {
             isLoading = false;
+            $('#loading').addClass('hidden');
         });
     }
 }
@@ -902,6 +995,43 @@ function GameEnd(){
         console.log(data);
         
         return data.status;
+    }).catch((er) => {
+        console.log('Error: ' + er);
+    })
+}
+
+function UpdateStats(){
+    fetch(RouteUpdateStats, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "X-CSRF-Token": csrfToken
+        },
+        body:JSON.stringify(
+            {
+                room_id: room_id,
+            }
+        )
+    })
+    .then(async response => {
+        const isJson = response.headers.get('content-type')?.includes('application/json');
+        const data = isJson ? await response.json() : null; 
+
+        if(!response.ok){
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'เกิดข้อผิดพลาด!',
+                html: `${data.status}`,
+            });
+
+            const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
+            return Promise.reject(error);
+        }
+
+        console.log(data);
+        
     }).catch((er) => {
         console.log('Error: ' + er);
     })

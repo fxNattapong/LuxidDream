@@ -80,6 +80,7 @@ Route::prefix('game')->group(function () {
         Route::post('/start', "GameController@StartGame")->Name('StartGame');
         Route::get('/start', "GameController@RoomPlay")->Name('RoomPlay')->middleware('redirectIfAuth');
     
+        Route::post('/leave', "GameController@LeaveRoom")->Name('LeaveRoom');
         Route::post('/start/timer', "GameController@StartTimer")->Name('StartTimer');
         Route::post('/end/timer', "GameController@EndTimer")->Name('EndTimer');
         Route::post('/poll/links', "GameController@PollLinks")->Name('PollLinks');
@@ -91,6 +92,7 @@ Route::prefix('game')->group(function () {
         Route::post('/start/next/round', "GameController@StartNextRound")->Name('StartNextRound');
         Route::post('/start/next/circle', "GameController@StartNextCircle")->Name('StartNextCircle');
         Route::post('/end', "GameController@GameEnd")->Name('GameEnd');
+        Route::post('/update/stats', "GameController@UpdateStats")->Name('UpdateStats');
     });
     
 });
