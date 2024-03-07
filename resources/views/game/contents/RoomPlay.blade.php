@@ -11,7 +11,7 @@
 
     <!-- START CONTENT -->
     <div class="flex-col flex items-center justify-center">
-        <h1 class="z-[100] text-white text-2xl font-bold">รอบที่ <span id="round-text">{{ $room->round }}</span></h1>
+        <h1 class="z-[100] text-white text-2xl font-bold">รอบที่ <span id="round-text">{{ $room->round }} / {{ $room->level_round}}</span></h1>
         <input id="room_id" type="hidden" value="{{ $room->room_id }}">
 
         <!-- START CIRCLE -->

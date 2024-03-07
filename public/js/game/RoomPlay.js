@@ -197,7 +197,15 @@ var x = setInterval(function() {
         
         const formattedMinutes = (minutes < 10) ? '0' + minutes : minutes;
         const formattedSeconds = (seconds < 10) ? '0' + seconds : seconds;
-        document.getElementById("countdown_timer").innerHTML = `${formattedMinutes} : ${formattedSeconds}`;
+        if(distance > 0) {
+            document.getElementById("countdown_timer").innerHTML = `${formattedMinutes} : ${formattedSeconds}`;
+        } else {
+            if(RoomRound == RuleRound) {
+                $('#countdown_timer').text('จบเกม');
+            } else {
+                $('#countdown_timer').text('หมดเวลา');
+            }
+        }
     } else {
         document.getElementById("countdown_timer").innerHTML = "00 : 00";
         
@@ -216,7 +224,6 @@ var x = setInterval(function() {
 
     // TIMEOUT
     if (distance < 0) {
-        document.getElementById("countdown_timer").innerHTML = "หมดเวลา";
         $('#div-countdown_timer').removeClass('hidden');
         $('#card_code_1, #card_code_2').addClass('hidden');
         $("#btn-timeout").addClass('hidden');
@@ -234,7 +241,7 @@ var x = setInterval(function() {
                 }, 3000);
                 $('#btn-result-final').removeClass('hidden');
             };
-
+            
             if(RoomRound == RuleRound) {
                 $('#loading').removeClass('hidden');
                 if (RoomStatus == 0) {
@@ -263,18 +270,33 @@ var x = setInterval(function() {
         if(isCreator) {
             pollLinksCalm(room_id)
                 .then(links_calm => {
+
+                    var showButtonAndNmSelect = function() {
+                        $('#btn-next-circle').removeClass('hidden');
+                        $('.nm_image').removeClass('btn-image-zoom').off('click');
+                        $('#modal-image-zoom').addClass('hidden');
+                        $('.nightmare-select').removeClass('hidden');
+                    };
+
                     if(links_calm < 3) {
-                        $('#btn-next-round').removeClass('hidden');
-                    } else {
-                        clearInterval(x);
-                        if(RoomCircle == RuleCircle) {
-                            $('#countdown_timer').text('จบเกม');
-                            $('#btn-new-room').removeClass('hidden');
+                        if(RoomRound === RuleRound && RoomCircle !== RuleCircle) {
+                            if(RoomCircle === RuleCircle) {
+                                $('#btn-new-room').removeClass('hidden');
+                            } else {
+                                showButtonAndNmSelect();
+                            }
                         } else {
-                            $('#btn-next-circle').removeClass('hidden');
-                            $('.nm_image').removeClass('btn-image-zoom').off('click');
-                            $('#modal-image-zoom').addClass('hidden');
-                            $('.nightmare-select').removeClass('hidden');
+                            $('#btn-next-round').removeClass('hidden');
+                        }
+                    } else {
+                        if(RoomRound === RuleRound) {
+                            if(RoomCircle === RuleCircle) {
+                                $('#btn-new-room').removeClass('hidden');
+                            } else {
+                                showButtonAndNmSelect();
+                            }
+                        } else {
+                            $('#btn-next-round').removeClass('hidden');
                         }
                     }
                 })
