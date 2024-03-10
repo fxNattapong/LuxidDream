@@ -1,3 +1,5 @@
+<title>Home | LuxidDream</title>
+
 @extends('webpages.layouts.Layout')
 
 @section('Content')
@@ -11,17 +13,14 @@
           <h1 class="pt-6 text-5xl">Luxid Dream</h1>
           <div class="pt-6 text-xl text-gray-400">
             <p>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In 253 ME (Mythical Era), the
-              Magical Empire was a dream land where all living creatures lived
-              together peacefully. <br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Unfortunately, there was a
-              mythical illness spreading, Luxid Dream, causing patients unable to
-              wake up. With the help of Dream Travelers, they are finding the
-              cause of this illness and curing affected creatures. <br />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In Luxid Dream, players play as
-              Dream Travelers who can travel between Dream and Reality to learn
-              about the nightmares and try to find calmness so that the patient
-              can wake up willingly.
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ในปี 253 ME (ยุคเทพนิยาย) 
+              อาณาจักรเวทมนตร์เป็นดินแดนในฝันที่สิ่งมีชีวิตทุกชนิดอาศัยอยู่ร่วมกันอย่างสงบสุข <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;น่าเสียดายที่มีโรคในตำนานแพร่กระจาย Luxid Dream 
+              ทำให้ผู้ป่วยไม่สามารถตื่นได้ ด้วยความช่วยเหลือจาก Dream Travellers 
+              พวกเขากำลังค้นหาสาเหตุของการเจ็บป่วยและรักษาสิ่งมีชีวิตที่ได้รับผลกระทบ <br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ใน Luxid Dream ผู้เล่นจะเล่นเป็น Dream Travellers 
+              ที่สามารถเดินทางระหว่าง Dream และ Reality เพื่อเรียนรู้เกี่ยวกับฝันร้าย
+              และพยายามค้นหาความสงบเพื่อให้ผู้ป่วยสามารถตื่นขึ้นมาอย่างเต็มใจ
             </p>
           </div>
         </div>

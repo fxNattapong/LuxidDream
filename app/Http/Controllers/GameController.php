@@ -170,46 +170,17 @@ class GameController extends Controller
         ], 200);
     }
 
-
-
-    public function RoomJoin() {
-        $room = [];
-        if(Session::get('player_id')) {
-            $isCreated = Rooms_Players::where('player_id', Session::get('player_id'))
-                                        ->whereIn('status', [0, 1])
-                                        ->first();
-
-            if($isCreated) {
-                $room = Rooms::where('room_id', $isCreated->room_id)->first();
-
-                $status = (Session::get('username') === $room->creator_name) ? 1 : 0;
-
-                Rooms_Players::where('room_id', $room->room_id)
-                                ->where('player_id', Session::get('player_id'))
-                                ->update([
-                                    'status' => $status,
-                                    'updated_at' => now()
-                                ]);
-
-                $isCreator = (Session::get('username') === $room->creator_name);
-                Session::put('creator', $isCreator);
-                Session::put('player', !$isCreator);
-                Session::put('username', Session::get('username'));
-                Session::put('name_ingame', $isCreated->name_ingame);
-
-                return redirect()->Route('RoomWaiting', ['invite_code' => $room->invite_code]);
-            }
-        }
-
-        return view('game/contents/RoomJoin', compact('room'));
-    }
-
-    public function RoomJoining(Request $request) {
+    public function RoomJoin(Request $request) {
         $invite_code = ($request->has('invite_code')) ? trim($request->input('invite_code')) : null;
         $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
         $username = ($request->has('username')) ? trim($request->input('username')) : null;
         $name_ingame = ($request->has('name_ingame')) ? trim($request->input('name_ingame')) : null;
         
+        if(!$username) {
+            $status = 'กรุณาเข้าสู่ระบบ';
+            return response()->json(['status' => $status], 400);
+        }
+
         $isRoom = Rooms::where('invite_code', $invite_code)->first();
         if(!$isRoom) {
             $status = 'กรุณากรอกรหัสและชื่อ';
@@ -443,7 +414,7 @@ class GameController extends Controller
         //                         ->get()
         //                         ->toArray();
 
-        $existingNightmaresIds = Rooms_Nightmares::pluck('nightmare_id')->toArray();
+        $existingNightmaresIds = Rooms_Nightmares::where('room_id', $room_id)->pluck('nightmare_id')->toArray();
         $randomNightmareIds = [];
         $previousType = null;
 
@@ -506,6 +477,15 @@ class GameController extends Controller
     public function RoomPlay(Request  $request) {
         $invite_code = ($request->has('invite_code')) ? trim($request->input('invite_code')) : null;
 
+        $isJoining = Rooms::leftJoin('rooms_players', 'rooms.room_id', '=', 'rooms_players.room_id')
+                            ->where('rooms_players.player_id', Session::get('player_id'))
+                            ->where('rooms.invite_code', $invite_code)
+                            ->select('rooms.*', 'rooms_players.player_id as player_id')
+                            ->first();
+        if(!$isJoining) {
+            return redirect()->Route('Home');
+        }
+
         $room = Rooms::leftJoin('players_rule', 'rooms.player_rule_id', '=', 'players_rule.player_rule_id')
                         ->leftJoin('levels', 'rooms.level_id', '=', 'levels.level_id')
                         ->where('rooms.invite_code', $invite_code)
@@ -540,7 +520,8 @@ class GameController extends Controller
                                             ->where('rooms_nightmares.circle', $room->circle)
                                             ->select('rooms_nightmares.*', 
                                                     'nightmares.type as nm_type', 'nightmares.description as nm_description', 'nightmares.image as nm_image', 
-                                                    'rooms_links.room_link_id as room_link_id', 'rooms_links.status as link_status', 'links.type as link_type', 'links.image as link_image')
+                                                    'rooms_links.room_link_id as room_link_id', 'rooms_links.status as link_status', 'links.link_id as link_id', 
+                                                    'links.type as link_type', 'links.image as link_image')
                                             ->get();
 
         // echo '<pre>';
@@ -555,7 +536,7 @@ class GameController extends Controller
 
         Rooms_Players::where('room_id', $room_id)->where('player_id', Session::get('player_id'))->delete();
 
-        return redirect()->Route('Home');
+        return response()->json(['redirect_url' => Route('Home')], 200);
     }
 
     public function PollLinks(Request $request) {
@@ -806,12 +787,15 @@ class GameController extends Controller
     }
 
     public function CheckNightmareLink(Request $request) {
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
         $room_link_id = ($request->has('room_link_id')) ? trim($request->input('room_link_id')) : null;
         
         $isCards = Rooms_Cards::where('room_link_id', $room_link_id)->get();
 
+        $room = Rooms::where('room_id', $room_id)->first();
+
         if($isCards->count() == 4) {
-            $existingLinksIds = Rooms_Links::pluck('link_id')->toArray();
+            $existingLinksIds = Rooms_Links::where('room_id', $room->room_id)->pluck('link_id')->toArray();
             $linkRandom = Links::whereNotIn('link_id', array_merge($existingLinksIds, [21, 22]))
                                 ->inRandomOrder()
                                 ->first();
@@ -986,8 +970,8 @@ class GameController extends Controller
         $linksStatus = ($request->has('linksStatus')) ? implode(',', $request->input('linksStatus')) : null;
         $countStatus = ($request->has('countStatus')) ? trim($request->input('countStatus')) : null;
         $linksStatus_array = explode(',', $linksStatus);
-        
-        $status = ($countStatus == $linksStatus_array) ? 1 : 2;
+
+        $status = ($countStatus == count($linksStatus_array)) ? 1 : 2;
         Rooms::where('room_id', $room_id)
                 ->update([
                     'status' => $status,

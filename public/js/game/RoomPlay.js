@@ -1,9 +1,14 @@
 var $image;
 var pollLinks;
 
-// const audio = document.getElementById('audioPlayer');
-// audio.addEventListener('ended', function() {
-//   audio.play();
+const audio1 = document.getElementById('audioPlayer1');
+const audio2 = document.getElementById('audioPlayer2');
+
+// audio1.addEventListener('ended', function() {
+//     audio2.play();
+// });
+// audio2.addEventListener('ended', function() {
+//     audio1.play();
 // });
 
 $(document).ready(function() {
@@ -83,6 +88,20 @@ $(document).ready(function() {
     });
     $('#icon-tips-close').on('click', function () {
         var modal = $('#modal-tips');
+        modal.addClass("fade-out-modal");
+
+        setTimeout(function() {
+            modal.addClass('hidden');
+            modal.removeClass("fade-out-modal");
+        }, 500);
+    });
+
+    // MODAL ACTIONS
+    $('#btn-actions').on('click', function () {
+        $("#modal-actions").removeClass('hidden');
+    });
+    $('#icon-actions-close').on('click', function () {
+        var modal = $('#modal-actions');
         modal.addClass("fade-out-modal");
 
         setTimeout(function() {
@@ -211,6 +230,20 @@ $(document).ready(function() {
             }
         })
     });
+
+    // MODAL NEW ROOM
+    $('#btn-new-room').on('click', function () {
+        $("#modal-new-room").removeClass('hidden');
+    });
+    $('#icon-new-room-close').on('click', function () {
+        var modal = $('#modal-new-room');
+        modal.addClass("fade-out-modal");
+
+        setTimeout(function() {
+            modal.addClass('hidden');
+            modal.removeClass("fade-out-modal");
+        }, 500);
+    });
 });
 
 var countNumber = 0;
@@ -227,10 +260,11 @@ var x = setInterval(function() {
         if(distance > 0) {
             document.getElementById("countdown_timer").innerHTML = `${formattedMinutes} : ${formattedSeconds}`;
         } else {
-            if(RoomRound == RuleRound) {
-                $('#countdown_timer').text('จบเกม');
+            if(RoomCircle == RuleCircle && RoomStatus != 0) {
+                document.getElementById("countdown_timer").innerHTML = `จบเกม`;
+                document.getElementById("prepare-text").innerHTML = ``;
             } else {
-                $('#countdown_timer').text('หมดเวลา');
+                document.getElementById("countdown_timer").innerHTML = `หมดเวลา`;
             }
         }
     } else {
@@ -243,117 +277,134 @@ var x = setInterval(function() {
     
     if(!Timeout) {
         $('#card_code_1, #card_code_2').addClass('hidden');
+        document.getElementById("prepare-text").innerHTML = `เตรียมการก่อนเล่น`;
         if(isCreator) {
             $('#div-countdown_timer').addClass('hidden');
             $('#btn-start-countdown').removeClass('hidden');
         }
     }
 
+    var showGameEndModal = function(status) {
+        var imageSrc = (status == 1) ? 'ending-01-pc.gif' : 'ending-03-pc.gif';
+        if (status == 1) {
+            $('#you-won').removeClass('hidden');
+        } else {
+            $('#you-lost').removeClass('hidden');
+        }
+        
+        $('#image_game_end').attr('src', pathAssets + 'web_based_board_game/' + imageSrc);
+        $('#btn-game-end').removeClass('hidden');
+        $('#modal-timeup').removeClass('hidden');
+        setTimeout(function() {
+            $('#modal-timeup').addClass('hidden');
+            $('#modal-game-end').removeClass('hidden');
+        }, 3000);
+        $('#btn-result-final').removeClass('hidden');
+    };
+
+    var showButtonAndNmSelect = function() {
+        $('#btn-next-circle').removeClass('hidden');
+        $('.nm_image').removeClass('btn-image-zoom').off('click');
+        $('#modal-image-zoom').addClass('hidden');
+        $('.nightmare-select').removeClass('hidden');
+    };
+
+    var showTimeUpAndResults = function() {
+        $('#modal-timeup').removeClass('hidden');
+        setTimeout(function() {
+            $('#modal-timeup').addClass('hidden');
+            $('#btn-result').click();
+        }, 3000);
+    };
+
+    var GameEndAndUpdateStats = function() {
+        if(isCreator) {
+            UpdateStats();
+        }
+        GameEnd()
+            .then(status => {
+                showGameEndModal(status);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+
+    var CheckLinksAndHiddenNM = function() {
+        var isLinkBeforeCalm;
+        var isLinkAfterCalm;
+        $('.nightmare-select').each(function() {
+            isLinkBeforeCalm = $(this).parent().prev().find('.btn-link').prevObject.data('link_status');
+            isLinkAfterCalm = $(this).parent().next().find('.btn-link').prevObject.data('link_status');
+            if(isLinkBeforeCalm != 1 && isLinkAfterCalm != 1) {
+                $(this).addClass('hidden');
+            }
+        });
+    };
+
     // TIMEOUT
+    var amtLinks = (amtNMSelect == 1) ? 5 : 6;
+    var links_calm;
     if (distance < 0) {
         $('#div-countdown_timer').removeClass('hidden');
         $('#card_code_1, #card_code_2').addClass('hidden');
         $("#btn-timeout").addClass('hidden');
-        
-        if(countNumber == 0) {
-            var showGameEndModal = function(status) {
-                var imageSrc = (status == 1) ? 'ending-01.png' : 'ending-03.png';
-                $('#image_game_end').attr('src', pathAssets + 'web_based_board_game/' + imageSrc);
-                $('#loading').addClass('hidden');
-                $('#btn-game-end').removeClass('hidden');
-                $('#modal-timeup').removeClass('hidden');
-                setTimeout(function() {
-                    $('#modal-timeup').addClass('hidden');
-                    $('#modal-game-end').removeClass('hidden');
-                }, 3000);
-                $('#btn-result-final').removeClass('hidden');
-            };
-            
-            if(RoomRound == RuleRound) {
-                $('#loading').removeClass('hidden');
-                if (RoomStatus == 0) {
-                    if(isCreator) {
-                        UpdateStats();
-                    }
-                    GameEnd()
-                    .then(status => {
-                        showGameEndModal(status);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                } else {
-                    showGameEndModal(RoomStatus);
-                }
-            } else {
-                $('#modal-timeup').removeClass('hidden');
-                setTimeout(function() {
-                    $('#modal-timeup').addClass('hidden');
-                    $('#btn-result').click();
-                }, 3000);
-            }
-            
-            countNumber++;
-        }
+        $("#btn-end-timer").addClass('hidden');
 
-        var links_calm;
+        pollLinksCalm(room_id)
+            .then(links_calm => {
+                if (countNumber == 0) {
+                    if (RoomCircle == RuleCircle) {
+                        $('#loading').removeClass('hidden');
+                        if(links_calm == amtLinks && RoomStatus == 0) {
+                            GameEndAndUpdateStats();
+                        } else if (RoomStatus != 0) {
+                            showGameEndModal(RoomStatus);
+                        } else {
+                            $('#btn-next-round').removeClass('hidden');
+                            showTimeUpAndResults();
+                        }
+                    } else {
+                        showTimeUpAndResults();
+                    }
+                    
+                    if(isCreator) {
+                        if(links_calm < 3) {
+                            $('#btn-next-round').removeClass('hidden');
+                        } else {
+                            if(RoomCircle == RuleCircle || RoomStatus != 0) {
+                                $('#btn-new-room').removeClass('hidden');
+                            } else {
+                                showButtonAndNmSelect();
+                                CheckLinksAndHiddenNM();
+                            }
+                        }
+                    }
+                }
+                $('#loading').addClass('hidden');
+                countNumber++;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+          
+    } else if(distance > 0) {
+        $('#card_code_1, #card_code_2').removeClass('hidden');
         if(isCreator) {
             pollLinksCalm(room_id)
                 .then(links_calm => {
-
-                    var showButtonAndNmSelect = function() {
-                        $('#btn-next-circle').removeClass('hidden');
-                        $('.nm_image').removeClass('btn-image-zoom').off('click');
-                        $('#modal-image-zoom').addClass('hidden');
-                        $('.nightmare-select').removeClass('hidden');
-                    };
-
-                    if(links_calm < 3) {
-                        if(RoomRound === RuleRound) {
-                            if(RoomCircle === RuleCircle) {
-                                $('#btn-new-room').removeClass('hidden');
-                            } else {
-                                showButtonAndNmSelect();
-                            }
-                        } else {
-                            $('#btn-next-round').removeClass('hidden');
-                        }
-                    } else {
-                        if(RoomRound === RuleRound) {
-                            if(RoomCircle === RuleCircle) {
-                                $('#btn-new-room').removeClass('hidden');
-                            } else {
-                                showButtonAndNmSelect();
-                            }
-                        } else {
-                            showButtonAndNmSelect();
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        } else {
-            pollLinksCalm(room_id)
-                .then(links_calm => {
-                    if(links_calm > 3) {
-                        if(RoomRound === RuleRound) {
-                            if(RoomCircle == RuleCircle) {
-                                $('#countdown_timer').text('จบเกม');
-                            } else {
-                                showButtonAndNmSelect();
-                            }
-                        } else {
-                            showButtonAndNmSelect();
-                        }
+                    if (RoomCircle == RuleCircle && links_calm  == amtLinks) {
+                        $('#btn-end-timer').removeClass('hidden');
+                    } else if (RoomCircle != RuleCircle) {
+                        if(links_calm >= 3) {
+                            $('#btn-end-timer').removeClass('hidden');
+                        } 
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
         }
-    } else if(distance > 0) {
-        $('#card_code_1, #card_code_2').removeClass('hidden');
     }
 }, 1000);
 
@@ -361,7 +412,6 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#loading').addClass('hidden');
     pollLinks(room_id);
 });
-
 
 function pollLinks(room_id){
     pollLinks = setInterval(() => {
@@ -388,8 +438,7 @@ function pollLinks(room_id){
                 return Promise.reject(error);
             }
             console.log('data:', data);
-
-            if(data.room.circle != RoomCircle || data.room.round != RoomRound) {
+            if(data.room.circle != RoomCircle || data.room.round != RoomRound || data.room.status != RoomStatus) {
                 window.location.reload();
             }
 
@@ -400,14 +449,15 @@ function pollLinks(room_id){
                 }
             });
 
-            if(link_calm === 5) {
+            var amtLinks = (amtNMSelect == 1) ? 5 : 6;
+            if(link_calm === amtLinks) {
                 var now = new Date().getTime();
                 var distance = Timeout - now;
-                clearInterval(pollLinks);
                 if(distance > 0) {
                     $('#btn-end-timer').removeClass('hidden');
                 }
             }
+
             $('.link_image').each(function(index) {
                 var newSource = data.links[index].link_image;
                 $(this).attr('src', pathUploads + newSource);
@@ -484,7 +534,8 @@ function LeaveRoom(){
             const error = (data && data.errorMessage) || "{{trans('general.warning.system_failed')}}" + " (CODE:"+response.status+")";
             return Promise.reject(error);
         }
-        console.log(data);
+
+        window.location.href = data.redirect_url;
         
     }).catch((er) => {
         console.log('Error: ' + er);
@@ -627,7 +678,7 @@ function FetchTimeout(){
 
 function FetchCards(element){
     var $image = $(element).next('div').find('img');
-    if(!isLoading) {
+    if(!isLoading && Timeout) {
         isLoading = true;
         fetch(RouteFetchCards, {
             method: "POST",
@@ -819,6 +870,7 @@ function CheckNightmareLink(){
             },
             body:JSON.stringify(
                 {
+                    room_id: room_id,
                     room_link_id: document.getElementById("modal_link").dataset.room_link_id,
                 }
             )
@@ -1035,4 +1087,88 @@ function UpdateStats(){
     }).catch((er) => {
         console.log('Error: ' + er);
     })
+}
+
+
+let currentGoalIndex = 1;
+const totalGoals = 3;
+if (currentGoalIndex == 1) {
+    document.getElementById('btn-prev-goal').classList.add('hidden');
+}
+function showNextGoal() {
+    if (currentGoalIndex < totalGoals) {
+        document.getElementById(`goal-${currentGoalIndex}`).classList.add('hidden');
+        currentGoalIndex++;
+        document.getElementById(`goal-${currentGoalIndex}`).classList.remove('hidden');
+        document.getElementById('btn-prev-goal').classList.remove('hidden');
+        
+        if (currentGoalIndex == totalGoals) {
+            document.getElementById('btn-next-goal').classList.add('hidden');
+        }
+    }
+}
+
+function showPrevGoal() {
+    if (currentGoalIndex > 1) {
+        document.getElementById(`goal-${currentGoalIndex}`).classList.add('hidden');
+        currentGoalIndex--;
+        document.getElementById(`goal-${currentGoalIndex}`).classList.remove('hidden');
+        document.getElementById('btn-next-goal').classList.remove('hidden');
+
+        if (currentGoalIndex == 1) {
+            document.getElementById('btn-prev-goal').classList.add('hidden');
+        }
+    }
+}
+
+function showActionDetails(actionNumber) {
+    document.getElementById('icon-actions-back').classList.remove('hidden');
+
+    document.querySelectorAll('[id^="action-details-"]').forEach(function(element) {
+        element.classList.add('hidden');
+    });
+
+    document.getElementById(`action-details-${actionNumber}`).classList.remove('hidden');
+    document.getElementById('actions-all').classList.add('hidden');
+    
+    if (actionNumber == '2-1') {
+        document.querySelectorAll('.btn-prev-2\\.1').forEach(function(btnPrev) {
+            btnPrev.classList.add('hidden');
+        });
+        document.querySelectorAll('.btn-next-2\\.2').forEach(function(btnNext) {
+            btnNext.classList.remove('hidden');
+        });
+    } else {
+        document.querySelectorAll('.btn-prev-2\\.1').forEach(function(btnPrev) {
+            btnPrev.classList.remove('hidden');
+        });
+        document.querySelectorAll('.btn-next-2\\.2').forEach(function(btnNext) {
+            btnNext.classList.add('hidden');
+        });
+    }
+
+    if (actionNumber == '3-1') {
+        document.querySelectorAll('.btn-prev-3\\.1').forEach(function(btnPrev) {
+            btnPrev.classList.add('hidden');
+        });
+        document.querySelectorAll('.btn-next-3\\.2').forEach(function(btnNext) {
+            btnNext.classList.remove('hidden');
+        });
+    } else {
+        document.querySelectorAll('.btn-prev-3\\.1').forEach(function(btnPrev) {
+            btnPrev.classList.remove('hidden');
+        });
+        document.querySelectorAll('.btn-next-3\\.2').forEach(function(btnNext) {
+            btnNext.classList.add('hidden');
+        });
+    }
+}
+
+function showActionsAll() {
+    document.getElementById('icon-actions-back').classList.add('hidden');
+
+    document.querySelectorAll('[id^="action-details-"]').forEach(function(element) {
+        element.classList.add('hidden');
+    });
+    document.getElementById('actions-all').classList.remove('hidden');
 }

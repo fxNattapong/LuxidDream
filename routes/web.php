@@ -64,9 +64,7 @@ Route::prefix('game')->group(function () {
     
     Route::prefix('room')->group(function () {
         Route::post('/create', "GameController@RoomCreate")->Name('RoomCreate');
-    
-        Route::get('/join', "GameController@RoomJoin")->Name('RoomJoin')->middleware('redirectIfAuth');
-        Route::post('/joining', "GameController@RoomJoining")->Name('RoomJoining');
+        Route::post('/join', "GameController@RoomJoin")->Name('RoomJoin');
     
         Route::get('/waiting', "GameController@RoomWaiting")->Name('RoomWaiting')->middleware('redirectIfAuth');
         Route::post('/player/remove', "GameController@PlayerRemove")->Name('PlayerRemove');

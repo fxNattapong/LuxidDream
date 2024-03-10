@@ -20,6 +20,8 @@
         <div class="z-10 relative min-h-screen">
             @include('game.components.Navbar')
 
+            @include('game.components.SidebarMobile')
+
             @yield('Content')
 
         </div>
@@ -41,6 +43,21 @@
         const currentRoute = '@php echo $currentRoute; @endphp';
         const pathAssets = "{{ URL('/assets/') }}/";
         const pathUploads = "{{ URL('/uploads/') }}/";
+
+        $(document).ready(function() {
+            $('#sidebar-mobile').on('click', function() {
+                $('#modal-sidebar-mobile').removeClass('hidden');
+            });
+            $('#icon-sidebar-mobile-close').on('click', function() {
+                var modal = $('.modal-mobile-left-bar');
+                modal.addClass('fade-out-mobile-left-bar');
+
+                setTimeout(function() {
+                    $('#modal-sidebar-mobile').addClass('hidden');
+                    modal.removeClass("fade-out-mobile-left-bar");
+                }, 500);
+            });
+        });
     </script>
 
 </html>

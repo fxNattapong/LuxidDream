@@ -231,6 +231,7 @@ function RoomDisconnect(){
 }
 
 function StartGame(){
+    $('#loading').removeClass('hidden');
     if(!isLoading) {
         isLoading = true;
         fetch(RouteStartGame, {
@@ -270,6 +271,7 @@ function StartGame(){
         })
         .finally(() => {
             isLoading = false;
+            $("#loading").addClass('hidden');
         });
     }
 }

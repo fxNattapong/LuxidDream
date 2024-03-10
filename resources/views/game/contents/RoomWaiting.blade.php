@@ -166,7 +166,7 @@
                         window.location.href = data.redirect_url;
                     }
 
-                    if(data.room.status === 1) {
+                    if(data.room.round !== 0) {
                         window.location.href = data.redirect_url;
                     }
                     
