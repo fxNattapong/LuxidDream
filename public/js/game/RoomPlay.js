@@ -898,6 +898,7 @@ function CheckNightmareLink(){
 
             $('#modal_link').attr('src', pathUploads + data.room_link.link_image);
             $image.attr('src', pathUploads + data.room_link.link_image);
+            $image.parent().parent().parent().attr('data-link_status', data.room_link.status);
 
         }).catch((er) => {
             console.log('Error: ' + er);
