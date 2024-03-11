@@ -968,7 +968,6 @@
                             <p>ให้ได้ตื่นขึ้นมาใช้ชีวิต</p>
                             <p>อย่างที่เขาเคยได้ฝันไว้อีกครั้ง</p>
                         </div>
-                        <a href="" class="z-[100] flex w-full justify-center rounded-full bg-[#E7B16A] hover:bg-[#dd8c32] px-3 py-1.5 leading-6 text-white border-2 border-white shadow duration-300">ช่วยผู้ฝันอีกครั้ง</a>
                         <a href="{{ Route('Home') }}"  class="z-[100] flex w-full justify-center rounded-full bg-[#E7B16A] hover:bg-[#dd8c32] px-3 py-1.5 leading-6 text-white border-2 border-white shadow duration-300">ช่วยผู้หลับใหลคนถัดไป</a>
                     </div>
                 </div>

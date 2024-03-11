@@ -1,12 +1,12 @@
 @if($Pages)
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <div class="swiper rounded-md w-[900px] h-[600px] max-xl:w-[500px] max-xl:h-[300px] max-md:w-[300px] max-md:h-[200px]">
+    <div class="swiper rounded-md w-[880px] h-[500px] max-xl:w-[500px] max-xl:h-[300px] max-md:w-[300px] max-md:h-[200px]">
         <div class="swiper-wrapper">
             @foreach($Pages as $Page)
                     <div class="swiper-slide">
                         <div class="item">
                             <div class="overflow-hidden w-full h-auto">
-                                <img src="{{ URL('/assets/images/' . $Page) }}" class="w-full h-full m-auto" alt="">
+                                <img src="{{ URL('/assets/images/' . $Page) }}" class="w-full h-full m-auto object-cover" alt="">
                             </div>
                         </div>
                     </div>

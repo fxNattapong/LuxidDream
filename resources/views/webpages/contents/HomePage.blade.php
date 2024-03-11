@@ -9,9 +9,8 @@
     <div class="story">
       <div class="grid grid-cols-2">
         <div>
-          <h2 class="pt-8 text-2xl text-gray-400">Overview</h2>
           <h1 class="pt-6 text-5xl">Luxid Dream</h1>
-          <div class="pt-6 text-xl text-gray-400">
+          <div class="pt-6 text-xl text-white">
             <p>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ในปี 253 ME (ยุคเทพนิยาย) 
               อาณาจักรเวทมนตร์เป็นดินแดนในฝันที่สิ่งมีชีวิตทุกชนิดอาศัยอยู่ร่วมกันอย่างสงบสุข <br />

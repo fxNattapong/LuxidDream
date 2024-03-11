@@ -10,7 +10,9 @@
             <a href="{{ Route('HomePage') }}">หน้าหลัก</a>
             <a href="{{ Route('RulePage') }}">กฎการเล่น</a>
             <a href="{{ Route('AboutPage') }}">เกี่ยวกับ</a>
-            <a href="">กระทู้</a>
+            @if(Session::get('authen'))
+                <a href="">กระทู้</a>
+            @endif
             <a href="">คำถามที่พบบ่อย</a>
             <a href="{{ Route('Home') }}">เกม</a>
             <br />
@@ -32,9 +34,11 @@
                 <li>
                     <a href="{{ Route('AboutPage') }}">เกี่ยวกับ</a>
                 </li>
-                <li>
-                    <a href="">กระทู้</a>
-                </li>
+                @if(Session::get('authen'))
+                    <li>
+                        <a href="">กระทู้</a>
+                    </li>
+                @endif
                 <li>
                     <a href="">คำถามที่พบบ่อย</a>
                 </li>
