@@ -682,7 +682,7 @@ function FetchTimeout(){
 
 function FetchCards(element){
     var $image = $(element).next('div').find('img');
-    if(!isLoading && Timeout) {
+    if(!isLoading) {
         isLoading = true;
         fetch(RouteFetchCards, {
             method: "POST",

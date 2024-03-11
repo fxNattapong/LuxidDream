@@ -32,6 +32,15 @@
             const pathAssets = "{{ URL('/assets/') }}/";
             const pathUploads = "{{ URL('/uploads/') }}/";
             const sessionUsername = "@php echo Session::get('username') @endphp";
+
+            if(currentRoute === currentRoute) {
+                if(currentRoute === 'Members' || currentRoute === 'Admins') {
+                    $('#' + currentRoute).removeClass('text-indigo-600');
+                    openMenuMembers();
+                }
+
+                $('#' + currentRoute).addClass('text-indigo-600 bg-[#E4E9F7]');
+            }
         </script>
         
         <script src="{{ URL('js/admin/LayoutAdmin.js') }}" defer></script>

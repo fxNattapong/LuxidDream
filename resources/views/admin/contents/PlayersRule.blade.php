@@ -91,47 +91,29 @@
             <!-- START MOBILE -->
             @if(sizeof($players_rule))
                 <div class="hidden max-md:block min-w-[250px] bg-white p-4 rounded-t-2xl overflow-hidden">
-                    @foreach($players_rule as $key => $level)
+                    @foreach($players_rule as $key => $player_rule)
                         <div class="flex items-center relative">
                             <div class="absolute top-0 right-0 bg-gray-200 rounded-full px-2 text-gray-500 text-sm"># {{ $key + 1 }}</div>
                             <div class="flex-col">
                                 <p class="text-sm font-medium text-gray-500 truncate">
-                                    ระดับความยาก: <span class="font-light">
-                                        @if($level['level'] === 0)
-                                            ง่าย
-                                        @elseif($level['level'] === 1)
-                                            ปานกลาง
-                                        @else
-                                            ยาก
-                                        @endif
-                                    </span>
+                                    จำนวนผู้เล่น: <span class="font-light">{{ $player_rule['amount']  }}</span>
                                 </p>
                                 <p class="text-sm font-medium text-gray-500 truncate">
-                                    จำนวนรอบ: <span class="font-light">{{ $level['round'] }}</span>
+                                    จำนวนวงฝัน: <span class="font-light">{{ $player_rule['circle'] }}</span>
                                 </p>
                                 <p class="text-sm font-medium text-gray-500 inline-flex">
-                                    เวลา:&nbsp;<span class="font-light flex items-center">
-                                        {{ $level['time_1'] }}<i class='bx bx-right-arrow-alt'></i>
-                                        {{ $level['time_2'] }}<i class='bx bx-right-arrow-alt'></i>
-                                        {{ $level['time_3'] }}<i class='bx bx-right-arrow-alt'></i>
-                                        {{ $level['time_4'] }}
-
-                                        @if($level['time_5'])
-                                            <i class='bx bx-right-arrow-alt'></i>{{ $level['time_5'] }}
-                                        @endif
-                                    </span>
+                                    จำนวนวงฝัน:&nbsp;<span class="font-light">5 = {{ $player_rule['nightmare_5'] }}, 6 = {{ $player_rule['nightmare_6'] }}</span>
                                 </p>
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-1 mt-2">
-                            <button class="btn-level-edit flex items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
-                            data-level_id="{{ $level['level_id'] }}" data-level="{{ $level['level'] }}" data-round="{{ $level['round'] }}"
-                            data-time_1="{{ $level['time_1'] }}" data-time_2="{{ $level['time_2'] }}" data-time_3="{{ $level['time_3'] }}"
-                            data-time_4="{{ $level['time_4'] }}" data-time_5="{{ $level['time_5'] }}">
+                            <button class="btn-player-rule-edit flex items-center justify-center gap-1 bg-blue-500 hover:bg-blue-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
+                            data-player_rule_id="{{ $player_rule['player_rule_id'] }}" data-amount="{{ $player_rule['amount'] }}" 
+                            data-circle="{{ $player_rule['circle'] }}"data-nightmare_5="{{ $player_rule['nightmare_5'] }}" data-nightmare_6="{{ $player_rule['nightmare_6'] }}">
                             <i class='bx bx-edit' ></i>แก้ไข</button>
 
-                            <button class="btn-level-delete flex items-center justify-center gap-1 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
-                            data-route="{{ Route('SubmitLevelDelete') }}" data-level_id="{{ $level['level_id'] }}" data-level="{{ $level['level'] }}">
+                            <button class="btn-player-rule-delete flex items-center justify-center gap-1 bg-red-500 hover:bg-red-600 text-white text-sm px-2 py-1 rounded-3xl truncate duration-300" 
+                            data-route="{{ Route('SubmitPlayerRuleDelete') }}" data-player_rule_id="{{ $player_rule['player_rule_id'] }}" data-amount="{{ $player_rule['amount'] }}">
                             <i class='bx bx-trash' ></i>ลบ</button>
                         </div>
                         <hr class="bg-blue-300 border-dashed border-gray-300 w-full my-2 rounded-2xl ">

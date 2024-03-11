@@ -407,36 +407,34 @@ class GameController extends Controller
                         'updated_at' => now()
                     ]);
 
-        // $existingNightmaresIds = Rooms_Nightmares::pluck('nightmare_id')->toArray();
-        // $nmRandom = Nightmares::whereNotIn('nightmare_id', array_merge($existingNightmaresIds, [17]))
-        //                         ->inRandomOrder()
-        //                         ->limit(4)
-        //                         ->get()
-        //                         ->toArray();
-
         $existingNightmaresIds = Rooms_Nightmares::where('room_id', $room_id)->pluck('nightmare_id')->toArray();
         $randomNightmareIds = [];
         $previousType = null;
-
+        $previousTypes = [];
         $excludedNightmares = array_merge($existingNightmaresIds, [17]);
 
         while (count($randomNightmareIds) < 4) {
             $randomNightmare = Nightmares::whereNotIn('nightmare_id', $excludedNightmares)
-                                          ->where('type', '!=', $previousType)
-                                          ->inRandomOrder()
-                                          ->first();
-        
+                                            ->where('type', '!=', $previousType)
+                                            ->inRandomOrder()
+                                            ->first();
+                                            
             if ($randomNightmare) {
                 $randomNightmareIds[] = $randomNightmare->nightmare_id;
                 $previousType = $randomNightmare->type;
                 $excludedNightmares[] = $randomNightmare->nightmare_id;
+                $previousTypes[] = $randomNightmare->type;
             }
         }
+        // $status = $previousTypes;
+        // return response()->json(['status' => $status], 400);
+        
         $nmRandom = Nightmares::whereIn('nightmare_id', $randomNightmareIds)
                                 ->get()
                                 ->toArray();
+                                
         $fourthNightmare = end($nmRandom);
-
+        
         foreach ($nmRandom as $nightmare) {
             $InsertRoomLinkDream = new Rooms_Links;
             $InsertRoomLinkDream->room_id = $room_id;
@@ -446,14 +444,14 @@ class GameController extends Controller
                 $InsertRoomLinkDream->status = 1;
             }
             $InsertRoomLinkDream->save();
-
+            
             $InsertNM = new Rooms_Nightmares;
             $InsertNM->room_id = $room_id;
             $InsertNM->room_link_id = $InsertRoomLinkDream->id;
             $InsertNM->nightmare_id = $nightmare['nightmare_id'];
             $InsertNM->circle = 1;
             $InsertNM->save();
-
+            
             Rooms_Links::where('room_link_id', $InsertRoomLinkDream->id)
                         ->update([
                             'room_nightmare_id' => $InsertNM->id,

@@ -23,7 +23,8 @@ Route::get('/rule', "WebpagesController@RulePage")->Name('RulePage');
 Route::prefix('admin')->group(function () {
     Route::get('/', "AdminController@IndexRedirect")->Name('IndexRedirect');
 
-    Route::get('/dashboard', "AdminController@Dashboard")->Name('Dashboard');
+    Route::post('/fetch/account', "AdminController@FetchAccountData")->Name('FetchAccountData');
+    Route::post('/account/edit', "AdminController@SubmitAccountEdit")->Name('SubmitAccountEdit');
 
     Route::get('/players', "AdminController@Players")->Name('Players');
     Route::post('/player/add', "AdminController@SubmitPlayerAdd")->Name('SubmitPlayerAdd');

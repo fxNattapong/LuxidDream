@@ -583,7 +583,7 @@
                     <!-- START IMAGE -->
                     <div class="flex-col flex justify-center w-full">
                         <div class="relative w-[125px] m-auto overflow-hidden">
-                            <img src="{{ URL('/assets/web_based_board_game/element add-70.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto cursor-pointer rounded-full px-[1px]" alt="action">
+                            <img src="{{ URL('/assets/web_based_board_game/element add-71.png') }}" class="btn-image-zoom w-full h-full object-cover my-auto cursor-pointer rounded-full px-[1px]" alt="action">
                         </div>
                         
                         <h1 class="mb-4 text-center text-[#322E53] font-medium ">ตำเเหน่ง ฝันร้าย</h1>
@@ -928,7 +928,7 @@
                     <p>ผู้ฝันได้ตื่นขึ้นจากหลับใหล</p>
                     <p>พร้อมจะใช้ชีวิตและก้าวต่อไปอย่างเต็มใจ</p>
                 </div>
-                <div id="you-loose" class="hidden z-50 absolute top-1/3 left-1/3 transform -translate-x-1/4 -translate-y-1/2 text-center text-white whitespace-nowrap">
+                <div id="you-lost" class="hidden z-50 absolute top-1/3 left-1/3 transform -translate-x-1/4 -translate-y-1/2 text-center text-white whitespace-nowrap">
                     <h1 class="text-3xl font-medium mb-[1em]">You're lost</h1>
                     <p>ผู้ฝันหลงทางอยู่ในโลกแห่งความฝัน</p>
                     <p>เฝ้ารอให้นักเดินทางฝันกลุ่มใหม่</p>

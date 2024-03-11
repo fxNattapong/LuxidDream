@@ -56,7 +56,7 @@
                     <div class="z-10 w-full h-full absolute top-0 left-0 bg-indigo-200 opacity-50 rounded-full"></div>
                     <div class="z-20 relative bg-white w-9 h-9 rounded-full p-1 overflow-hidden border">
                         @if(Session::get('image'))
-                            <img src="{{ URL('/uploads/'.Session::get('image')) }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
+                            <img src="{{ URL('/uploads/' . Session::get('image')) }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
                         @else
                             <img src="{{ URL('/assets/'.'member.png') }}" alt="" class="w-full h-full object-cover my-auto scale-125" alt="logo">
                         @endif
@@ -69,9 +69,10 @@
             </div>
             <div id="popup-logged-in" class="hidden z-50 absolute mt-[125px] right-0 z-10 w-40 origin-top-right rounded-md bg-white drop-shadow overflow-hidden ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div class="">
-                    <a href="" class="flex items-center gap-1 px-4 py-2 text-sm text-gray-500 hover:bg-blue-100 hover:text-blue-700 duration-300">
+                    <button id="btn-account-edit" class="flex items-center gap-1 w-full px-4 py-2 text-sm text-gray-500 hover:bg-blue-100 hover:text-blue-700 duration-300"
+                    onClick="FetchAccountData(this)" data-route="{{ Route('FetchAccountData') }}" data-username="{{ Session::get('username') }}">
                         <i class="fi fi-rr-portrait text-lg"></i>บัญชีของฉัน
-                    </a>
+                    </button>
                     <button id="btn-logout" class="flex items-center gap-1 w-full px-4 py-2 text-sm text-gray-500 hover:bg-rose-100 hover:text-rose-700 duration-300">
                         <i class="fi fi-rr-sign-out-alt text-lg ml-1"></i>ออกจากระบบ
                     </button>
@@ -83,6 +84,7 @@
 </div>
 <!-- END HEADER -->
 
+@include('admin/components/ModalProfile')
 
 <!-- START MODAL REGISTER -->
 <div id="modal-register" class="modal hidden fixed z-[100] flex left-0 top-0 w-[100%] h-[100%] overflow-auto max-md:p-[10px]">

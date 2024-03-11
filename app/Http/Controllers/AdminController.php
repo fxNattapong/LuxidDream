@@ -26,10 +26,71 @@ class AdminController extends Controller
         }
     }
 
+    public function FetchAccountData(Request $request) {
+        $username = ($request->has('username')) ? trim($request->input('username')) : null;
 
+        $player = Players::leftJoin('players_stats', 'players.player_id', '=', 'players_stats.player_id')
+                            ->where('players.username', $username)
+                            ->select('players.*', 'players_stats.played_all as played_all', 'players_stats.played_last as played_last')
+                            ->first();
+        
+        return response()->json(['player' => $player], 200);
+    }
 
-    public function Dashboard() {
-        return view('admin/contents/Dashboard');
+    public function SubmitAccountEdit(Request $request) {
+        $player_id = ($request->has('player_id')) ? trim($request->input('player_id')) : null;
+        $password = ($request->has('password')) ? trim($request->input('password')) : null;
+        $phone = ($request->has('phone')) ? trim($request->input('phone')) : null;
+        $email = ($request->has('email')) ? trim($request->input('email')) : null;
+        $image64 = ($request->has('image64')) ? trim($request->input('image64')) : null;
+        
+        if(strlen($password) < 4) {
+            $status = 'รหัสผ่านขั้นต่ำ 4 ตัวอักษร';
+            return response()->json(['status' => $status], 400);
+        }
+        if(strlen($password) < 4) {
+            $status = 'รหัสผ่านขั้นต่ำ 4 ตัวอักษร';
+            return response()->json(['status' => $status], 400);
+        }
+        if($phone && strlen($phone) < 10 || strlen($phone) > 10) {
+            $status = 'รูปแบบหมายเลขโทรศัพท์ไม่ถูกต้อง';
+            return response()->json(['status' => $status], 400);
+        }
+        if($email) {
+            if (!(Str::endsWith($email, '@gmail.com') || Str::endsWith($email, '@hotmail.com') || Str::endsWith($email, '@outlook.com'))) {
+                $status = 'กรุณารูปแบบอีเมลให้ถูกต้อง';
+                return response()->json(['status' => $status], 400);
+            }
+        }
+
+        if($image64) {
+            @list($type, $file_data) = explode(';', $image64);
+            @list(, $file_data) = explode(',', $file_data); 
+            $imageName = Str::random(10).'.'.'png';   
+            file_put_contents(config('pathImage.uploads_path') . '/' . $imageName, base64_decode($file_data));
+
+            Players::where('player_id', $player_id)
+                ->update([
+                'password' => $password,
+                'phone' => $phone,
+                'email' => $email,
+                'image' => $imageName,
+                'updated_at' => now()
+            ]);
+
+            $player = Players::where('player_id', $player_id)->first();
+            session::put('image', $player->image);
+        } else {
+            Players::where('player_id', $player_id)
+                ->update([
+                'password' => $password,
+                'phone' => $phone,
+                'email' => $email,
+                'updated_at' => now()
+            ]);
+        }
+
+        return response()->json(200);
     }
 
 
