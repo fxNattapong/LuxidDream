@@ -284,6 +284,14 @@ var x = setInterval(function() {
         }
     }
 
+    var showTimeUpAndResults = function() {
+        $('#modal-timeup').removeClass('hidden');
+        setTimeout(function() {
+            $('#modal-timeup').addClass('hidden');
+            $('#btn-result').click();
+        }, 3000);
+    };
+
     var showGameEndModal = function(status) {
         var imageSrc = (status == 1) ? 'ending-01-pc.gif' : 'ending-03-pc.gif';
         if (status == 1) {
@@ -302,21 +310,6 @@ var x = setInterval(function() {
         $('#btn-result-final').removeClass('hidden');
     };
 
-    var showButtonAndNmSelect = function() {
-        $('#btn-next-circle').removeClass('hidden');
-        $('.nm_image').removeClass('btn-image-zoom').off('click');
-        $('#modal-image-zoom').addClass('hidden');
-        $('.nightmare-select').removeClass('hidden');
-    };
-
-    var showTimeUpAndResults = function() {
-        $('#modal-timeup').removeClass('hidden');
-        setTimeout(function() {
-            $('#modal-timeup').addClass('hidden');
-            $('#btn-result').click();
-        }, 3000);
-    };
-
     var GameEndAndUpdateStats = function() {
         if(isCreator) {
             UpdateStats();
@@ -330,18 +323,30 @@ var x = setInterval(function() {
             });
     };
 
+    var showButtonAndNmSelect = function() {
+        $('#btn-next-circle').removeClass('hidden');
+        $('.nm_image').removeClass('btn-image-zoom').off('click');
+        $('#modal-image-zoom').addClass('hidden');
+        $('.nightmare-select').removeClass('hidden');
+    };
+
     var CheckLinksAndHiddenNM = function() {
         var isLinkBeforeCalm;
         var isLinkAfterCalm;
         $('.nightmare-select').each(function() {
-            isLinkBeforeCalm = $(this).parent().prev().find('.btn-link').prevObject.data('link_status');
-            isLinkAfterCalm = $(this).parent().next().find('.btn-link').prevObject.data('link_status');
+            isLinkBeforeCalm = $(this).parent().prev().find('.div_link').prevObject.data('link_status');
+            isLinkAfterCalm = $(this).parent().next().find('.div_link').prevObject.data('link_status');
             if(isLinkBeforeCalm != 1 && isLinkAfterCalm != 1) {
                 $(this).addClass('hidden');
             }
         });
     };
 
+    async function runCheckNmSelect() {
+        await showButtonAndNmSelect();
+        CheckLinksAndHiddenNM();
+    }
+    
     // TIMEOUT
     var amtLinks = (amtNMSelect == 1) ? 5 : 6;
     var links_calm;
@@ -375,8 +380,7 @@ var x = setInterval(function() {
                             if(RoomCircle == RuleCircle || RoomStatus != 0) {
                                 $('#btn-new-room').removeClass('hidden');
                             } else {
-                                showButtonAndNmSelect();
-                                CheckLinksAndHiddenNM();
+                                runCheckNmSelect();
                             }
                         }
                     }

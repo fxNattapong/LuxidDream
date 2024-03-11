@@ -77,7 +77,8 @@
                             </div>
                         </div>
                         @if($room_nightmares[0]->link_id == 21)
-                            <div class="z-50 absolute bottom-0 right-0 transform -translate-x-5 translate-y-2 rotate-[140deg] rounded-full">
+                            <div class="div-link z-50 absolute bottom-0 right-0 transform -translate-x-5 translate-y-2 rotate-[140deg] rounded-full"
+                            data-link_status="{{ $room_nightmares[0]->link_status }}">
                                 <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                                     <div class="z-20 w-[90px] h-full overflow-hidden">
                                         <img src="{{ URL('/uploads/' . $room_nightmares[0]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
@@ -85,7 +86,7 @@
                                 </div>
                             </div>
                         @else
-                            <div class="btn-link z-50 absolute bottom-0 right-0 transform -translate-x-5 translate-y-2 rotate-[140deg] cursor-pointer rounded-full"
+                            <div class="btn-link div-link z-50 absolute bottom-0 right-0 transform -translate-x-5 translate-y-2 rotate-[140deg] cursor-pointer rounded-full"
                             onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[0]->room_link_id }}" data-link_status="{{ $room_nightmares[0]->link_status }}"
                             data-nightmare_id_1="{{ $room_nightmares[0]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[0]->nm_image) }}" 
                             data-nightmare_id_2="{{ $room_nightmares[1]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}">
@@ -112,7 +113,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-link z-50 absolute top-1/5 right-0 transform translate-x-7 -translate-y-12 rotate-[70deg] cursor-pointer rounded-full"
+                        <div class="btn-link div-link z-50 absolute top-1/5 right-0 transform translate-x-7 -translate-y-12 rotate-[70deg] cursor-pointer rounded-full"
                         onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[1]->room_link_id }}" data-link_status="{{ $room_nightmares[1]->link_status }}"
                         data-nightmare_id_1="{{ $room_nightmares[1]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" 
                         data-nightmare_id_2="{{ $room_nightmares[2]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}">
@@ -138,7 +139,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-link z-50 absolute top-0 left-1/5 transform translate-x-1 -translate-y-4 rotate-[0deg] cursor-pointer rounded-full"
+                        <div class="btn-link div-link z-50 absolute top-0 left-1/5 transform translate-x-1 -translate-y-4 rotate-[0deg] cursor-pointer rounded-full"
                         onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[2]->room_link_id }}" data-link_status="{{ $room_nightmares[2]->link_status }}"
                         data-nightmare_id_1="{{ $room_nightmares[2]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" 
                         data-nightmare_id_2="{{ $room_nightmares[3]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}">
@@ -164,7 +165,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-link z-50 absolute bottom-1/5 left-0 transform -translate-x-5 -translate-y-12 -rotate-[70deg] cursor-pointer rounded-full"
+                        <div class="btn-link div-link z-50 absolute bottom-1/5 left-0 transform -translate-x-5 -translate-y-12 -rotate-[70deg] cursor-pointer rounded-full"
                         onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[3]->room_link_id }}" data-link_status="{{ $room_nightmares[3]->link_status }}"
                         data-nightmare_id_1="{{ $room_nightmares[3]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" 
                         data-nightmare_id_2="{{ $room_nightmares[4]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}">
@@ -191,7 +192,8 @@
                             </div>
                         </div>
                         @if($room_nightmares[4]->link_id == 21)
-                            <div class="z-50 absolute bottom-0 left-0 transform translate-x-5 translate-y-2 -rotate-[140deg] rounded-full">
+                            <div class="div-link z-50 absolute bottom-0 left-0 transform translate-x-5 translate-y-2 -rotate-[140deg] rounded-full"
+                            data-link_status="{{ $room_nightmares[4]->link_status }}">
                                 <div class="z-50 relative flex-col flex items-center justify-center w-full rounded overflow-hidden">
                                     <div class="z-20 w-[90px] h-full overflow-hidden">
                                         <img src="{{ URL('/uploads/' . $room_nightmares[4]->link_image) }}" class="link_image w-full h-auto object-cover" alt="">
@@ -199,7 +201,7 @@
                                 </div>
                             </div>
                         @else
-                            <div class="btn-link z-50 absolute bottom-0 left-0 transform translate-x-5 translate-y-2 -rotate-[140deg] cursor-pointer rounded-full"
+                            <div class="btn-link div-link z-50 absolute bottom-0 left-0 transform translate-x-5 translate-y-2 -rotate-[140deg] cursor-pointer rounded-full"
                             onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[4]->room_link_id }}" data-link_status="{{ $room_nightmares[4]->link_status }}"
                             data-nightmare_id_1="{{ $room_nightmares[4]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}" 
                             data-nightmare_id_2="{{ $room_nightmares[0]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[0]->nm_image) }}">
@@ -220,7 +222,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-link z-50 absolute bottom-0 right-0 transform -translate-x-6 translate-y-6 rotate-[150deg] cursor-pointer rounded-full"
+                        <div class="btn-link div-link z-50 absolute bottom-0 right-0 transform -translate-x-6 translate-y-6 rotate-[150deg] cursor-pointer rounded-full"
                         onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[0]->room_link_id }}" data-link_status="{{ $room_nightmares[0]->link_status }}" 
                         data-nightmare_id_1="{{ $room_nightmares[0]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" 
                         data-nightmare_id_2="{{ $room_nightmares[1]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}">
@@ -246,7 +248,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-link z-50 absolute top-1/5 right-0 transform translate-x-12 -translate-y-3 rotate-[90deg] cursor-pointer rounded-full"
+                        <div class="btn-link div-link z-50 absolute top-1/5 right-0 transform translate-x-12 -translate-y-3 rotate-[90deg] cursor-pointer rounded-full"
                         onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[1]->room_link_id }}" data-link_status="{{ $room_nightmares[1]->link_status }}"
                         data-nightmare_id_1="{{ $room_nightmares[1]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[1]->nm_image) }}" 
                         data-nightmare_id_2="{{ $room_nightmares[2]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}">
@@ -272,7 +274,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-link z-50 absolute top-0 left-1/5 transform translate-x-20 -translate-y-6 rotate-[30deg] cursor-pointer rounded-full"
+                        <div class="btn-link div-link z-50 absolute top-0 left-1/5 transform translate-x-20 -translate-y-6 rotate-[30deg] cursor-pointer rounded-full"
                         onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[2]->room_link_id }}" data-link_status="{{ $room_nightmares[2]->link_status }}"
                         data-nightmare_id_1="{{ $room_nightmares[2]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[2]->nm_image) }}" 
                         data-nightmare_id_2="{{ $room_nightmares[3]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}">
@@ -298,7 +300,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-link z-50 absolute top-0 left-0 transform translate-x-6 -translate-y-5 -rotate-[30deg] cursor-pointer rounded-full"
+                        <div class="btn-link div-link z-50 absolute top-0 left-0 transform translate-x-6 -translate-y-5 -rotate-[30deg] cursor-pointer rounded-full"
                         onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[3]->room_link_id }}" data-link_status="{{ $room_nightmares[3]->link_status }}"
                         data-nightmare_id_1="{{ $room_nightmares[3]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[3]->nm_image) }}" 
                         data-nightmare_id_2="{{ $room_nightmares[4]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}">
@@ -324,7 +326,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-link z-50 absolute top-1/2 left-0 transform -translate-x-14 -translate-y-14 -rotate-[90deg] cursor-pointer rounded-full"
+                        <div class="btn-link div-link z-50 absolute top-1/2 left-0 transform -translate-x-14 -translate-y-14 -rotate-[90deg] cursor-pointer rounded-full"
                         onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[4]->room_link_id }}" data-link_status="{{ $room_nightmares[4]->link_status }}"
                         data-nightmare_id_1="{{ $room_nightmares[4]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[4]->nm_image) }}" 
                         data-nightmare_id_2="{{ $room_nightmares[5]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[5]->nm_image) }}">
@@ -350,7 +352,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="btn-link z-50 absolute bottom-0 left-0 transform translate-x-6 translate-y-6 -rotate-[150deg] cursor-pointer rounded-full"
+                        <div class="btn-link div-link z-50 absolute bottom-0 left-0 transform translate-x-6 translate-y-6 -rotate-[150deg] cursor-pointer rounded-full"
                         onclick="FetchCards(this)" data-room_link_id="{{ $room_nightmares[5]->room_link_id }}" data-link_status="{{ $room_nightmares[5]->link_status }}"
                         data-nightmare_id_1="{{ $room_nightmares[5]->nightmare_id }}" data-image_1="{{ URL('/uploads/' . $room_nightmares[5]->nm_image) }}" 
                         data-nightmare_id_2="{{ $room_nightmares[0]->nightmare_id }}" data-image_2="{{ URL('/uploads/' . $room_nightmares[0]->nm_image) }}">
