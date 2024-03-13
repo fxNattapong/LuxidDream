@@ -4,12 +4,12 @@ var pollLinks;
 const audio1 = document.getElementById('audioPlayer1');
 const audio2 = document.getElementById('audioPlayer2');
 
-// audio1.addEventListener('ended', function() {
-//     audio2.play();
-// });
-// audio2.addEventListener('ended', function() {
-//     audio1.play();
-// });
+audio1.addEventListener('ended', function() {
+    audio2.play();
+});
+audio2.addEventListener('ended', function() {
+    audio1.play();
+});
 
 $(document).ready(function() {
     $('#btn-leave-room').on('click', function() {
@@ -362,7 +362,7 @@ var x = setInterval(function() {
                 if (countNumber == 0) {
                     if (RoomCircle == RuleCircle) {
                         $('#loading').removeClass('hidden');
-                        if(links_calm == amtLinks && RoomStatus == 0) {
+                        if(RoomRound == RuleRound && RoomStatus == 0) {
                             GameEndAndUpdateStats();
                         } else if (RoomStatus != 0) {
                             showGameEndModal(RoomStatus);
@@ -445,6 +445,9 @@ function pollLinks(room_id){
             console.log('data:', data);
             if(data.room.circle != RoomCircle || data.room.round != RoomRound || data.room.status != RoomStatus) {
                 window.location.reload();
+            }
+            if(data.room.time != Timeout) {
+                Timeout = new Date(data.room.time).getTime();
             }
 
             var link_calm = 0;

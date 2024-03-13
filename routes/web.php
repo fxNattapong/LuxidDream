@@ -68,6 +68,7 @@ Route::prefix('game')->group(function () {
         Route::post('/join', "GameController@RoomJoin")->Name('RoomJoin');
     
         Route::get('/waiting', "GameController@RoomWaiting")->Name('RoomWaiting')->middleware('redirectIfAuth');
+        Route::post('/leave/wating', "GameController@LeaveRoomWating")->Name('LeaveRoomWating');
         Route::post('/player/remove', "GameController@PlayerRemove")->Name('PlayerRemove');
         Route::post('/delete', "GameController@RoomDelete")->Name('RoomDelete');
         Route::post('/poll/players', "GameController@pollPlayers")->Name('pollPlayers');
@@ -79,7 +80,7 @@ Route::prefix('game')->group(function () {
         Route::post('/start', "GameController@StartGame")->Name('StartGame');
         Route::get('/start', "GameController@RoomPlay")->Name('RoomPlay')->middleware('redirectIfAuth');
     
-        Route::post('/leave', "GameController@LeaveRoom")->Name('LeaveRoom');
+        Route::post('/leave/playing', "GameController@LeaveRoom")->Name('LeaveRoom');
         Route::post('/start/timer', "GameController@StartTimer")->Name('StartTimer');
         Route::post('/end/timer', "GameController@EndTimer")->Name('EndTimer');
         Route::post('/poll/links', "GameController@PollLinks")->Name('PollLinks');

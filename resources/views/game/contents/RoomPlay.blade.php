@@ -6,7 +6,7 @@
 
     <!-- START CONTENT -->
     <div class="flex-col flex items-center justify-center">
-        <!-- <audio id="audioPlayer1" autoplay loop>
+        <audio id="audioPlayer1" autoplay loop>
             <source src="{{ URL('/assets/web_based_board_game/music-01.mp3') }}" type="audio/mp3">
             Your browser does not support the audio element.
         </audio>
@@ -14,9 +14,8 @@
         <audio id="audioPlayer2" loop>
             <source src="{{ URL('/assets/web_based_board_game/music-02.mp3') }}" type="audio/mp3">
             Your browser does not support the audio element.
-        </audio> -->
+        </audio>
 
-        <!-- <h1 class="z-[100] text-white text-2xl font-bold hidden1">เตรียมการก่อนเล่น</h1> -->
         <h1 class="z-[100] text-white text-2xl font-bold">
             <span id="prepare-text"></span> รอบที่ <span id="round-text">{{ $room->round }}</span> / {{ $room->level_round}}
         </h1>
@@ -29,6 +28,7 @@
         <div class="z-50 relative w-[400px] max-sm:w-full h-[450px] overflow-hidden">
         @endif
             <div class="z-50 flex justify-center items-center h-full">
+                <h1 class="z-[101] absolute top-2 left-2 text-white text- font-medium bg-[#EE609A] rounded-full px-2 py-1">{{ $room->invite_code }}</h1>
                 <h1 class="z-[101] absolute top-2 right-2 text-white text- font-medium bg-indigo-900 rounded-full px-2 py-1">วงที่ {{ $room->circle }} / {{ $room->rule_circle }}</h1>
                 <div class="z-10 w-full h-full absolute top-0 left-0 bg-indigo-100 opacity-50"></div>
 
@@ -919,7 +919,7 @@
                     <div class="z-10 w-full h-full absolute top-0 left-0 bg-gray-800 opacity-20 bg-set-opacity"></div>
                 </div>
 
-                <span id="btn-new-room" class="z-[100] hidden absolute top-1/2 transform -translate-y-1/2 right-0 mr-2 h-fit text-[30px] text-white bg-[#d1ae00] hover:bg-[#a67d02] rounded-full drop-shadow border duration-300 cursor-pointer">
+                <span id="btn-new-room" class="z-[100] absolute top-1/2 transform -translate-y-1/2 right-0 mr-2 h-fit text-[30px] text-white bg-[#d1ae00] hover:bg-[#a67d02] rounded-full drop-shadow border duration-300 cursor-pointer">
                     <i class='bx bx-right-arrow-alt'></i>
                 </span>
 

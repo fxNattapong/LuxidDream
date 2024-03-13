@@ -162,6 +162,7 @@ class GameController extends Controller
         $InsertPlayer->save();
 
         session::put('creator', true);
+        session::put('player', false);
         session::put('username', $username);
         session::put('name_ingame', $name_ingame);
     
@@ -192,6 +193,7 @@ class GameController extends Controller
                                 ->where('player_id', $player->player_id)
                                 ->first();
         if($isJoining) {
+            session::put('creator', false);
             session::put('player', true);
             session::put('username', $username);
             session::put('name_ingame', $name_ingame);
@@ -214,6 +216,7 @@ class GameController extends Controller
         $InsertPlayer->name_ingame = $name_ingame;
         $InsertPlayer->save();
 
+        session::put('creator', false);
         session::put('player', true);
         session::put('username', $username);
         session::put('name_ingame', $name_ingame);
@@ -299,6 +302,14 @@ class GameController extends Controller
         Rooms_Players::where('room_player_id', $room_player_id)->delete();
     
         return response()->json(200);
+    }
+
+    public function LeaveRoomWating(Request $request) {
+        $room_id = ($request->has('room_id')) ? trim($request->input('room_id')) : null;
+        
+        Rooms_Players::where('room_id', $room_id)->where('player_id', Session::get('player_id'))->delete();
+
+        return response()->json(['redirect_url' => Route('Home')], 200);
     }
 
     public function PollPlayers(Request $request) {
@@ -531,7 +542,7 @@ class GameController extends Controller
         // print_r($room_nightmares);
         // echo '</pre>';
                                     
-        return view('game/contents/RoomPlay', compact('room', 'amt_next_circle', 'players', 'room_nightmares', 'room_card'));
+        return view('game/contents/RoomPlay', compact('room', 'amt_next_circle', 'players', 'room_nightmares'));
     }
 
     public function LeaveRoom(Request $request) {
@@ -926,15 +937,24 @@ class GameController extends Controller
         
         $excludedNightmares = array_merge($existingNightmaresIds, [17]);
         $currentRound = 0;
+
+        $nmTypeSelected = Nightmares::leftJoin('rooms_nightmares', 'nightmares.nightmare_id', '=', 'rooms_nightmares.nightmare_id')
+                                    ->whereIn('rooms_nightmares.room_nightmare_id', $nm_selected_ids_array)
+                                    ->orderByRaw("FIELD(rooms_nightmares.nightmare_id, " . implode(",", $nm_selected_ids_array) . ")")
+                                    ->pluck('type')
+                                    ->toArray();
         while (count($randomNightmareIds) < 4) {
             $randomNightmare = Nightmares::whereNotIn('nightmare_id', $excludedNightmares)
                                         ->where('type', '!=', $previousType)
-                                        ->when($currentRound === 4, function ($query) use ($nm_selected_ids_array) {
-                                            return $query->where('type', '!=', $nm_selected_ids_array[0]);
+                                        ->when($currentRound === 0, function ($query) use ($nmTypeSelected) {
+                                            return $query->where('type', '!=', $nmTypeSelected[1]);
+                                        })
+                                        ->when($currentRound === 4, function ($query) use ($nmTypeSelected) {
+                                            return $query->where('type', '!=', $nmTypeSelected[0]);
                                         })
                                         ->inRandomOrder()
                                         ->first();
-                                                         
+                                 
             if ($randomNightmare) {
                 $randomNightmareIds[] = $randomNightmare->nightmare_id;
                 $previousType = $randomNightmare->type;
@@ -943,7 +963,7 @@ class GameController extends Controller
 
             $currentRound++;
         }
-           
+        
         $nmRandom = Nightmares::whereIn('nightmare_id', $randomNightmareIds)
                                 ->orderByRaw("FIELD(nightmare_id, " . implode(",", $randomNightmareIds) . ")")
                                 ->get()

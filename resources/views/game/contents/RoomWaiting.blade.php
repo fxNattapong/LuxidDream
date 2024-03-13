@@ -5,8 +5,8 @@
 @section('Content')
     <div class="flex-col flex items-center justify-center mt-[5em]">
         <!-- START LOGO -->
-        <div class="z-50 w-[275px] max-sm:w-[250px] absolute">
-            <img src="{{ URL('assets/logo.png') }}" alt="">
+        <div class="z-50 w-[275px] absolute">
+            <img src="{{ URL('assets/web_based_board_game/element-16.png') }}" alt="">
         </div>
         <!-- END LOGO -->
 
@@ -45,9 +45,16 @@
                                 <div onclick="StartGame()" class="z-[20] bg-[#8A66A7] rounded-full py-1 w-full border border-white text-white text-center cursor-pointer hover:bg-[#6e4f88] duration-300">เริ่มเกม</div>
                             @endif
                             @if(Session::get('player'))
-                            <div class="w-full gap-2">
-                                <input id="player_status" type="hidden">
-                                <button onclick="ChangeStatus()" id="btn-status" class="bg-[#E69FBC] rounded-full py-1 w-full border border-white text-white hover:bg-[#d1638a] duration-300">พร้อม</button>
+                            <div class="w-full space-y-2">
+                                <div>
+                                    <input id="player_status" type="hidden">
+                                    <button onclick="ChangeStatus()" id="btn-status" class="bg-[#53b46f] rounded-full py-1 w-full border border-white text-white hover:bg-[#309951] duration-300">พร้อม</button>
+                                </div>
+                                <div>
+                                    <input id="player_status" type="hidden">
+                                    <button id="btn-leave-room" class="bg-[#E69FBC] rounded-full py-1 w-full border border-white text-white hover:bg-[#df87a9] duration-300"
+                                    data-room_id="{{ $room->room_id }}">ออกจากห้อง</button>
+                                </div>
                             </div>
                             @endif
                         </div>
@@ -56,7 +63,7 @@
                 <!-- END INVITE -->
 
                 <!-- START PLAYER -->
-                <div id="grid-players" class="z-50 relative w-full min-h-[76px] border border-gray-300 rounded-3xl p-2 col-span-2 grid grid-cols-2 max-sm:grid-cols-1 max-lg:col-span-3 max-lg:mx-auto max-lg:mt-[1em]">
+                <div id="grid-players" class="z-50 relative w-full min-h-[76px] border border-gray-300 rounded-3xl p-2 col-span-2 grid grid-cols-2 max-lg:grid-cols-1 max-lg:col-span-3 max-lg:mx-auto max-lg:mt-[1em]">
                     <div class="z-10 w-full h-full absolute top-0 left-0 bg-[#4A4098] opacity-50 rounded-3xl"></div>
                     <div class="absolute right-0 mt-[-40px]">
                         <span class="flex items-center px-2 py-1 font-light text-gray-50 bg-gray-400 rounded-3xl whitespace-nowrap">
@@ -117,6 +124,7 @@
         const RouteHome = "<?php echo Route('Home'); ?>";
         const RouteRoomDelete = "<?php echo Route('RoomDelete'); ?>";
         const RoutePlayerRemove = "<?php echo Route('PlayerRemove'); ?>";
+        const RouteLeaveRoomWating = "<?php echo Route('LeaveRoomWating'); ?>";
         const RoutePollPlayers = "<?php echo Route('pollPlayers'); ?>";
         const RouteChangeStatus = "<?php echo Route('ChangeStatus'); ?>";
         const RouteRoomDisconnect = "<?php echo Route('RoomDisconnect'); ?>";
