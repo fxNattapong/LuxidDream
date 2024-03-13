@@ -258,6 +258,7 @@ var x = setInterval(function() {
         const formattedMinutes = (minutes < 10) ? '0' + minutes : minutes;
         const formattedSeconds = (seconds < 10) ? '0' + seconds : seconds;
         if(distance > 0) {
+            document.getElementById("prepare-text").innerHTML = ``;
             document.getElementById("countdown_timer").innerHTML = `${formattedMinutes} : ${formattedSeconds}`;
         } else {
             if(RoomCircle == RuleCircle && RoomStatus != 0) {
